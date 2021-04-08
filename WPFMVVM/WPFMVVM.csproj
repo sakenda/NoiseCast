@@ -1,0 +1,25 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <OutputType>WinExe</OutputType>
+    <TargetFramework>net5.0-windows</TargetFramework>
+    <UseWPF>true</UseWPF>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <None Remove="Fonts\BarlowSemiCondensed-Regular.ttf" />
+    <None Remove="Images\man.png" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="MVVM\Core\" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Resource Include="Fonts\BarlowSemiCondensed-Regular.ttf">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Resource>
+    <Resource Include="Images\man.png" />
+  </ItemGroup>
+
+</Project>
