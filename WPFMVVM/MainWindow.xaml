@@ -6,72 +6,109 @@
         xmlns:local="clr-namespace:WPFMVVM"
         xmlns:viewModel="clr-namespace:WPFMVVM.MVVM.ViewModel"
         mc:Ignorable="d"
-        Title="MainWindow"
+        Title="NoiseCast"
         WindowStartupLocation="CenterScreen"
         Height="600"
-        Width="920"
+        Width="1000"
+        MinHeight="330"
+        MinWidth="450"
         Background="Transparent"
         WindowStyle="None"
         AllowsTransparency="True"
-        FontFamily="/Fonts/#Barlow Semi Condensed">
+        ResizeMode="CanResizeWithGrip"
+        FontFamily="{StaticResource BarlowRegular}">
 
     <Window.DataContext>
         <viewModel:MainViewModel/>
     </Window.DataContext>
 
-    <Border Background="#272537"
-            CornerRadius="20">
+    <Border Background="{StaticResource DarkBackground1}" CornerRadius="20 20 0 20">
         <Grid>
             <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="200"/>
+                <ColumnDefinition Width="{Binding ElementName=sp_menu, Path=Width}"/>
                 <ColumnDefinition/>
+                <ColumnDefinition Width="{Binding ElementName=sp_player, Path=Width}"/>
             </Grid.ColumnDefinitions>
             <Grid.RowDefinitions>
                 <RowDefinition Height="75"/>
                 <RowDefinition/>
             </Grid.RowDefinitions>
 
-            <TextBlock Text="NoiseCast"
-                       Grid.Column="1"
-                       VerticalAlignment="Center"
-                       HorizontalAlignment="Left"
-                       Foreground="White"
-                       FontSize="22"
-                       Margin="20 0 0 0"/>
-
-            <StackPanel Grid.Row="1">
-                <RadioButton Content="Home"
-                             Height="50"
-                             Foreground="White"
-                             FontSize="14"
-                             Style="{StaticResource MenuButtonStyle}"
-                             IsChecked="True"
-                             Command="{Binding HomeViewCommand}"/>
-                <RadioButton Content="Discovery"
-                             Height="50"
-                             Foreground="White"
-                             FontSize="14"
-                             Style="{StaticResource MenuButtonStyle}"
-                             Command="{Binding DiscoveryViewCommand}"/>
-                <RadioButton Content="Feature"
-                             Height="50"
-                             Foreground="White"
-                             FontSize="14"
-                             Style="{StaticResource MenuButtonStyle}"/>
+            <!-- Application/Window Controls -->
+            <StackPanel Grid.Column="2"
+                        Orientation="Horizontal"
+                        VerticalAlignment="Top"
+                        HorizontalAlignment="Right"
+                        Margin="10">
+                <Button Background="#29CD42" BorderThickness="0"
+                        Style="{StaticResource WindowControlButton}"
+                        Click="MinWindow_Click"
+                        ToolTip="Minimieren"/>
+                <Button Background="#FFC12F" BorderThickness="0"
+                        Style="{StaticResource WindowControlButton}"
+                        Click="MaxWindow_Click"
+                        ToolTip="Maximieren"/>
+                <Button Background="#FF6157" BorderThickness="0"
+                        Style="{StaticResource WindowControlButton}"
+                        Click="CloseApplication_Click"
+                        ToolTip="Schließen"/>
             </StackPanel>
 
-            <TextBox Width="250"
+            <!-- Header/Searchbar -->
+            <TextBlock Text="NoiseCast"
+                       Grid.Column="0" Grid.ColumnSpan="2"
+                       VerticalAlignment="Center"
+                       HorizontalAlignment="Left"
+                       Foreground="{StaticResource DarkFont1}"
+                       FontSize="38"
+                       FontFamily="{StaticResource BarlowSemiBold}"
+                       FontWeight="Bold"
+                       Margin="40 0 0 0"/>
+            <TextBox Grid.Column="1" Grid.ColumnSpan="2"
+                     Width="250"
                      Height="40"
                      VerticalContentAlignment="Center"
                      HorizontalAlignment="Right"
-                     Margin="5"
-                     Grid.Column="1"
+                     Margin="5 5 110 5"
                      Style="{StaticResource SearchBoxStyle}"/>
 
-            <ContentControl Grid.Row="1"
-                            Grid.Column="1"
-                            Margin="10"
-                            Content="{Binding CurrentView}"/>
+            <!-- Menu -->
+            <StackPanel Grid.Row="1" x:Name="sp_menu" Width="200">
+                <RadioButton Content="Your Podcasts"
+                             IsChecked="True"
+                             Style="{StaticResource MenuButtonStyle}"
+                             Command="{Binding YourPodcastsViewCommand}"/>
+                <RadioButton Content="New Episodes"
+                             Style="{StaticResource MenuButtonStyle}"
+                             Command="{Binding NewEpisodesViewCommand}"/>
+                <RadioButton Content="Discover"
+                             Style="{StaticResource MenuButtonStyle}"
+                             Command="{Binding DiscoveryViewCommand}"/>
+                <RadioButton Content="In Progress"
+                             Style="{StaticResource MenuButtonStyle}"
+                             Command="{Binding InProgressViewCommand}"/>
+                <RadioButton Content="Downloads"
+                             Style="{StaticResource MenuButtonStyle}"
+                             Command="{Binding DownloadsViewCommand}"/>
+                <RadioButton Content="Settings"
+                             Style="{StaticResource MenuButtonStyle}"
+                             Command="{Binding SettingsViewCommand}"/>
+            </StackPanel>
+
+            <!-- Content -->
+            <Border Grid.Row="1" Grid.Column="1"
+                    Background="White" CornerRadius="10" Margin="0 0 0 20">
+                <ScrollViewer Margin="5">
+                    <ContentControl Margin="10" Content="{Binding CurrentView}"/>
+                </ScrollViewer>
+            </Border>
+
+            <!-- Player -->
+            <StackPanel Grid.Row="1" Grid.Column="2"
+                        x:Name="sp_player"
+                        Width="250"
+                        Orientation="Vertical">
+            </StackPanel>
         </Grid>
     </Border>
 </Window>

@@ -16,11 +16,11 @@ using System.Windows.Shapes;
 namespace WPFMVVM.MVVM.View
 {
     /// <summary>
-    /// Interaction logic for DiscoveryView.xaml
+    /// Interaction logic for DownloadsView.xaml
     /// </summary>
-    public partial class DiscoveryView : UserControl
+    public partial class DownloadsView : UserControl
     {
-        public DiscoveryView()
+        public DownloadsView()
         {
             InitializeComponent();
         }

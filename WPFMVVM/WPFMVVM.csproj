@@ -7,7 +7,10 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <None Remove="Fonts\BarlowSemiCondensed-Bold.ttf" />
+    <None Remove="Fonts\BarlowSemiCondensed-Italic.ttf" />
     <None Remove="Fonts\BarlowSemiCondensed-Regular.ttf" />
+    <None Remove="Fonts\BarlowSemiCondensed-SemiBold.ttf" />
     <None Remove="Images\man.png" />
   </ItemGroup>
 
@@ -16,7 +19,16 @@
   </ItemGroup>
 
   <ItemGroup>
+    <Resource Include="Fonts\BarlowSemiCondensed-Bold.ttf">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Resource>
+    <Resource Include="Fonts\BarlowSemiCondensed-Italic.ttf">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Resource>
     <Resource Include="Fonts\BarlowSemiCondensed-Regular.ttf">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Resource>
+    <Resource Include="Fonts\BarlowSemiCondensed-SemiBold.ttf">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Resource>
     <Resource Include="Images\man.png" />

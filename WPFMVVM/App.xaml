@@ -8,16 +8,36 @@
     <Application.Resources>
         <ResourceDictionary>
             <ResourceDictionary.MergedDictionaries>
+                <ResourceDictionary Source="/Styles/Fonts.xaml"/>
+                <ResourceDictionary Source="/Styles/Colors.xaml"/>
                 <ResourceDictionary Source="/Styles/RadioButtonStyle.xaml"/>
                 <ResourceDictionary Source="/Styles/TextBoxStyle.xaml"/>
+                <ResourceDictionary Source="/Styles/ScrollbarStyle.xaml"/>
+                <ResourceDictionary Source="/Styles/ButtonStyle.xaml"/>
             </ResourceDictionary.MergedDictionaries>
 
-            <DataTemplate DataType="{x:Type viewModel:HomeViewModel}">
-                <view:HomeView/>
+            <DataTemplate DataType="{x:Type viewModel:YourPodcastsViewModel}">
+                <view:YourPodcastsView/>
             </DataTemplate>
 
-            <DataTemplate DataType="{x:Type viewModel:DiscoveryViewModel}">
-                <view:DiscoveryView/>
+            <DataTemplate DataType="{x:Type viewModel:NewEpisodesViewModel}">
+                <view:NewEpisodesView/>
+            </DataTemplate>
+
+            <DataTemplate DataType="{x:Type viewModel:DiscoverViewModel}">
+                <view:DiscoverView/>
+            </DataTemplate>
+
+            <DataTemplate DataType="{x:Type viewModel:InProgressViewModel}">
+                <view:InProgressView/>
+            </DataTemplate>
+
+            <DataTemplate DataType="{x:Type viewModel:DownloadsViewModel}">
+                <view:DownloadsView/>
+            </DataTemplate>
+
+            <DataTemplate DataType="{x:Type viewModel:SettingsViewModel}">
+                <view:SettingsView/>
             </DataTemplate>
         </ResourceDictionary>
     </Application.Resources>

@@ -4,11 +4,19 @@ namespace WPFMVVM.MVVM.ViewModel
 {
     internal class MainViewModel : ObservableObject
     {
-        public RelayCommand HomeViewCommand { get; set; }
+        public RelayCommand YourPodcastsViewCommand { get; set; }
+        public RelayCommand NewEpisodesViewCommand { get; set; }
         public RelayCommand DiscoveryViewCommand { get; set; }
+        public RelayCommand InProgressViewCommand { get; set; }
+        public RelayCommand DownloadsViewCommand { get; set; }
+        public RelayCommand SettingsViewCommand { get; set; }
 
-        public HomeViewModel HomeVM { get; set; }
-        public DiscoveryViewModel DiscoveryVM { get; set; }
+        public YourPodcastsViewModel YourPodcastsVM { get; set; }
+        public NewEpisodesViewModel NewEpisodesVM { get; set; }
+        public DiscoverViewModel DiscoveryVM { get; set; }
+        public InProgressViewModel InProgressVM { get; set; }
+        public DownloadsViewModel DownloadsVM { get; set; }
+        public SettingsViewModel SettingsVM { get; set; }
 
         private object currentView;
         public object CurrentView
@@ -23,13 +31,21 @@ namespace WPFMVVM.MVVM.ViewModel
 
         public MainViewModel()
         {
-            HomeVM = new HomeViewModel();
-            DiscoveryVM = new DiscoveryViewModel();
+            YourPodcastsVM = new YourPodcastsViewModel();
+            NewEpisodesVM = new NewEpisodesViewModel();
+            DiscoveryVM = new DiscoverViewModel();
+            InProgressVM = new InProgressViewModel();
+            DownloadsVM = new DownloadsViewModel();
+            SettingsVM = new SettingsViewModel();
 
-            CurrentView = HomeVM;
+            CurrentView = YourPodcastsVM;
 
-            HomeViewCommand = new RelayCommand(o => CurrentView = HomeVM);
+            YourPodcastsViewCommand = new RelayCommand(o => CurrentView = YourPodcastsVM);
+            NewEpisodesViewCommand = new RelayCommand(o => CurrentView = NewEpisodesVM);
             DiscoveryViewCommand = new RelayCommand(o => CurrentView = DiscoveryVM);
+            InProgressViewCommand = new RelayCommand(o => CurrentView = InProgressVM);
+            DownloadsViewCommand = new RelayCommand(o => CurrentView = DownloadsVM);
+            SettingsViewCommand = new RelayCommand(o => CurrentView = SettingsVM);
         }
     }
 }

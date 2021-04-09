@@ -1,0 +1,8 @@
+﻿<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+
+    <FontFamily x:Key="BarlowRegular">/Fonts/BarlowSemiCondensed-Regular.ttf#Barlow Semi Condensed</FontFamily>
+    <FontFamily x:Key="BarlowBold">/Fonts/BarlowSemiCondensed-Bold.ttf#Barlow Semi Condensed</FontFamily>
+    <FontFamily x:Key="BarlowItalic">/Fonts/BarlowSemiCondensed-Italic.ttf#Barlow Semi Condensed</FontFamily>
+    <FontFamily x:Key="BarlowSemiBold">/Fonts/BarlowSemiCondensed-SemiBold.ttf#Barlow Semi Condensed</FontFamily>
+</ResourceDictionary>
