@@ -11,7 +11,13 @@
     <None Remove="Fonts\BarlowSemiCondensed-Italic.ttf" />
     <None Remove="Fonts\BarlowSemiCondensed-Regular.ttf" />
     <None Remove="Fonts\BarlowSemiCondensed-SemiBold.ttf" />
+    <None Remove="Fonts\Font Awesome 5 Brands-Regular-400.otf" />
+    <None Remove="Fonts\Font Awesome 5 Free-Regular-400.otf" />
+    <None Remove="Fonts\Font Awesome 5 Free-Solid-900.otf" />
+    <None Remove="Images\hooked.jpg" />
+    <None Remove="Images\lage.png" />
     <None Remove="Images\man.png" />
+    <None Remove="Images\stay.jpg" />
   </ItemGroup>
 
   <ItemGroup>
@@ -31,7 +37,25 @@
     <Resource Include="Fonts\BarlowSemiCondensed-SemiBold.ttf">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Resource>
+    <Resource Include="Fonts\Font Awesome 5 Brands-Regular-400.otf">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Resource>
+    <Resource Include="Fonts\Font Awesome 5 Free-Regular-400.otf">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Resource>
+    <Resource Include="Fonts\Font Awesome 5 Free-Solid-900.otf">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Resource>
+    <Resource Include="Images\hooked.jpg">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Resource>
+    <Resource Include="Images\lage.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Resource>
     <Resource Include="Images\man.png" />
+    <Resource Include="Images\stay.jpg">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Resource>
   </ItemGroup>
 
 </Project>

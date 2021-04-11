@@ -3,21 +3,25 @@
 
     <Style x:Key="WindowControlButton" TargetType="{x:Type Button}">
 
+        <Setter Property="FontFamily" Value="{StaticResource FontAwesomeSolid}"/>
+        <Setter Property="Foreground" Value="{StaticResource DarkBackground1}"/>
+
         <Setter Property="Template">
             <Setter.Value>
                 <ControlTemplate TargetType="{x:Type Button}">
-                    <Grid>
-                        <Ellipse Fill="{TemplateBinding Background}"
-                                 Height="15" Width="15" Margin="5"
-                                 x:Name="theEllipse"/>
+                    <Border CornerRadius="5"
+                            Background="{TemplateBinding Background}"
+                            Height="25" Width="25" Margin="5"
+                            x:Name="border">
                         <ContentPresenter VerticalAlignment="Center" HorizontalAlignment="Center"/>
-                    </Grid>
+                    </Border>
+
                     <ControlTemplate.Triggers>
                         <Trigger Property="IsMouseOver" Value="True">
-                            <Setter Property="Fill" Value="white" TargetName="theEllipse"/>
+                            <Setter Property="Background" Value="white" TargetName="border"/>
                         </Trigger>
                         <Trigger Property="IsPressed" Value="True">
-                            <Setter Property="Fill" Value="Gray" TargetName="theEllipse"/>
+                            <Setter Property="Background" Value="Gray" TargetName="border"/>
                         </Trigger>
                     </ControlTemplate.Triggers>
                 </ControlTemplate>

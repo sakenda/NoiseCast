@@ -5,4 +5,8 @@
     <FontFamily x:Key="BarlowBold">/Fonts/BarlowSemiCondensed-Bold.ttf#Barlow Semi Condensed</FontFamily>
     <FontFamily x:Key="BarlowItalic">/Fonts/BarlowSemiCondensed-Italic.ttf#Barlow Semi Condensed</FontFamily>
     <FontFamily x:Key="BarlowSemiBold">/Fonts/BarlowSemiCondensed-SemiBold.ttf#Barlow Semi Condensed</FontFamily>
+
+    <FontFamily x:Key="FontAwesomeRegular">/Fonts/Font Awesome 5 Free-Regular-400.otf#Font Awesome 5 Free Regular</FontFamily>
+    <FontFamily x:Key="FontAwesomeSolid">/Fonts/Font Awesome 5 Free-Solid-900.otf#Font Awesome 5 Free Solid</FontFamily>
+    <FontFamily x:Key="FontAwesomeBrands">/Fonts/Font Awesome 5 Brands-Regular-400.otf#Font Awesome 5 Brands Regular</FontFamily>
 </ResourceDictionary>
