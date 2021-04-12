@@ -13,21 +13,23 @@
                                 Background="{TemplateBinding Background}"
                                 CornerRadius="10"
                                 Height="40"
-                                Margin="10 0 10 0">
+                                Margin="0 0 10 0">
 
                             <TextBlock Text="{TemplateBinding Content}"
                                        Foreground="{TemplateBinding Foreground}"
-                                       FontSize="{TemplateBinding FontSize}"
+                                       FontFamily="{TemplateBinding FontFamily}"
+                                       FontWeight="{TemplateBinding FontWeight}"
                                        VerticalAlignment="Center"
-                                       Margin="40 0 0 0"/>
+                                       Margin="20 0 0 0"/>
                         </Border>
                     </ControlTemplate>
                 </Setter.Value>
             </Setter>
 
             <Setter Property="Background" Value="Transparent"/>
-            <Setter Property="Foreground" Value="{StaticResource DarkFont2}"/>
-            <Setter Property="FontSize" Value="14"/>
+            <Setter Property="Foreground" Value="{StaticResource DarkFont3}"/>
+            <Setter Property="FontSize" Value="18"/>
+            <Setter Property="FontFamily" Value="{StaticResource BarlowRegular}"/>
             <Setter Property="BorderThickness" Value="0"/>
         </Style.Setters>
 
@@ -35,6 +37,11 @@
             <Trigger Property="IsChecked" Value="True">
                 <Setter Property="Background" Value="{StaticResource DarkBackground2}"/>
                 <Setter Property="Foreground" Value="{StaticResource DarkFont1}"/>
+                <Setter Property="FontFamily" Value="{StaticResource BarlowSemiBold}"/>
+            </Trigger>
+            <Trigger Property="IsMouseOver" Value="True">
+                <Setter Property="Foreground" Value="{StaticResource DarkFont1}"/>
+                <Setter Property="FontFamily" Value="{StaticResource BarlowSemiBold}"/>
             </Trigger>
         </Style.Triggers>
     </Style>
