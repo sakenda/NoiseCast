@@ -21,62 +21,48 @@
         <ListBox Grid.Column="0"
                  x:Name="lb_podcastList"
                  ItemsSource="{Binding PodcastList}"
-                 Width="230"
-                 BorderThickness="0">
-            <ListBoxItem>
+                 Style="{StaticResource ListBoxStyle}"
+                 Width="230">
+            <ListBoxItem Style="{StaticResource PodcastListBoxItem}"/>
+
+
+            <ListBoxItem HorizontalContentAlignment="Stretch">
                 <Grid>
-                    <StackPanel Orientation="Horizontal">
-                        <Border Width="80" Height="80"
-                                Background="{StaticResource NaNGradient}">
-                            <Border.Clip>
-                                <RectangleGeometry RadiusX="10" RadiusY="10" Rect="0,0,80,80"/>
-                            </Border.Clip>
-                            <Image Width="80"
-                                   Height="80"
-                                   Source="/Images/lage.png"/>
-                        </Border>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="{Binding ElementName=im_PodcastImage, Path=Width}"/>
+                        <ColumnDefinition/>
+                    </Grid.ColumnDefinitions>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="auto"/>
+                        <RowDefinition Height="*"/>
+                        <RowDefinition Height="auto"/>
+                    </Grid.RowDefinitions>
+                    
+                    <Border Grid.RowSpan="3"
+                            Width="80" Height="80"
+                            Background="{StaticResource NaNGradient}">
+                        <Border.Clip>
+                            <RectangleGeometry RadiusX="10" RadiusY="10" Rect="0,0,80,80"/>
+                        </Border.Clip>
+                        <Image Width="80"
+                               Height="80"
+                               x:Name="im_PodcastImage"
+                               Source="/Images/hooked.jpg"/>
+                    </Border>
 
-                        <StackPanel Orientation="Vertical" Margin="10 0 0 0">
-                            <TextBlock Text="Lage der Nation"
-                                       FontFamily="{StaticResource BarlowSemiBold}"
-                                       FontSize="16"/>
-                            <TextBlock Text="kuechenstud.io"
-                                       FontFamily="{StaticResource BarlowRegular}"
-                                       FontSize="14"/>
-                        </StackPanel>
-                    </StackPanel>
-
-                    <TextBlock Text="2 hrs ago"
+                    <Border Grid.Column="1"
+                            x:Name="b_PodcastTitel"
+                            CornerRadius="5" HorizontalAlignment="Stretch"
+                            Background="{StaticResource DarkHighlight1}">
+                        <TextBlock Grid.Column="1"
+                               Text="Hooked"
                                FontFamily="{StaticResource BarlowSemiBold}"
-                               FontSize="14"
-                               Foreground="{StaticResource DarkFont3}"
-                               VerticalAlignment="Bottom"
-                               Margin="90 0 0 0"/>
-                </Grid>
-            </ListBoxItem>
+                               FontSize="16"/>
+                    </Border>
 
-            <ListBoxItem>
-                <Grid>
-                    <StackPanel Orientation="Horizontal">
-                        <Border Width="80" Height="80"
-                                Background="{StaticResource NaNGradient}">
-                            <Border.Clip>
-                                <RectangleGeometry RadiusX="10" RadiusY="10" Rect="0,0,80,80"/>
-                            </Border.Clip>
-                            <Image Width="80"
-                                   Height="80"
-                                   Source="/Images/hooked.jpg"/>
-                        </Border>
-
-                        <StackPanel Orientation="Vertical" Margin="10 0 0 0">
-                            <TextBlock Text="Hooked"
-                                       FontFamily="{StaticResource BarlowSemiBold}"
-                                       FontSize="16"/>
-                            <TextBlock Text="Hooked"
+                    <TextBlock Text="Hooked"
                                        FontFamily="{StaticResource BarlowRegular}"
                                        FontSize="14"/>
-                        </StackPanel>
-                    </StackPanel>
 
                     <TextBlock Text="1 days ago"
                                FontFamily="{StaticResource BarlowSemiBold}"
