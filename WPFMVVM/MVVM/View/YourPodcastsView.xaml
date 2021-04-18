@@ -4,15 +4,19 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:local="clr-namespace:WPFMVVM.MVVM.View"
+             xmlns:vm="clr-namespace:WPFMVVM.MVVM.ViewModel"
              x:Class="WPFMVVM.MVVM.View.YourPodcastsView"
              mc:Ignorable="d"
-             d:DesignHeight="450"
-             d:DesignWidth="800"
+             d:DesignHeight="800"
+             d:DesignWidth="1200"
              d:Background="White"
              FontFamily="{StaticResource BarlowRegular}">
+    <UserControl.Resources>
+        <vm:YourPodcastsViewModel x:Key="YourPodcastViewModel"/>
+    </UserControl.Resources>
     <Grid>
         <Grid.ColumnDefinitions>
-            <ColumnDefinition Width="{Binding Width, ElementName=lb_podcastList}"/>
+            <ColumnDefinition Width="280"/>
             <ColumnDefinition Width="Auto"/>
             <ColumnDefinition/>
         </Grid.ColumnDefinitions>
@@ -21,147 +25,78 @@
         <ListBox Grid.Column="0"
                  x:Name="lb_podcastList"
                  ItemsSource="{Binding PodcastList}"
+                 d:DataContext="{d:DesignInstance IsDesignTimeCreatable=True, Type=vm:YourPodcastsViewModel}"
+                 SelectedIndex="0"
+                 Width="280"
+                 Margin="0 -5 0 0"
                  Style="{StaticResource ListBoxStyle}"
-                 Width="230">
-            <ListBoxItem Style="{StaticResource PodcastListBoxItem}"/>
-
-
-            <ListBoxItem HorizontalContentAlignment="Stretch">
-                <Grid>
-                    <Grid.ColumnDefinitions>
-                        <ColumnDefinition Width="{Binding ElementName=im_PodcastImage, Path=Width}"/>
-                        <ColumnDefinition/>
-                    </Grid.ColumnDefinitions>
-                    <Grid.RowDefinitions>
-                        <RowDefinition Height="auto"/>
-                        <RowDefinition Height="*"/>
-                        <RowDefinition Height="auto"/>
-                    </Grid.RowDefinitions>
-                    
-                    <Border Grid.RowSpan="3"
-                            Width="80" Height="80"
-                            Background="{StaticResource NaNGradient}">
-                        <Border.Clip>
-                            <RectangleGeometry RadiusX="10" RadiusY="10" Rect="0,0,80,80"/>
-                        </Border.Clip>
-                        <Image Width="80"
-                               Height="80"
-                               x:Name="im_PodcastImage"
-                               Source="/Images/hooked.jpg"/>
-                    </Border>
-
-                    <Border Grid.Column="1"
-                            x:Name="b_PodcastTitel"
-                            CornerRadius="5" HorizontalAlignment="Stretch"
-                            Background="{StaticResource DarkHighlight1}">
-                        <TextBlock Grid.Column="1"
-                               Text="Hooked"
-                               FontFamily="{StaticResource BarlowSemiBold}"
-                               FontSize="16"/>
-                    </Border>
-
-                    <TextBlock Text="Hooked"
-                                       FontFamily="{StaticResource BarlowRegular}"
-                                       FontSize="14"/>
-
-                    <TextBlock Text="1 days ago"
-                               FontFamily="{StaticResource BarlowSemiBold}"
-                               FontSize="14"
-                               Foreground="{StaticResource DarkFont3}"
-                               VerticalAlignment="Bottom"
-                               Margin="90 0 0 0"/>
-                </Grid>
-            </ListBoxItem>
-
-            <ListBoxItem>
-                <Grid>
-                    <StackPanel Orientation="Horizontal">
-                        <Border Width="80" Height="80"
-                                Background="{StaticResource NaNGradient}">
-                            <Border.Clip>
-                                <RectangleGeometry RadiusX="10" RadiusY="10" Rect="0,0,80,80"/>
-                            </Border.Clip>
-                            <Image Width="80"
-                                   Height="80"
-                                   Source="/Images/stay.jpg"/>
-                        </Border>
-
-                        <StackPanel Orientation="Vertical" Margin="10 0 0 0">
-                            <TextBlock Text="Stay Forever"
-                                       FontFamily="{StaticResource BarlowSemiBold}"
-                                       FontSize="16"/>
-                            <TextBlock Text="Stay Forever"
-                                       FontFamily="{StaticResource BarlowRegular}"
-                                       FontSize="14"/>
-                        </StackPanel>
-                    </StackPanel>
-
-                    <TextBlock Text="1 week ago"
-                               FontFamily="{StaticResource BarlowSemiBold}"
-                               FontSize="14"
-                               Foreground="{StaticResource DarkFont3}"
-                               VerticalAlignment="Bottom"
-                               Margin="90 0 0 0"/>
-                </Grid>
-            </ListBoxItem>
+                 ItemContainerStyle="{StaticResource PodcastListBoxItem}">
         </ListBox>
 
         <Rectangle Grid.Column="1" Fill="{StaticResource DarkFont2}"
                    Width="1" Margin="10 0"/>
 
         <!-- Podcast Detail -->
-        <Grid Grid.Column="2">
+        <Grid Grid.Column="2"
+              HorizontalAlignment="Left"
+              DataContext="{Binding ElementName=lb_podcastList, Path=SelectedItem}">
             <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="{Binding Width, ElementName=b_podcast}"/>
+                <ColumnDefinition Width="{Binding ElementName=b_podcast, Path=Width}"/>
                 <ColumnDefinition Width="*"/>
                 <ColumnDefinition Width="{Binding ElementName=btn_unsub, Path=Width}"/>
             </Grid.ColumnDefinitions>
             <Grid.RowDefinitions>
                 <RowDefinition Height="Auto"/>
                 <RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto"/>
                 <RowDefinition Height="*"/>
             </Grid.RowDefinitions>
 
             <!-- Podcast image -->
-            <Border Grid.Column="0" Grid.Row="0" Grid.RowSpan="4"
+            <Border Grid.Column="0" Grid.Row="0" Grid.RowSpan="2"
                     x:Name="b_podcast"
                     Width="120" Height="120"
-                    Background="{StaticResource NaNGradient}"
-                    VerticalAlignment="Top">
+                    Background="{StaticResource NaNGradient}">
                 <Border.Clip>
                     <RectangleGeometry RadiusX="10" RadiusY="10" Rect="0,0,120,120"/>
                 </Border.Clip>
                 <Image Width="{Binding Width, ElementName=b_podcast}"
-                           Height="{Binding Width, ElementName=b_podcast}"
-                           Source="/Images/lage.png"/>
+                       Height="{Binding Width, ElementName=b_podcast}"
+                       Source="{Binding Image}"
+                       d:Source="/Images/hooked.jpg"/>
             </Border>
 
             <!-- Podcast Info -->
             <StackPanel Grid.Row="0" Grid.Column="1"
                         Orientation="Vertical"
                         Height="{Binding Height, ElementName=b_podcast}"
+                        VerticalAlignment="Top"
                         Margin="10 0 0 0">
 
-                <TextBlock Text="Die Lage der Nation"
+                <TextBlock Text="{Binding Titel}"
+                           d:Text="Hooked"
                            FontFamily="{StaticResource BarlowBold}"
                            FontSize="28"/>
-                <TextBlock Text="kuechenstud.io"
+                <TextBlock Text="{Binding Publisher}"
+                           d:Text="Hooked"
                            FontFamily="{StaticResource BarlowSemiBold}"
                            FontSize="20"/>
                 <TextBlock FontFamily="{StaticResource BarlowRegular}"
                            FontSize="18">
-                    <Hyperlink NavigateUri="www.lagedernation.de">
-                        <TextBlock Text="lagedernation.de"/>
+                    <Hyperlink NavigateUri="{Binding Website}">
+                        <TextBlock Text="{Binding Website}" d:Text="http:\\www.hooked.de\"/>
                     </Hyperlink>
                 </TextBlock>
             </StackPanel>
 
-            <!-- Episodes / Played tracker -->
-            <StackPanel Grid.Column="1"
+            <!-- Episodes / Played Counter -->
+            <StackPanel Grid.Column="1" Grid.Row="1"
                         Orientation="Horizontal"
                         VerticalAlignment="Bottom"
                         Margin="10 0 0 0">
-                <TextBlock Text="121 episodes"
+                <TextBlock Text="{Binding EpisodesCount, StringFormat={}{0} episodes}"
+                           d:Text="158 episodes"
                            Foreground="{StaticResource DarkFont3}"
                            FontFamily="{StaticResource BarlowSemiBold}"
                            FontSize="16"
@@ -173,7 +108,7 @@
             </StackPanel>
 
             <!-- Unsubscribe Button -->
-            <Button Grid.Column="2"
+            <Button Grid.Column="2" Grid.Row="0"
                     Content="Unsubscribe"
                     x:Name="btn_unsub"
                     Style="{StaticResource UnsubButton}"
@@ -181,21 +116,19 @@
                     VerticalAlignment="Top"/>
 
             <!-- Podcast Beschreibung -->
-            <Grid Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="3"
-                   Margin="0 10" MaxHeight="90">
-                <ScrollViewer HorizontalScrollBarVisibility="Disabled">
-                    <TextBlock Text="Jede Woche lassen Philip Banse und Ulf Buermeyer die politische Woche Revue passieren und kommentieren die Lage der Nation. Jede Woche lassen Philip Banse und Ulf Buermeyer die politische Woche Revue passieren und kommentieren die Lage der Nation. Jede Woche lassen Philip Banse und Ulf Buermeyer die politische Woche Revue passieren und kommentieren die Lage der Nation. Jede Woche lassen Philip Banse und Ulf Buermeyer die politische Woche Revue passieren und kommentieren die Lage der Nation. Jede Woche lassen Philip Banse und Ulf Buermeyer die politische Woche Revue passieren und kommentieren die Lage der Nation. Jede Woche lassen Philip Banse und Ulf Buermeyer die politische Woche Revue passieren und kommentieren die Lage der Nation. Jede Woche lassen Philip Banse und Ulf Buermeyer die politische Woche Revue passieren und kommentieren die Lage der Nation. Jede Woche lassen Philip Banse und Ulf Buermeyer die politische Woche Revue passieren und kommentieren die Lage der Nation. Jede Woche lassen Philip Banse und Ulf Buermeyer die politische Woche Revue passieren und kommentieren die Lage der Nation. Jede Woche lassen Philip Banse und Ulf Buermeyer die politische Woche Revue passieren und kommentieren die Lage der Nation. Jede Woche lassen Philip Banse und Ulf Buermeyer die politische Woche Revue passieren und kommentieren die Lage der Nation. Jede Woche lassen Philip Banse und Ulf Buermeyer die politische Woche Revue passieren und kommentieren die Lage der Nation. Jede Woche lassen Philip Banse und Ulf Buermeyer die politische Woche Revue passieren und kommentieren die Lage der Nation. Jede Woche lassen Philip Banse und Ulf Buermeyer die politische Woche Revue passieren und kommentieren die Lage der Nation. Jede Woche lassen Philip Banse und Ulf Buermeyer die politische Woche Revue passieren und kommentieren die Lage der Nation. Jede Woche lassen Philip Banse und Ulf Buermeyer die politische Woche Revue passieren und kommentieren die Lage der Nation."
+            <Grid Grid.Row="3" Grid.Column="0" Grid.ColumnSpan="3"
+                  Margin="0 10"
+                  MaxHeight="90">
+                <ScrollViewer HorizontalScrollBarVisibility="Disabled"
+                              VerticalAlignment="Top">
+                    <TextBlock Text="{Binding Description}"
+                               d:Text="Jede Woche Montag erscheint mit Hooked FM unser Podcast rund um das Thema Videospiele. Und manchmal auch Serien. Und Filme. Und überhaupt."
                                TextWrapping="Wrap"
                                FontSize="18"/>
                 </ScrollViewer>
             </Grid>
 
-            <ListView Grid.Row="2" Grid.ColumnSpan="3">
-                <ListViewItem Content="test1"/>
-                <ListViewItem Content="test2"/>
-                <ListViewItem Content="test3"/>
-                <ListViewItem Content="test4"/>
-            </ListView>
+            <ListView Grid.Row="4" Grid.ColumnSpan="3" ItemsSource="{Binding EpisodesList}"/>
         </Grid>
     </Grid>
 </UserControl>

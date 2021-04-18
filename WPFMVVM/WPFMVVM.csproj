@@ -21,10 +21,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="MVVM\Core\" />
-  </ItemGroup>
-
-  <ItemGroup>
     <Resource Include="Fonts\BarlowSemiCondensed-Bold.ttf">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Resource>
