@@ -32,7 +32,7 @@
                             BorderThickness="{TemplateBinding BorderThickness}"
                             CornerRadius="10" Margin="0 5 0 5">
                         <Grid x:Name="gr_ListBoxItem" Margin="0"
-                              Height="100"
+                              Height="80"
                               VerticalAlignment="Center">
                             <Grid.ColumnDefinitions>
                                 <ColumnDefinition Width="{Binding ElementName=im_PodcastImage, Path=Width}"/>
@@ -48,13 +48,12 @@
                             </Grid.RowDefinitions>
 
                             <Border Grid.RowSpan="6"
-                                    Width="100" Height="100"
-                                    Background="{StaticResource NaNGradient}">
+                                    Width="80" Height="80">
                                 <Border.Clip>
-                                    <RectangleGeometry RadiusX="10" RadiusY="10" Rect="0,0,100,100"/>
+                                    <RectangleGeometry RadiusX="10" RadiusY="10" Rect="0,0,80,80"/>
                                 </Border.Clip>
-                                <Image Width="100"
-                                       Height="100"
+                                <Image Width="80"
+                                       Height="80"
                                        x:Name="im_PodcastImage"
                                        Source="{Binding Image}"/>
                             </Border>
@@ -117,7 +116,7 @@
                             <Setter Property="Foreground" Value="Black"/>
                             <Setter Property="Background" Value="{StaticResource Gray1}"/>
                             <Setter TargetName="b_ListBoxItem" Property="BorderThickness" Value="0 0 5 0"/>
-                            <Setter TargetName="b_ListBoxItem" Property="BorderBrush" Value="{StaticResource DarkHighlight4}"/>
+                            <Setter TargetName="b_ListBoxItem" Property="BorderBrush" Value="{StaticResource DarkHighlight0}"/>
                             <Setter TargetName="gr_ListBoxItem" Property="Margin" Value="20 0 0 0"/>
                             <Trigger.EnterActions>
                                 <BeginStoryboard>
@@ -150,6 +149,89 @@
                                     </Storyboard>
                                 </BeginStoryboard>
                             </Trigger.ExitActions>
+                        </Trigger>
+                    </ControlTemplate.Triggers>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+
+    <Style x:Key="EpisodesListBoxItem" TargetType="{x:Type ListBoxItem}">
+        <Setter Property="Background" Value="Transparent"/>
+        <Setter Property="Foreground" Value="{StaticResource Gray3}"/>
+        <Setter Property="BorderThickness" Value="0"/>
+        <Setter Property="HorizontalContentAlignment" Value="Stretch"/>
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="{x:Type ListBoxItem}">
+                    <Border Background="{TemplateBinding Background}"
+                            BorderThickness="{TemplateBinding BorderThickness}"
+                            CornerRadius="10" Margin="0 5 0 5">
+                        <Grid x:Name="gr_ListBoxItem" Margin="0 5"
+                              VerticalAlignment="Center">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="50"/>
+                                <ColumnDefinition/>
+                                <ColumnDefinition Width="60"/>
+                                <ColumnDefinition Width="80"/>
+                            </Grid.ColumnDefinitions>
+
+                            <Button Grid.Column="0"
+                                    x:Name="b_play"
+                                    Command=""
+                                    Content="&#xf144;"
+                                    Style="{StaticResource EpisodePlayerButton}"
+                                    VerticalAlignment="Top"
+                                    FontSize="30"/>
+
+                            <StackPanel Grid.Column="1"
+                                        VerticalAlignment="Center"
+                                        Margin="10 0">
+                                <TextBlock Text="{Binding Titel}"
+                                           TextWrapping="WrapWithOverflow"
+                                           TextTrimming="WordEllipsis"
+                                           FontFamily="{StaticResource BarlowSemiBold}"
+                                           FontSize="18"/>
+
+                                <ScrollViewer x:Name="sv_desc"
+                                              HorizontalScrollBarVisibility="Disabled"
+                                              VerticalScrollBarVisibility="Disabled"
+                                              CanContentScroll="True"
+                                              MaxHeight="100">
+                                    <TextBlock Text="{Binding Description}"
+                                               x:Name="tb_desc"
+                                               TextWrapping="WrapWithOverflow"
+                                               TextTrimming="WordEllipsis"
+                                               MaxHeight="15"
+                                               FontSize="14"/>
+                                </ScrollViewer>
+                            </StackPanel>
+
+                            <TextBlock Grid.Column="2"
+                                       Text=" 45 min"
+                                       FontSize="14"
+                                       VerticalAlignment="Top"/>
+
+                            <TextBlock Grid.Column="3"
+                                       Text="{Binding Release, StringFormat=dd.MM.yyyy}"
+                                       FontSize="14"
+                                       VerticalAlignment="Top"/>
+                        </Grid>
+                    </Border>
+
+                    <ControlTemplate.Triggers>
+                        <Trigger Property="IsMouseOver" Value="True">
+                            <Setter Property="Foreground" Value="Black"/>
+                            <Setter Property="Background" Value="{StaticResource Gray1}"/>
+                        </Trigger>
+
+                        <Trigger Property="IsSelected" Value="True">
+                            <Setter Property="Foreground" Value="Black"/>
+                            <Setter Property="Background" Value="{StaticResource Gray1}"/>
+                            <Setter TargetName="tb_desc" Property="MaxHeight" Value="Infinity"/>
+                            <Setter TargetName="tb_desc" Property="TextBlock.TextTrimming" Value="None"/>
+                            <Setter TargetName="sv_desc" Property="ScrollViewer.VerticalScrollBarVisibility" Value="Visible"/>
+                            <Setter TargetName="b_play" Property="Button.Foreground" Value="{StaticResource DarkHighlight0}"/>
                         </Trigger>
                     </ControlTemplate.Triggers>
                 </ControlTemplate>

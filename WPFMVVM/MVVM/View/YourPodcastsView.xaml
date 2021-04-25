@@ -16,7 +16,7 @@
     </UserControl.Resources>
     <Grid>
         <Grid.ColumnDefinitions>
-            <ColumnDefinition Width="280"/>
+            <ColumnDefinition Width="{Binding ElementName=lb_podcastList, Path=ActualWidth}"/>
             <ColumnDefinition Width="Auto"/>
             <ColumnDefinition/>
         </Grid.ColumnDefinitions>
@@ -25,9 +25,9 @@
         <ListBox Grid.Column="0"
                  x:Name="lb_podcastList"
                  ItemsSource="{Binding PodcastList}"
-                 d:DataContext="{d:DesignInstance IsDesignTimeCreatable=True, Type=vm:YourPodcastsViewModel}"
+                 d:DataContext="{d:DesignInstance Type=vm:YourPodcastsViewModel, IsDesignTimeCreatable=True}"
                  SelectedIndex="0"
-                 Width="280"
+                 Width="250"
                  Margin="0 -5 0 0"
                  Style="{StaticResource ListBoxStyle}"
                  ItemContainerStyle="{StaticResource PodcastListBoxItem}">
@@ -56,10 +56,10 @@
             <!-- Podcast image -->
             <Border Grid.Column="0" Grid.Row="0" Grid.RowSpan="2"
                     x:Name="b_podcast"
-                    Width="120" Height="120"
-                    Background="{StaticResource NaNGradient}">
+                    Width="150" Height="150"
+                    VerticalAlignment="Top">
                 <Border.Clip>
-                    <RectangleGeometry RadiusX="10" RadiusY="10" Rect="0,0,120,120"/>
+                    <RectangleGeometry RadiusX="10" RadiusY="10" Rect="0,0,150,150"/>
                 </Border.Clip>
                 <Image Width="{Binding Width, ElementName=b_podcast}"
                        Height="{Binding Width, ElementName=b_podcast}"
@@ -70,7 +70,6 @@
             <!-- Podcast Info -->
             <StackPanel Grid.Row="0" Grid.Column="1"
                         Orientation="Vertical"
-                        Height="{Binding Height, ElementName=b_podcast}"
                         VerticalAlignment="Top"
                         Margin="10 0 0 0">
 
@@ -128,7 +127,10 @@
                 </ScrollViewer>
             </Grid>
 
-            <ListView Grid.Row="4" Grid.ColumnSpan="3" ItemsSource="{Binding EpisodesList}"/>
+            <ListBox Grid.Row="4" Grid.ColumnSpan="3"
+                     ItemsSource="{Binding EpisodesList}"
+                     Style="{StaticResource ListBoxStyle}"
+                     ItemContainerStyle="{StaticResource EpisodesListBoxItem}"/>
         </Grid>
     </Grid>
 </UserControl>

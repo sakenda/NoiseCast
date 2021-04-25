@@ -5,7 +5,7 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:local="clr-namespace:WPFMVVM.MVVM.View"
              mc:Ignorable="d"
-             d:DesignHeight="700"
+             Height="825"
              Width="280"
              FontFamily="{StaticResource BarlowRegular}"
              x:Name="main">
@@ -13,12 +13,14 @@
 
         <Grid.RowDefinitions>
             <RowDefinition Height="{Binding ElementName=main, Path=ActualWidth}"/>
-            <RowDefinition Height="*"/>
+            <RowDefinition Height="{Binding ElementName=sp_episodeInfo, Path=Height}"/>
+            <RowDefinition/>
             <RowDefinition Height="{Binding ElementName=sp_player, Path=Height}"/>
         </Grid.RowDefinitions>
 
         <!-- Podcast/Episode Image -->
-        <Border Grid.Row="0" Background="{StaticResource NaNGradient}">
+        <Border Grid.Row="0"
+                Background="{StaticResource NaNGradient}">
             <Border.Clip>
                 <RectangleGeometry RadiusX="10"
                                    RadiusY="10"
@@ -29,28 +31,38 @@
         </Border>
 
         <!-- EpisodeInfo's -->
-        <ScrollViewer Grid.Row="1" HorizontalScrollBarVisibility="Hidden" Margin="0 0 0 0">
-            <StackPanel Grid.Row="1"
-                        x:Name="sp_episodeInfo"
-                        Orientation="Vertical">
-                <TextBlock Text="Lage der Nation - der Politik-Podcast aus Berlin"
-                           FontSize="16"
-                           Width="{Binding ElementName=main, Path=ActualWidth}"
-                           FontFamily="{StaticResource BarlowSemiBold}"
-                           Foreground="{StaticResource DarkFont2}"
-                           Margin="0 5"/>
-                <TextBlock Text="Spahns Spenden-Dinner, Ukraine-Konflikt, Brückenlockdown und Pilotprojekte, K-Frage in der Union, digitaler Impfausweis"
-                           TextWrapping="WrapWithOverflow"
-                           FontSize="24"
-                           Width="{Binding ElementName=main, Path=ActualWidth}"
-                           Foreground="{StaticResource DarkFont1}"
-                           Margin="0 5"/>
-                <TextBlock Text="Begrüßung Website Lage Plus MapAlarmNG for Mac Beta Testing (kicks-apps.com) Corona-Lage Kai Kupferschmidt (twitter) Yes, we can! Warum wir die Pandemie in den Griff bekommen werden – und zwar sehr bald (STERN PLUS) Föderale Fairness: 8-Punkte-Plan für gleichwertige Lebensverhältnisse bis 2025 (Fraktion DIE LINKE. im Bundestag) Buchungsboom für Mallorca: Bundesregierung prüft Verbot von Auslandsurlaub (FAZ.NET) Kritik an Datenschutz: Bitkom fordert Zwangsnutzung von Corona-Apps – (Golem.de) Bitkom zu den Ergebnissen des Corona-Gipfels (Bitkom e.V.) Kritik an Polizeieinsatz bei Corona-Demo (Süddeutsche.de) Verheerendes Signal (Süddeutsche.de) Jakob Schlandt (twitter)"
-                           TextWrapping="WrapWithOverflow"
-                           Width="{Binding ElementName=main, Path=ActualWidth}"
-                           FontSize="14"
-                           Foreground="{StaticResource DarkFont1}"/>
-            </StackPanel>
+        <StackPanel Grid.Row="1"
+                    x:Name="sp_episodeInfo"
+                    MaxHeight="110"
+                    Orientation="Vertical"
+                    VerticalAlignment="Top"
+                    Margin="0 0 0 10">
+            <TextBlock Text="Lage der Nation - der Politik-Podcast aus Berlin"
+                       TextWrapping="NoWrap"
+                       TextTrimming="WordEllipsis"
+                       FontSize="16"
+                       HorizontalAlignment="Left"
+                       FontFamily="{StaticResource BarlowSemiBold}"
+                       Foreground="{StaticResource DarkFont2}"/>
+            <TextBlock Text="Spahns Spenden-Dinner, Ukraine-Konflikt, Brückenlockdown und Pilotprojekte, K-Frage in der Union, digitaler Impfausweis"
+                       TextWrapping="WrapWithOverflow"
+                       TextTrimming="WordEllipsis"
+                       FontSize="24"
+                       HorizontalAlignment="Left"
+                       Foreground="{StaticResource DarkFont1}"/>
+        </StackPanel>
+
+        <!-- EpisodeDescription -->
+        <ScrollViewer Grid.Row="2"
+                      Name="sc_info"
+                      HorizontalScrollBarVisibility="Hidden">
+            <TextBlock Text="Begrüßung Website Lage Plus MapAlarmNG for Mac Beta Testing (kicks-apps.com) Corona-Lage Kai Kupferschmidt (twitter) Yes, we can! Warum wir die Pandemie in den Griff bekommen werden – und zwar sehr bald (STERN PLUS) Föderale Fairness: 8-Punkte-Plan für gleichwertige Lebensverhältnisse bis 2025 (Fraktion DIE LINKE. im Bundestag) Buchungsboom für Mallorca: Bundesregierung prüft Verbot von Auslandsurlaub (FAZ.NET) Kritik an Datenschutz: Bitkom fordert Zwangsnutzung von Corona-Apps – (Golem.de) Bitkom zu den Ergebnissen des Corona-Gipfels (Bitkom e.V.) Kritik an Polizeieinsatz bei Corona-Demo (Süddeutsche.de) Verheerendes Signal (Süddeutsche.de) Jakob Schlandt (twitter)Begrüßung Website Lage Plus MapAlarmNG for Mac Beta Testing (kicks-apps.com) Corona-Lage Kai Kupferschmidt (twitter) Yes, we can! Warum wir die Pandemie in den Griff bekommen werden – und zwar sehr bald (STERN PLUS) Föderale Fairness: 8-Punkte-Plan für gleichwertige Lebensverhältnisse bis 2025 (Fraktion DIE LINKE. im Bundestag) Buchungsboom für Mallorca: Bundesregierung prüft Verbot von Auslandsurlaub (FAZ.NET) Kritik an Datenschutz: Bitkom fordert Zwangsnutzung von Corona-Apps – (Golem.de) Bitkom zu den Ergebnissen des Corona-Gipfels (Bitkom e.V.) Kritik an Polizeieinsatz bei Corona-Demo (Süddeutsche.de) Verheerendes Signal (Süddeutsche.de) Jakob Schlandt (twitter)"
+                       TextWrapping="WrapWithOverflow"
+                       TextTrimming="WordEllipsis"
+                       Width="{Binding ElementName=sc_info, Path=ViewportWidth}"
+                       HorizontalAlignment="Left"
+                       FontSize="14"
+                       Foreground="{StaticResource DarkFont1}"/>
         </ScrollViewer>
 
         <!-- PlayerControls -->

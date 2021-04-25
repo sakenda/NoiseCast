@@ -4,6 +4,7 @@
     <!-- #3573EE -->
     <SolidColorBrush x:Key="DarkBackground1" Color="#283246"/>
     <SolidColorBrush x:Key="DarkBackground2" Color="#1B1B1B"/>
+    <SolidColorBrush x:Key="DarkHighlight0" Color="#3573EE"/>
     <SolidColorBrush x:Key="DarkHighlight1" Color="#5AC2FF"/>
     <SolidColorBrush x:Key="DarkHighlight2" Color="#2D4C89"/>
     <SolidColorBrush x:Key="DarkHighlight3" Color="#EC0000"/>
@@ -21,6 +22,7 @@
 
     <Color x:Key="Color_DarkBackground1">#283246</Color>
     <Color x:Key="Color_DarkBackground2">#1B1B1B</Color>
+    <Color x:Key="Color_DarkHighlight0">#3573EE</Color>
     <Color x:Key="Color_DarkHighlight1">#5AC2FF</Color>
     <Color x:Key="Color_DarkHighlight2">#2D4C89</Color>
     <Color x:Key="Color_DarkHighlight3">#EC0000</Color>
@@ -46,5 +48,5 @@
         <GradientStop Color="#B90000" Offset="1.0"/>
     </LinearGradientBrush>
 
-    <DropShadowEffect x:Key="DropShadow" BlurRadius="4" Direction="330" Color="Black" ShadowDepth="5" Opacity="0.5"/>
+    <DropShadowEffect x:Key="DropShadow" BlurRadius="3" Direction="330" Color="Black" ShadowDepth="1.5" Opacity="0.5"/>
 </ResourceDictionary>
