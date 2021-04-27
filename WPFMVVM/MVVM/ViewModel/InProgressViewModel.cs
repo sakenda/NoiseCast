@@ -7,7 +7,7 @@ using WPFMVVM.Core;
 
 namespace WPFMVVM.MVVM.ViewModel
 {
-    internal class InProgressViewModel : ObservableObject
+    public class InProgressViewModel : ObservableObject
     {
     }
 }

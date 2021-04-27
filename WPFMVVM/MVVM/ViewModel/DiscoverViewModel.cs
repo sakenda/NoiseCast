@@ -7,7 +7,7 @@ using WPFMVVM.Core;
 
 namespace WPFMVVM.MVVM.ViewModel
 {
-    internal class DiscoverViewModel : ObservableObject
+    public class DiscoverViewModel : ObservableObject
     {
     }
 }

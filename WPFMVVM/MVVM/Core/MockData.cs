@@ -3,7 +3,7 @@ using System.Collections.ObjectModel;
 
 namespace WPFMVVM.MVVM.Core
 {
-    internal static class MockData
+    public static class MockData
     {
         public static ObservableCollection<Podcast> GetPodcastMockData()
         {

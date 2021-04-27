@@ -3,7 +3,7 @@ using System.Windows.Input;
 
 namespace WPFMVVM.Core
 {
-    internal class RelayCommand : ICommand
+    public class RelayCommand : ICommand
     {
         private Action<object> execute;
         private Func<object, bool> canExecute;

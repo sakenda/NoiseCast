@@ -7,7 +7,7 @@ using WPFMVVM.Core;
 
 namespace WPFMVVM.MVVM.ViewModel
 {
-    internal class DownloadsViewModel : ObservableObject
+    public class DownloadsViewModel : ObservableObject
     {
     }
 }

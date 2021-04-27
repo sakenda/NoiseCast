@@ -1,4 +1,6 @@
 ﻿<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+                    xmlns:feed="clr-namespace:CodeHollow.FeedReader.Feeds;assembly=CodeHollow.FeedReader"
+                    xmlns:vm="clr-namespace:WPFMVVM.MVVM.ViewModel"
                     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
 
     <Style x:Key="ListBoxStyle" TargetType="{x:Type ListBox}">
@@ -52,35 +54,35 @@
                                 <Border.Clip>
                                     <RectangleGeometry RadiusX="10" RadiusY="10" Rect="0,0,80,80"/>
                                 </Border.Clip>
+
                                 <Image Width="80"
                                        Height="80"
                                        x:Name="im_PodcastImage"
-                                       Source="{Binding Image}"/>
+                                       Source="{Binding Image.Url}"/>
                             </Border>
 
                             <TextBlock Grid.Column="1" Grid.Row="2"
-                                       Text="{Binding Titel}"
-                                       x:Name="tb_PodcastTitel"
+                                       Text="{Binding Title}"
+                                       TextTrimming="WordEllipsis"
                                        Margin="5 0 0 0"
                                        FontFamily="{StaticResource BarlowSemiBold}"
                                        FontSize="16"/>
 
                             <TextBlock Grid.Column="1" Grid.Row="3"
-                                       Text="{Binding Publisher}"
-                                       x:Name="tb_PodcastPublisher"
+                                       Text="{Binding Copyright}"
+                                       TextTrimming="WordEllipsis"
                                        Margin="5 0 0 0"
-                                       VerticalAlignment="Bottom"
+                                       VerticalAlignment="Top"
                                        FontFamily="{StaticResource BarlowRegular}"
                                        FontSize="14"/>
 
                             <TextBlock Grid.Column="1" Grid.Row="4"
-                                       Text="{Binding LastUpdated, StringFormat=dd.MM.yyyy - HH:mm}"
-                                       x:Name="tb_PodcastLastUpdated"
+                                       Text="{Binding LastBuildDate, StringFormat=dd.MM.yy - HH:mm}"
+                                       Foreground="{StaticResource DarkFont3}"
                                        Margin="5 0 0 0"
                                        VerticalAlignment="Bottom"
                                        FontFamily="{StaticResource BarlowSemiBold}"
-                                       FontSize="14"
-                                       Foreground="{StaticResource DarkFont3}"/>
+                                       FontSize="14"/>
                         </Grid>
                     </Border>
 
@@ -175,37 +177,27 @@
                                 <ColumnDefinition Width="60"/>
                                 <ColumnDefinition Width="80"/>
                             </Grid.ColumnDefinitions>
+                            <Grid.RowDefinitions>
+                                <RowDefinition/>
+                                <RowDefinition/>
+                            </Grid.RowDefinitions>
 
-                            <Button Grid.Column="0"
+                            <Button Grid.Column="0" Grid.RowSpan="2"
                                     x:Name="b_play"
-                                    Command=""
+                                    Command="{Binding Parent.BindingContext.PlayCommand}"
                                     Content="&#xf144;"
                                     Style="{StaticResource EpisodePlayerButton}"
                                     VerticalAlignment="Top"
                                     FontSize="30"/>
 
-                            <StackPanel Grid.Column="1"
-                                        VerticalAlignment="Center"
-                                        Margin="10 0">
-                                <TextBlock Text="{Binding Titel}"
-                                           TextWrapping="WrapWithOverflow"
-                                           TextTrimming="WordEllipsis"
-                                           FontFamily="{StaticResource BarlowSemiBold}"
-                                           FontSize="18"/>
-
-                                <ScrollViewer x:Name="sv_desc"
-                                              HorizontalScrollBarVisibility="Disabled"
-                                              VerticalScrollBarVisibility="Disabled"
-                                              CanContentScroll="True"
-                                              MaxHeight="100">
-                                    <TextBlock Text="{Binding Description}"
-                                               x:Name="tb_desc"
-                                               TextWrapping="WrapWithOverflow"
-                                               TextTrimming="WordEllipsis"
-                                               MaxHeight="15"
-                                               FontSize="14"/>
-                                </ScrollViewer>
-                            </StackPanel>
+                            <TextBlock Grid.Column="1"
+                                       Text="{Binding Title}"
+                                       TextWrapping="WrapWithOverflow"
+                                       TextTrimming="WordEllipsis"
+                                       FontFamily="{StaticResource BarlowSemiBold}"
+                                       FontSize="18"
+                                       VerticalAlignment="Center"
+                                       Margin="10 0"/>
 
                             <TextBlock Grid.Column="2"
                                        Text=" 45 min"
@@ -213,9 +205,25 @@
                                        VerticalAlignment="Top"/>
 
                             <TextBlock Grid.Column="3"
-                                       Text="{Binding Release, StringFormat=dd.MM.yyyy}"
+                                       Text="{Binding PublishingDate, StringFormat=dd.MM.yyyy}"
                                        FontSize="14"
                                        VerticalAlignment="Top"/>
+
+                            <ScrollViewer Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="4"
+                                          x:Name="sv_desc"
+                                          IsDeferredScrollingEnabled="True"
+                                          HorizontalScrollBarVisibility="Disabled"
+                                          VerticalScrollBarVisibility="Disabled"
+                                          CanContentScroll="False"
+                                          MaxHeight="100"
+                                          Margin="10 10">
+                                <TextBlock Text="{Binding Description}"
+                                           x:Name="tb_desc"
+                                           TextWrapping="WrapWithOverflow"
+                                           TextTrimming="WordEllipsis"
+                                           MaxHeight="15"
+                                           FontSize="14"/>
+                            </ScrollViewer>
                         </Grid>
                     </Border>
 

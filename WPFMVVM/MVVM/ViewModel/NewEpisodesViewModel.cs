@@ -7,7 +7,7 @@ using WPFMVVM.Core;
 
 namespace WPFMVVM.MVVM.ViewModel
 {
-    internal class NewEpisodesViewModel : ObservableObject
+    public class NewEpisodesViewModel : ObservableObject
     {
     }
 }

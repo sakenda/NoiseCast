@@ -3,7 +3,7 @@ using System.Collections.ObjectModel;
 
 namespace WPFMVVM.MVVM.Core
 {
-    internal class Podcast
+    public class Podcast
     {
         public string Titel { get; set; }
         public string Description { get; set; }

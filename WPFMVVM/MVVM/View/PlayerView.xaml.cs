@@ -35,7 +35,6 @@ namespace WPFMVVM.MVVM.View
         {
             userIsDraggingSlider = false;
             me_player.Position = TimeSpan.FromSeconds(sli_progress.Value);
-            Debug.WriteLine("Position: " + me_player.Position);
         }
         private void sliProgress_ValueChanged(object sender, RoutedPropertyChangedEventArgs<double> e)
         {

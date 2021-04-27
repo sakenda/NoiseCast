@@ -7,7 +7,7 @@ using WPFMVVM.Core;
 
 namespace WPFMVVM.MVVM.ViewModel
 {
-    internal class SettingsViewModel : ObservableObject
+    public class SettingsViewModel : ObservableObject
     {
     }
 }

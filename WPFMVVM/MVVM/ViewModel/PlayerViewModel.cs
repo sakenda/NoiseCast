@@ -7,7 +7,7 @@ using WPFMVVM.Core;
 
 namespace WPFMVVM.MVVM.ViewModel
 {
-    internal class PlayerViewModel : ObservableObject
+    public class PlayerViewModel : ObservableObject
     {
     }
 }

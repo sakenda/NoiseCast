@@ -2,7 +2,7 @@
 
 namespace WPFMVVM.MVVM.ViewModel
 {
-    internal class MainViewModel : ObservableObject
+    public class MainViewModel : ObservableObject
     {
         public RelayCommand YourPodcastsViewCommand { get; set; }
         public RelayCommand NewEpisodesViewCommand { get; set; }
@@ -23,22 +23,14 @@ namespace WPFMVVM.MVVM.ViewModel
         private object currentView;
         public object CurrentView
         {
-            get { return currentView; }
-            set
-            {
-                currentView = value;
-                OnPropertyChanged();
-            }
+            get => currentView;
+            set => SetProperty(ref currentView, value);
         }
         private object playerView;
         public object PlayerView
         {
-            get { return playerView; }
-            set
-            {
-                playerView = value;
-                OnPropertyChanged();
-            }
+            get => playerView;
+            set => SetProperty(ref playerView, value);
         }
 
         public MainViewModel()

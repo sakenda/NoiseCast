@@ -21,6 +21,10 @@
   </ItemGroup>
 
   <ItemGroup>
+    <PackageReference Include="CodeHollow.FeedReader" Version="1.2.1" />
+  </ItemGroup>
+
+  <ItemGroup>
     <Resource Include="Fonts\BarlowSemiCondensed-Bold.ttf">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Resource>

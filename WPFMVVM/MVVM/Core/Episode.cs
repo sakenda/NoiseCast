@@ -2,7 +2,7 @@
 
 namespace WPFMVVM.MVVM.Core
 {
-    internal class Episode
+    public class Episode
     {
         public string Titel { get; set; }
         public DateTime Release { get; set; }
