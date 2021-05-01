@@ -184,7 +184,7 @@
 
                             <Button Grid.Column="0" Grid.RowSpan="2"
                                     x:Name="b_play"
-                                    Command="{Binding Parent.BindingContext.PlayCommand}"
+                                    Command="{x:Static vm:YourPodcastsViewModel.PlayCommand}"
                                     Content="&#xf144;"
                                     Style="{StaticResource EpisodePlayerButton}"
                                     VerticalAlignment="Top"

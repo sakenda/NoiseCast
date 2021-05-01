@@ -2,6 +2,8 @@
 using CodeHollow.FeedReader.Feeds;
 using System;
 using System.Collections.ObjectModel;
+using System.Diagnostics;
+using System.Linq;
 using System.Threading.Tasks;
 using System.Windows.Data;
 using System.Windows.Input;
@@ -12,49 +14,52 @@ namespace WPFMVVM.MVVM.ViewModel
 {
     public class YourPodcastsViewModel : ObservableObject
     {
-        public ICommand PlayCommand { get; private set; }
+        public static ICommand PlayCommand { get; private set; }
 
         public ListCollectionView ViewPodcasts => _viewPodcasts;
         public ListCollectionView ViewEpisodes => _viewEpisodes;
-        public ObservableCollection<Feed> PodcastList => _podcastList;
-        public ObservableCollection<Rss20FeedItem> EpisodesList => _episodesList;
-        public Rss20FeedItem CurrentEpisode => _currentEpisode;
+        public ObservableCollection<BaseFeed> PodcastList => _podcastList;
+        public ObservableCollection<BaseFeedItem> EpisodesList => _episodesList;
+        public BaseFeedItem CurrentEpisode
+        {
+            get => _currentEpisode;
+            set => SetProperty(ref _currentEpisode, value);
+        }
 
         private ListCollectionView _viewPodcasts;
         private ListCollectionView _viewEpisodes;
-        private ObservableCollection<Feed> _podcastList;
-        private ObservableCollection<Rss20FeedItem> _episodesList;
-        private Rss20FeedItem _currentEpisode;
+        private ObservableCollection<BaseFeed> _podcastList;
+        private ObservableCollection<BaseFeedItem> _episodesList;
+        private BaseFeedItem _currentEpisode;
 
         public YourPodcastsViewModel()
         {
-            _podcastList = new PodcastFeed().RequestFeedsAsync();
-            _viewPodcasts = new ListCollectionView(_podcastList);
-            _viewPodcasts.MoveCurrentToFirst();
-
-            _episodesList = ((Feed)_viewPodcasts.CurrentItem).Items as ObservableCollection<Rss20FeedItem>;
-            if (_episodesList != null)
-            {
-                _viewEpisodes = new ListCollectionView(_episodesList);
-                _viewEpisodes.MoveCurrentToFirst();
-            }
+            _podcastList = new ObservableCollection<BaseFeed>();
+            _episodesList = new ObservableCollection<BaseFeedItem>();
 
             PlayCommand = new RelayCommand(PlayExecuted, PlayCanExecute);
 
-            //_viewPodcasts.CurrentChanged += _viewPodcasts_CurrentChanged;
-            //_viewEpisodes.CurrentChanged += _viewEpisodes_CurrentChanged;
+            _podcastList = new PodcastFeed().RequestFeeds();
+            UpdateView_Podcasts();
+
+            ViewPodcasts.CurrentChanged += UpdateView_Podcasts;
         }
 
-        private void _viewEpisodes_CurrentChanged(object sender, EventArgs e)
-        {
-            _currentEpisode = sender as Rss20FeedItem;
-        }
+        private void ChangeCurrentPlayerItem() => MainViewModel.PlayerVM.CurrentEpisode = _viewEpisodes.CurrentItem as BaseFeedItem;
 
-        private void _viewPodcasts_CurrentChanged(object sender, EventArgs e)
+        private void UpdateView_Podcasts(object sender = null, EventArgs e = null)
         {
-            _episodesList = ((Rss20Feed)_viewPodcasts.CurrentItem).Items as ObservableCollection<Rss20FeedItem>;
+            if (_viewPodcasts == null || (_viewPodcasts.Count == 0 && _episodesList.Count != 0))
+            {
+                _viewPodcasts = new ListCollectionView(_podcastList);
+                _viewPodcasts.MoveCurrentToFirst();
+            }
+            else return;
+
+            _episodesList = new ObservableCollection<BaseFeedItem>(((BaseFeed)(_viewPodcasts.CurrentItem)).Items);
+
             _viewEpisodes = new ListCollectionView(_episodesList);
-            _viewEpisodes.MoveCurrentToFirst();
+            _viewEpisodes.MoveCurrentToLast();
         }
 
         private bool PlayCanExecute(object arg)
@@ -63,7 +68,7 @@ namespace WPFMVVM.MVVM.ViewModel
         }
         private void PlayExecuted(object obj)
         {
-            _currentEpisode = obj as Rss20FeedItem;
+            MainViewModel.PlayerVM.CurrentEpisode = _viewEpisodes.CurrentItem as BaseFeedItem;
         }
     }
 }

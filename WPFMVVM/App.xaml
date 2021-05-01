@@ -46,6 +46,8 @@
             <DataTemplate DataType="{x:Type viewModel:PlayerViewModel}">
                 <view:PlayerView/>
             </DataTemplate>
+
+            <Style TargetType="{x:Type Rectangle}"/>
         </ResourceDictionary>
     </Application.Resources>
 </Application>

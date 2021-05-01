@@ -12,13 +12,13 @@ namespace WPFMVVM.MVVM.ViewModel
         public RelayCommand SettingsViewCommand { get; set; }
         public RelayCommand PlayerViewCommand { get; set; }
 
-        public YourPodcastsViewModel YourPodcastsVM { get; set; }
-        public NewEpisodesViewModel NewEpisodesVM { get; set; }
-        public DiscoverViewModel DiscoveryVM { get; set; }
-        public InProgressViewModel InProgressVM { get; set; }
-        public DownloadsViewModel DownloadsVM { get; set; }
-        public SettingsViewModel SettingsVM { get; set; }
-        public PlayerViewModel PlayerVM { get; set; }
+        public static YourPodcastsViewModel YourPodcastsVM { get; set; }
+        public static NewEpisodesViewModel NewEpisodesVM { get; set; }
+        public static DiscoverViewModel DiscoveryVM { get; set; }
+        public static InProgressViewModel InProgressVM { get; set; }
+        public static DownloadsViewModel DownloadsVM { get; set; }
+        public static SettingsViewModel SettingsVM { get; set; }
+        public static PlayerViewModel PlayerVM { get; set; }
 
         private object currentView;
         public object CurrentView

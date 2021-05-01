@@ -14,7 +14,6 @@
         WindowStyle="None"
         AllowsTransparency="True"
         FontFamily="{StaticResource BarlowRegular}">
-
     <Window.DataContext>
         <viewModel:MainViewModel/>
     </Window.DataContext>
