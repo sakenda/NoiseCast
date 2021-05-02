@@ -28,13 +28,13 @@
             <RowDefinition/>
         </Grid.RowDefinitions>
 
-        <Rectangle Grid.Column="1" Fill="{StaticResource DarkFont2}" Width="1" Margin="10 0"/>
+        <Rectangle Grid.Column="1" Grid.RowSpan="2" Fill="{StaticResource DarkFont2}" Width="1" Margin="10 0"/>
 
         <!-- PodcastList (DataContext: ViewPodcasts) -->
         <ListBox Grid.Column="0" Grid.RowSpan="2"
                  x:Name="lb_podcastList"
                  ItemsSource="{Binding ViewPodcasts}"
-                 SelectedIndex="0"
+                 SelectedIndex="4"
                  Width="300"
                  Margin="0 -5 0 0"
                  Style="{StaticResource ListBoxStyle}"
@@ -42,7 +42,7 @@
                  ScrollViewer.CanContentScroll="False"/>
 
         <!-- Podcast Detail (DataContext: ViewPodcasts.CurrentItem) -->
-        <Grid Grid.Column="2"
+        <Grid Grid.Column="2" Grid.Row="0"
               HorizontalAlignment="Left" VerticalAlignment="Top"
               DataContext="{Binding Path=ViewPodcasts.CurrentItem}"
               MaxHeight="240">
@@ -131,7 +131,7 @@
 
         <!-- Episodenliste (DataContext: ViewEpisodes) -->
         <ListBox Grid.Row="1" Grid.Column="2" Grid.ColumnSpan="3"
-                 ItemsSource="{Binding ViewEpisodes}"
+                 ItemsSource="{Binding ViewPodcasts.CurrentItem.Items}"
                  Style="{StaticResource ListBoxStyle}"
                  ItemContainerStyle="{StaticResource EpisodesListBoxItem}"
                  ScrollViewer.CanContentScroll="False"/>

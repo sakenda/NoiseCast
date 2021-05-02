@@ -20,14 +20,10 @@ namespace WPFMVVM.MVVM.ViewModel
         public static ICommand PlayCommand { get; private set; }
 
         public ListCollectionView ViewPodcasts => _viewPodcasts;
-        public ListCollectionView ViewEpisodes => _viewEpisodes;
         public ObservableCollection<BaseFeed> PodcastList => _podcastList;
-        public ObservableCollection<BaseFeedItem> EpisodesList => _episodesList;
 
         private ListCollectionView _viewPodcasts;
-        private ListCollectionView _viewEpisodes;
         private ObservableCollection<BaseFeed> _podcastList;
-        private ObservableCollection<BaseFeedItem> _episodesList;
 
         public YourPodcastsViewModel()
         {
@@ -37,21 +33,8 @@ namespace WPFMVVM.MVVM.ViewModel
             _viewPodcasts = new ListCollectionView(_podcastList);
             _viewPodcasts.MoveCurrentToFirst();
 
-            Update_ViewEpisodes();
-
             SortViewCollection(_viewPodcasts, nameof(FeedItem.Title), ListSortDirection.Ascending);
             _viewPodcasts.Refresh();
-
-            _viewPodcasts.CurrentChanged += Update_ViewEpisodes;
-        }
-
-        private void Update_ViewEpisodes(object sender = null, EventArgs e = null)
-        {
-            _episodesList = new ObservableCollection<BaseFeedItem>(((BaseFeed)_viewPodcasts.CurrentItem).Items);
-
-            _viewEpisodes = new ListCollectionView(_episodesList);
-            _viewEpisodes.MoveCurrentToFirst();
-            _viewEpisodes.Refresh();
         }
 
         private void SortViewCollection(ListCollectionView list, string property, ListSortDirection direction)
@@ -61,6 +44,26 @@ namespace WPFMVVM.MVVM.ViewModel
         }
 
         private bool PlayCanExecute(object arg) => true;
-        private void PlayExecuted(object obj) => MainViewModel.PlayerVM.CurrentEpisode = (BaseFeedItem)obj;
+        private void PlayExecuted(object obj)
+        {
+            var player = MainViewModel.PlayerVM;
+            var typeName = ((BaseFeedItem)obj).GetType().Name;
+
+            player.CurrentEpisode = (BaseFeedItem)obj;
+
+            switch (typeName)
+            {
+                case nameof(Rss20FeedItem):
+                    player.Image = ((Rss20Feed)_viewPodcasts.CurrentItem).Image.Url;
+                    player.Url = ((Rss20FeedItem)obj).Enclosure.Url;
+                    break;
+                case nameof(MediaRssFeedItem):
+                    player.Image = ((MediaRssFeed)_viewPodcasts.CurrentItem).Image.Url;
+                    player.Url = ((MediaRssFeedItem)obj).Enclosure.Url;
+                    break;
+                default:
+                    break;
+            }
+        }
     }
 }
