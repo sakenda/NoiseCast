@@ -8,8 +8,9 @@
              x:Class="WPFMVVM.MVVM.View.YourPodcastsView"
              mc:Ignorable="d"
              d:DesignHeight="800"
-             d:DesignWidth="1200"
+             d:DesignWidth="1500"
              d:Background="White"
+             d:DataContext="{d:DesignInstance Type=vm:YourPodcastsViewModel, IsDesignTimeCreatable=True}"
              FontFamily="{StaticResource BarlowRegular}">
     <UserControl.Resources>
         <vm:YourPodcastsViewModel x:Key="YourPodcastViewModel"/>
@@ -20,34 +21,37 @@
             <ColumnDefinition Width="{Binding ElementName=lb_podcastList, Path=ActualWidth}"/>
             <ColumnDefinition Width="Auto"/>
             <ColumnDefinition/>
+            <ColumnDefinition Width="Auto"/>
         </Grid.ColumnDefinitions>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="auto"/>
+            <RowDefinition/>
+        </Grid.RowDefinitions>
 
-        <!-- PodcastList -->
-        <ListBox Grid.Column="0"
+        <Rectangle Grid.Column="1" Fill="{StaticResource DarkFont2}" Width="1" Margin="10 0"/>
+
+        <!-- PodcastList (DataContext: ViewPodcasts) -->
+        <ListBox Grid.Column="0" Grid.RowSpan="2"
                  x:Name="lb_podcastList"
                  ItemsSource="{Binding ViewPodcasts}"
-                 d:DataContext="{d:DesignInstance Type=vm:YourPodcastsViewModel, IsDesignTimeCreatable=True}"
                  SelectedIndex="0"
-                 Width="250"
+                 Width="300"
                  Margin="0 -5 0 0"
                  Style="{StaticResource ListBoxStyle}"
                  ItemContainerStyle="{StaticResource PodcastListBoxItem}"
                  ScrollViewer.CanContentScroll="False"/>
 
-        <Rectangle Grid.Column="1" Fill="{StaticResource DarkFont2}"
-                   Width="1" Margin="10 0"/>
-
-        <!-- Podcast Detail -->
+        <!-- Podcast Detail (DataContext: ViewPodcasts.CurrentItem) -->
         <Grid Grid.Column="2"
-              HorizontalAlignment="Left"
-              DataContext="{Binding ElementName=lb_podcastList, Path=SelectedItem}">
+              HorizontalAlignment="Left" VerticalAlignment="Top"
+              DataContext="{Binding Path=ViewPodcasts.CurrentItem}"
+              MaxHeight="240">
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="{Binding ElementName=b_podcast, Path=Width}"/>
                 <ColumnDefinition Width="*"/>
                 <ColumnDefinition Width="{Binding ElementName=btn_unsub, Path=Width}"/>
             </Grid.ColumnDefinitions>
             <Grid.RowDefinitions>
-                <RowDefinition Height="Auto"/>
                 <RowDefinition Height="Auto"/>
                 <RowDefinition Height="Auto"/>
                 <RowDefinition Height="Auto"/>
@@ -104,12 +108,12 @@
             </StackPanel>
 
             <!-- Unsubscribe Button -->
-            <!--Button Grid.Column="2" Grid.Row="0"
+            <Button Grid.Column="3" Grid.Row="0"
                     Content="Unsubscribe"
                     x:Name="btn_unsub"
                     Style="{StaticResource UnsubButton}"
                     HorizontalAlignment="Right"
-                    VerticalAlignment="Top"/-->
+                    VerticalAlignment="Top"/>
 
             <!-- Podcast Beschreibung -->
             <Grid Grid.Row="3" Grid.Column="0" Grid.ColumnSpan="3"
@@ -123,12 +127,13 @@
                                FontSize="18"/>
                 </ScrollViewer>
             </Grid>
-
-            <ListBox Grid.Row="4" Grid.ColumnSpan="3"
-                     ItemsSource="{Binding ElementName=lb_podcastList, Path=SelectedItem.Items}"
-                     Style="{StaticResource ListBoxStyle}"
-                     ItemContainerStyle="{StaticResource EpisodesListBoxItem}"
-                     ScrollViewer.CanContentScroll="False"/>
         </Grid>
+
+        <!-- Episodenliste (DataContext: ViewEpisodes) -->
+        <ListBox Grid.Row="1" Grid.Column="2" Grid.ColumnSpan="3"
+                 ItemsSource="{Binding ViewEpisodes}"
+                 Style="{StaticResource ListBoxStyle}"
+                 ItemContainerStyle="{StaticResource EpisodesListBoxItem}"
+                 ScrollViewer.CanContentScroll="False"/>
     </Grid>
 </UserControl>

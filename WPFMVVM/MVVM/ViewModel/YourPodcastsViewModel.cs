@@ -1,10 +1,13 @@
 ﻿using CodeHollow.FeedReader;
 using CodeHollow.FeedReader.Feeds;
 using System;
+using System.Collections;
 using System.Collections.ObjectModel;
+using System.ComponentModel;
 using System.Diagnostics;
 using System.Linq;
 using System.Threading.Tasks;
+using System.Windows.Controls;
 using System.Windows.Data;
 using System.Windows.Input;
 using WPFMVVM.Core;
@@ -20,55 +23,44 @@ namespace WPFMVVM.MVVM.ViewModel
         public ListCollectionView ViewEpisodes => _viewEpisodes;
         public ObservableCollection<BaseFeed> PodcastList => _podcastList;
         public ObservableCollection<BaseFeedItem> EpisodesList => _episodesList;
-        public BaseFeedItem CurrentEpisode
-        {
-            get => _currentEpisode;
-            set => SetProperty(ref _currentEpisode, value);
-        }
 
         private ListCollectionView _viewPodcasts;
         private ListCollectionView _viewEpisodes;
         private ObservableCollection<BaseFeed> _podcastList;
         private ObservableCollection<BaseFeedItem> _episodesList;
-        private BaseFeedItem _currentEpisode;
 
         public YourPodcastsViewModel()
         {
-            _podcastList = new ObservableCollection<BaseFeed>();
-            _episodesList = new ObservableCollection<BaseFeedItem>();
-
             PlayCommand = new RelayCommand(PlayExecuted, PlayCanExecute);
 
             _podcastList = new PodcastFeed().RequestFeeds();
-            UpdateView_Podcasts();
+            _viewPodcasts = new ListCollectionView(_podcastList);
+            _viewPodcasts.MoveCurrentToFirst();
 
-            ViewPodcasts.CurrentChanged += UpdateView_Podcasts;
+            Update_ViewEpisodes();
+
+            SortViewCollection(_viewPodcasts, nameof(FeedItem.Title), ListSortDirection.Ascending);
+            _viewPodcasts.Refresh();
+
+            _viewPodcasts.CurrentChanged += Update_ViewEpisodes;
         }
 
-        private void ChangeCurrentPlayerItem() => MainViewModel.PlayerVM.CurrentEpisode = _viewEpisodes.CurrentItem as BaseFeedItem;
-
-        private void UpdateView_Podcasts(object sender = null, EventArgs e = null)
+        private void Update_ViewEpisodes(object sender = null, EventArgs e = null)
         {
-            if (_viewPodcasts == null || (_viewPodcasts.Count == 0 && _episodesList.Count != 0))
-            {
-                _viewPodcasts = new ListCollectionView(_podcastList);
-                _viewPodcasts.MoveCurrentToFirst();
-            }
-            else return;
-
-            _episodesList = new ObservableCollection<BaseFeedItem>(((BaseFeed)(_viewPodcasts.CurrentItem)).Items);
+            _episodesList = new ObservableCollection<BaseFeedItem>(((BaseFeed)_viewPodcasts.CurrentItem).Items);
 
             _viewEpisodes = new ListCollectionView(_episodesList);
-            _viewEpisodes.MoveCurrentToLast();
+            _viewEpisodes.MoveCurrentToFirst();
+            _viewEpisodes.Refresh();
         }
 
-        private bool PlayCanExecute(object arg)
+        private void SortViewCollection(ListCollectionView list, string property, ListSortDirection direction)
         {
-            return true;
+            list.SortDescriptions.Clear();
+            list.SortDescriptions.Add(new SortDescription(property, direction));
         }
-        private void PlayExecuted(object obj)
-        {
-            MainViewModel.PlayerVM.CurrentEpisode = _viewEpisodes.CurrentItem as BaseFeedItem;
-        }
+
+        private bool PlayCanExecute(object arg) => true;
+        private void PlayExecuted(object obj) => MainViewModel.PlayerVM.CurrentEpisode = (BaseFeedItem)obj;
     }
 }

@@ -1,5 +1,4 @@
 ﻿<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
-                    xmlns:feed="clr-namespace:CodeHollow.FeedReader.Feeds;assembly=CodeHollow.FeedReader"
                     xmlns:vm="clr-namespace:WPFMVVM.MVVM.ViewModel"
                     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
 
@@ -185,6 +184,7 @@
                             <Button Grid.Column="0" Grid.RowSpan="2"
                                     x:Name="b_play"
                                     Command="{x:Static vm:YourPodcastsViewModel.PlayCommand}"
+                                    CommandParameter="{Binding SelectedItem, RelativeSource={RelativeSource AncestorType={x:Type ListBox}}}"
                                     Content="&#xf144;"
                                     Style="{StaticResource EpisodePlayerButton}"
                                     VerticalAlignment="Top"

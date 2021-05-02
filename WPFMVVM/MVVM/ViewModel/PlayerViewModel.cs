@@ -10,8 +10,14 @@ namespace WPFMVVM.MVVM.ViewModel
             get => _currentEpisode;
             set
             {
-                _url = ((Rss20FeedItem)value).Enclosure.Url;
-                _image = new CodeHollow.FeedReader.Feeds.Itunes.ItunesImage(value.Element).Href;
+                if (value.GetType() == typeof(Rss20FeedItem))
+                    _url = ((Rss20FeedItem)value).Enclosure.Url;
+
+                if (value.GetType() == typeof(MediaRssFeedItem))
+                    _url = ((MediaRssFeedItem)value).Enclosure.Url;
+
+                GetAlternativeImageLink(value);
+
                 SetProperty(ref _currentEpisode, value);
             }
         }
@@ -29,5 +35,13 @@ namespace WPFMVVM.MVVM.ViewModel
         private BaseFeedItem _currentEpisode;
         private string _image;
         private string _url;
+
+        private void GetAlternativeImageLink(BaseFeedItem feed)
+        {
+            string iTunesImage = new CodeHollow.FeedReader.Feeds.Itunes.ItunesImage(feed.Element).Href;
+
+            if (!string.IsNullOrEmpty(iTunesImage))
+                Image = iTunesImage;
+        }
     }
 }
