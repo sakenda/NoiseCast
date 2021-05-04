@@ -9,6 +9,7 @@
              Height="825"
              Width="280"
              FontFamily="{StaticResource BarlowRegular}"
+             d:DataContext="{d:DesignInstance Type=vm:PlayerViewModel, IsDesignTimeCreatable=True}"
              x:Name="main">
     <UserControl.Resources>
         <vm:PlayerViewModel x:Key="PlayerViewModel"/>
@@ -20,7 +21,7 @@
             <RowDefinition Height="{Binding ElementName=main, Path=ActualWidth}"/>
             <RowDefinition Height="{Binding ElementName=sp_episodeInfo, Path=Height}"/>
             <RowDefinition/>
-            <RowDefinition Height="{Binding ElementName=sp_player, Path=Height}"/>
+            <RowDefinition Height="190"/>
         </Grid.RowDefinitions>
 
         <!-- Podcast/Episode Image -->
@@ -34,7 +35,7 @@
                                    Rect="0,0,265,265"/>
             </Border.Clip>
 
-            <Image Margin="0 -10 0 0" Source="{Binding Image}"/>
+            <Image Margin="0 -10 0 10" Source="{Binding Image, TargetNullValue={x:Null}}"/>
         </Border>
 
         <!-- EpisodeInfo's -->
@@ -45,6 +46,7 @@
                     VerticalAlignment="Top"
                     Margin="0 0 0 10">
             <TextBlock Text="{Binding CurrentEpisode.Title}"
+                       d:Text="Überschrift"
                        TextWrapping="NoWrap"
                        TextTrimming="WordEllipsis"
                        FontSize="16"
@@ -58,6 +60,7 @@
                       Name="sc_info"
                       HorizontalScrollBarVisibility="Hidden">
             <TextBlock Text="{Binding CurrentEpisode.Description}"
+                       d:Text="Beschreibung"
                        TextWrapping="WrapWithOverflow"
                        TextTrimming="WordEllipsis"
                        Width="{Binding ElementName=sc_info, Path=ViewportWidth}"
@@ -77,17 +80,19 @@
             <!-- Playback Position -->
             <StackPanel Orientation="Vertical" Margin="0 10">
                 <Slider Name="sli_progress" Style="{StaticResource Horizontal_Slider}"
-                        Thumb.DragStarted="sliProgress_DragStarted"
-                        Thumb.DragCompleted="sliProgress_DragCompleted"
-                        ValueChanged="sliProgress_ValueChanged"/>
+                        Thumb.DragStarted="sli_Progress_DragStarted"
+                        Thumb.DragCompleted="sli_Progress_DragCompleted"
+                        ValueChanged="sli_Progress_ValueChanged"/>
                 <Grid Margin="10 0">
                     <TextBlock Name="tbl_progressStatus"
-                               Text="00:00:00"
+                               Text="{Binding CurrentPosition, StringFormat=\{0:hh\\:mm\\:ss\}}"
+                               d:Text="00:00:00"
                                Foreground="{StaticResource DarkFont2}"
                                FontSize="14"
                                HorizontalAlignment="Left"/>
                     <TextBlock Name="tbl_totalStatus"
-                               Text="00:00:00"
+                               Text="{Binding TotalLength, StringFormat=\{0:hh\\:mm\\:ss\}}"
+                               d:Text="00:00:00"
                                Foreground="{StaticResource DarkFont2}"
                                FontSize="14"
                                HorizontalAlignment="Right"/>
@@ -125,7 +130,7 @@
                         Style="{StaticResource PlayerButton}"
                         FontSize="40"/>
                 <Button Grid.Column="4"
-                        Command=""
+                        Command="{Binding SkipCommand}"
                         Content="&#xf2f9;"
                         Style="{StaticResource PlayerButton}"
                         FontSize="20"/>

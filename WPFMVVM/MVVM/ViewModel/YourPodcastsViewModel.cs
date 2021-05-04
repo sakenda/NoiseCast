@@ -46,20 +46,15 @@ namespace WPFMVVM.MVVM.ViewModel
         private bool PlayCanExecute(object arg) => true;
         private void PlayExecuted(object obj)
         {
-            var player = MainViewModel.PlayerVM;
             var typeName = ((BaseFeedItem)obj).GetType().Name;
-
-            player.CurrentEpisode = (BaseFeedItem)obj;
 
             switch (typeName)
             {
                 case nameof(Rss20FeedItem):
-                    player.Image = ((Rss20Feed)_viewPodcasts.CurrentItem).Image.Url;
-                    player.Url = ((Rss20FeedItem)obj).Enclosure.Url;
+                    MainViewModel.PlayerVM.SetCurrentEpisode((Rss20FeedItem)obj, ((Rss20Feed)_viewPodcasts.CurrentItem).Image.Url);
                     break;
                 case nameof(MediaRssFeedItem):
-                    player.Image = ((MediaRssFeed)_viewPodcasts.CurrentItem).Image.Url;
-                    player.Url = ((MediaRssFeedItem)obj).Enclosure.Url;
+                    MainViewModel.PlayerVM.SetCurrentEpisode((MediaRssFeedItem)obj, ((MediaRssFeed)_viewPodcasts.CurrentItem).Image.Url);
                     break;
                 default:
                     break;
