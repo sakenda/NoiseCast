@@ -131,7 +131,7 @@
 
         <!-- Episodenliste (DataContext: ViewEpisodes) -->
         <ListBox Grid.Row="1" Grid.Column="2" Grid.ColumnSpan="3"
-                 ItemsSource="{Binding ViewPodcasts.CurrentItem.Items}"
+                 ItemsSource="{Binding ViewEpisodes}"
                  Style="{StaticResource ListBoxStyle}"
                  ItemContainerStyle="{StaticResource EpisodesListBoxItem}"
                  ScrollViewer.CanContentScroll="False"/>

@@ -1,20 +1,62 @@
-﻿using System;
+﻿using CodeHollow.FeedReader;
+using CodeHollow.FeedReader.Feeds;
+using System;
+using WPFMVVM.Core;
 
 namespace WPFMVVM.MVVM.Core
 {
-    public class Episode
+    public delegate void EpisodeChangedEventHandler(Episode sender, EpisodeChangedEventArgs e);
+    public class EpisodeChangedEventArgs : EventArgs
     {
-        public string Titel { get; set; }
-        public DateTime Release { get; set; }
-        public string Description { get; set; }
-        public string AudioFile { get; set; }
+        public FeedType Type { get; set; }
 
-        public Episode(string titel, DateTime release, string description, string audioFile)
+        public EpisodeChangedEventArgs(Episode episode)
         {
-            Titel = titel;
-            Release = release;
-            Description = description;
-            AudioFile = audioFile;
+            Type = episode.EpisodeFeed.GetType().Name switch
+            {
+                nameof(Rss20FeedItem) => FeedType.Rss_2_0,
+                nameof(MediaRssFeedItem) => FeedType.MediaRss,
+                _ => FeedType.Unknown
+            };
         }
+    }
+
+    public class Episode : ObservableObject
+    {
+        public event EpisodeChangedEventHandler EpisodeChanged;
+
+        private BaseFeedItem _episodeFeed;
+        private string _imageUrl;
+        private string _mediaUrl;
+
+        public BaseFeedItem EpisodeFeed
+        {
+            get => _episodeFeed;
+            private set => SetProperty(ref _episodeFeed, value);
+        }
+        public string ImageUrl
+        {
+            get => _imageUrl;
+            private set => SetProperty(ref _imageUrl, value);
+        }
+        public string MediaUrl
+        {
+            get => _mediaUrl;
+            private set => SetProperty(ref _mediaUrl, value);
+        }
+
+        public Episode()
+        {
+        }
+
+        public void ChangeEpisode(BaseFeedItem episodeFeed, string mediaUrl, string imageUrl = null)
+        {
+            ImageUrl = imageUrl;
+            EpisodeFeed = episodeFeed;
+            MediaUrl = mediaUrl;
+            OnEpisodeChanged(new EpisodeChangedEventArgs(this));
+        }
+
+        public virtual void OnEpisodeChanged(EpisodeChangedEventArgs e) => EpisodeChanged?.Invoke(this, e);
     }
 }

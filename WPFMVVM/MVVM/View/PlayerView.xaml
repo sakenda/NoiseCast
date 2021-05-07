@@ -35,7 +35,7 @@
                                    Rect="0,0,265,265"/>
             </Border.Clip>
 
-            <Image Margin="0 -10 0 10" Source="{Binding Image, TargetNullValue={x:Null}}"/>
+            <Image Margin="0 -10 0 10" Source="{Binding CurrentEpisode.ImageUrl, TargetNullValue={x:Null}}"/>
         </Border>
 
         <!-- EpisodeInfo's -->
@@ -45,7 +45,7 @@
                     Orientation="Vertical"
                     VerticalAlignment="Top"
                     Margin="0 0 0 10">
-            <TextBlock Text="{Binding CurrentEpisode.Title}"
+            <TextBlock Text="{Binding CurrentEpisode.EpisodeFeed.Title}"
                        d:Text="Überschrift"
                        TextWrapping="NoWrap"
                        TextTrimming="WordEllipsis"
@@ -59,7 +59,7 @@
         <ScrollViewer Grid.Row="2"
                       Name="sc_info"
                       HorizontalScrollBarVisibility="Hidden">
-            <TextBlock Text="{Binding CurrentEpisode.Description}"
+            <TextBlock Text="{Binding CurrentEpisode.EpisodeFeed.Description}"
                        d:Text="Beschreibung"
                        TextWrapping="WrapWithOverflow"
                        TextTrimming="WordEllipsis"
@@ -80,19 +80,15 @@
             <!-- Playback Position -->
             <StackPanel Orientation="Vertical" Margin="0 10">
                 <Slider Style="{StaticResource Horizontal_Slider}"
-                        Value="{Binding MediaElement.Position, Mode=TwoWay}"
                         Minimum="0"
-                        Maximum="{Binding MediaElement.NaturalDuration.TimeSpan.TotalSeconds}"/>
+                        Maximum="{Binding PositionMaximum}"
+                        Value="{Binding Position, Mode=TwoWay}"/>
                 <Grid Margin="10 0">
-                    <TextBlock Name="tbl_progressStatus"
-                               Text="{Binding MediaElement.Position,
-                                      StringFormat=\{0:hh\\:mm\\:ss\}, Mode=OneWay}"
+                    <TextBlock Text="{Binding Position}"
                                Foreground="{StaticResource DarkFont2}"
                                FontSize="14"
                                HorizontalAlignment="Left"/>
-                    <TextBlock Name="tbl_totalStatus"
-                               Text="{Binding MediaElement.NaturalDuration.TimeSpan.TotalSeconds,
-                                      StringFormat=\{0:hh\\:mm\\:ss\}, Mode=OneWay}"
+                    <TextBlock Text="{Binding PositionMaximum}"
                                Foreground="{StaticResource DarkFont2}"
                                FontSize="14"
                                HorizontalAlignment="Right"/>
@@ -141,11 +137,12 @@
                         HorizontalAlignment="Center">
                 <Button Content="&#xf028;"
                         Style="{StaticResource PlayerButton}"
+                        Command="{Binding MuteCommand}"
                         Margin="0 0 15 0"/>
                 <Slider Style="{StaticResource Horizontal_Slider}"
+                        Minimum="0" Maximum="1"
                         Value="{Binding MediaElement.Volume, Mode=TwoWay}"
                         Width="200"
-                        Maximum="1"
                         VerticalAlignment="Center"/>
             </StackPanel>
         </StackPanel>
