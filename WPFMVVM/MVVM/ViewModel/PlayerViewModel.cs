@@ -1,13 +1,9 @@
-﻿using CodeHollow.FeedReader.Feeds;
-using System;
-using System.ComponentModel;
-using System.Diagnostics;
-using System.Threading;
+﻿using System;
 using System.Windows.Controls;
 using System.Windows.Input;
 using System.Windows.Threading;
 using WPFMVVM.Core;
-using WPFMVVM.MVVM.Core;
+using WPFMVVM.MVVM.Model;
 
 namespace WPFMVVM.MVVM.ViewModel
 {
@@ -17,9 +13,9 @@ namespace WPFMVVM.MVVM.ViewModel
         private DispatcherTimer _timer;
         private Episode _currentEpisode;
         private double _skipAmount;
-        private double _tempVolume;
         private double _position;
         private double _positionMaximum;
+        private double _tempVolume;
 
         public MediaElement MediaElement
         {
@@ -39,7 +35,13 @@ namespace WPFMVVM.MVVM.ViewModel
         public double Position
         {
             get => _position;
-            set => SetProperty(ref _position, value);
+            set
+            {
+                if (value != _position + 1)
+                    MediaElement.Position = TimeSpan.FromSeconds(value);
+
+                SetProperty(ref _position, value);
+            }
         }
         public double PositionMaximum
         {
@@ -74,20 +76,22 @@ namespace WPFMVVM.MVVM.ViewModel
             _mediaElement = new MediaElement();
             _mediaElement.LoadedBehavior = MediaState.Manual;
             _mediaElement.UnloadedBehavior = MediaState.Manual;
+            _mediaElement.MediaOpened += MediaElement_MediaOpened;
 
             _skipAmount = 30;
             _mediaElement.Volume = .2;
         }
 
         private void OnTimerTick(object sender, EventArgs e) => Position++;
-
+        private void MediaElement_MediaOpened(object sender, System.Windows.RoutedEventArgs e)
+        {
+            Position = 0;
+            PositionMaximum = _mediaElement.NaturalDuration.TimeSpan.TotalSeconds;
+        }
         private void _currentEpisode_EpisodeChanged(Episode sender, EpisodeChangedEventArgs e)
         {
             MediaElement.Source = new Uri(sender.MediaUrl);
             _mediaElement.Pause();
-
-            if (_mediaElement.NaturalDuration.HasTimeSpan) PositionMaximum = _mediaElement.NaturalDuration.TimeSpan.TotalSeconds;
-            Position = 0;
         }
 
         private bool LastCanExecute(object arg) => false;
@@ -96,7 +100,7 @@ namespace WPFMVVM.MVVM.ViewModel
         private bool NextCanExecute(object arg) => false;
         private void NextExecuted(object obj) => throw new NotImplementedException();
 
-        private bool PlayCanExecute(object arg) => true;
+        private bool PlayCanExecute(object arg) => _mediaElement.Source != null;
         private void PlayExecuted(object obj)
         {
             if (_timer.IsEnabled)
@@ -110,11 +114,37 @@ namespace WPFMVVM.MVVM.ViewModel
             _mediaElement.Play();
         }
 
-        private bool SkipCanExecute(object arg) => _mediaElement.Source != null && _mediaElement.Position > TimeSpan.Zero;
-        private void SkipExecuted(object obj) => _mediaElement.Position += TimeSpan.FromSeconds(_skipAmount);
+        private bool SkipCanExecute(object arg) => _mediaElement.Source != null;
+        private void SkipExecuted(object obj)
+        {
+            TimeSpan targetTime = _mediaElement.Position + TimeSpan.FromSeconds(_skipAmount);
 
-        private bool RewindCanExecute(object arg) => _mediaElement.Source != null && _mediaElement.Position < _mediaElement.NaturalDuration;
-        private void RewindExecuted(object obj) => _mediaElement.Position -= TimeSpan.FromSeconds(_skipAmount);
+            if (targetTime > _mediaElement.NaturalDuration.TimeSpan)
+            {
+                _mediaElement.Position = _mediaElement.NaturalDuration.TimeSpan;
+                Position = _mediaElement.Position.TotalSeconds;
+                return;
+            }
+
+            _mediaElement.Position = targetTime;
+            Position = targetTime.TotalSeconds;
+        }
+
+        private bool RewindCanExecute(object arg) => _mediaElement.Source != null;
+        private void RewindExecuted(object obj)
+        {
+            TimeSpan targetTime = _mediaElement.Position - TimeSpan.FromSeconds(_skipAmount);
+
+            if (targetTime <= TimeSpan.Zero)
+            {
+                _mediaElement.Position = TimeSpan.Zero;
+                Position = 0;
+                return;
+            }
+
+            _mediaElement.Position = targetTime;
+            Position = targetTime.TotalSeconds;
+        }
 
         private bool MuteCanExecute(object arg) => true;
         private void MuteExecuted(object obj)

@@ -3,7 +3,7 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
-             xmlns:local="clr-namespace:WPFMVVM.MVVM.View"
+             xmlns:core="clr-namespace:WPFMVVM.MVVM.Core"
              xmlns:vm="clr-namespace:WPFMVVM.MVVM.ViewModel"
              mc:Ignorable="d"
              Height="825"
@@ -12,6 +12,7 @@
              d:DataContext="{d:DesignInstance Type=vm:PlayerViewModel, IsDesignTimeCreatable=True}"
              x:Name="main">
     <UserControl.Resources>
+        <core:DoubleToTimeSpanConverter x:Key="TimeConverter"/>
         <vm:PlayerViewModel x:Key="PlayerViewModel"/>
     </UserControl.Resources>
 
@@ -84,11 +85,11 @@
                         Maximum="{Binding PositionMaximum}"
                         Value="{Binding Position, Mode=TwoWay}"/>
                 <Grid Margin="10 0">
-                    <TextBlock Text="{Binding Position}"
+                    <TextBlock Text="{Binding Position, Converter={StaticResource TimeConverter}, StringFormat={}{0:hh\\:mm\\:ss}}"
                                Foreground="{StaticResource DarkFont2}"
                                FontSize="14"
                                HorizontalAlignment="Left"/>
-                    <TextBlock Text="{Binding PositionMaximum}"
+                    <TextBlock Text="{Binding PositionMaximum, Converter={StaticResource TimeConverter}, StringFormat={}{0:hh\\:mm\\:ss}}"
                                Foreground="{StaticResource DarkFont2}"
                                FontSize="14"
                                HorizontalAlignment="Right"/>

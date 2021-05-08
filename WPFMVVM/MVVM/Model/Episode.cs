@@ -3,7 +3,7 @@ using CodeHollow.FeedReader.Feeds;
 using System;
 using WPFMVVM.Core;
 
-namespace WPFMVVM.MVVM.Core
+namespace WPFMVVM.MVVM.Model
 {
     public delegate void EpisodeChangedEventHandler(Episode sender, EpisodeChangedEventArgs e);
     public class EpisodeChangedEventArgs : EventArgs

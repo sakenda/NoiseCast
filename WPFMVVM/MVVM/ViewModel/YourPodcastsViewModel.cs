@@ -31,7 +31,7 @@ namespace WPFMVVM.MVVM.ViewModel
             // Podcasts List Setup
             _podcastList = new PodcastFeed().RequestFeeds();
             _viewPodcasts = new ListCollectionView(_podcastList);
-            SortViewCollection(_viewPodcasts, nameof(FeedItem.Title), ListSortDirection.Ascending);
+            SortViewCollection(_viewPodcasts, nameof(Rss20Feed.LastBuildDate), ListSortDirection.Ascending);
             _viewPodcasts.MoveCurrentToFirst();
 
             // Episodes List Setup
