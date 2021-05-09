@@ -13,25 +13,24 @@ namespace WPFMVVM.MVVM.ViewModel
     public class YourPodcastsViewModel : ObservableObject
     {
         public static ICommand PlayCommand { get; private set; }    // static damit das style für ListBox diesen Command aufrufen kann
+        public static ICommand UnsubCommand { get; private set; }
 
         public ListCollectionView ViewPodcasts => _viewPodcasts;
         public ListCollectionView ViewEpisodes => _viewEpisodes;
-        public ObservableCollection<Feed> PodcastList => _podcastList;
         public ObservableCollection<FeedItem> EpisodesList => _episodesList;
 
         private ListCollectionView _viewPodcasts;
         private ListCollectionView _viewEpisodes;
-        private ObservableCollection<Feed> _podcastList;
         private ObservableCollection<FeedItem> _episodesList;
 
         public YourPodcastsViewModel()
         {
             PlayCommand = new RelayCommand(PlayExecuted, PlayCanExecute);
+            UnsubCommand = new RelayCommand(UnsubExecuted, UnsubCanExecute);
 
             // Podcasts List Setup
             //_podcastList = new PodcastFeed().RequestFeedList();
-            _podcastList = new ObservableCollection<Feed>();
-            _viewPodcasts = new ListCollectionView(_podcastList);
+            _viewPodcasts = new ListCollectionView(new PodcastFeed().PodcastList);
 
             // Episodes List Setup
             _episodesList = new ObservableCollection<FeedItem>();
@@ -91,6 +90,13 @@ namespace WPFMVVM.MVVM.ViewModel
             }
 
             MainViewModel.PlayerVM.CurrentEpisode.ChangeEpisode(feedItem, mediaUrl, imageUrl);
+        }
+
+        private bool UnsubCanExecute(object arg) => true;
+        private void UnsubExecuted(object obj)
+        {
+            Feed feed = (Feed)_viewPodcasts.CurrentItem;
+            new PodcastFeed().RemoveFeed(feed);
         }
     }
 }

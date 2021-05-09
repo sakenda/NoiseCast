@@ -9,10 +9,17 @@ namespace WPFMVVM.MVVM.Core
 {
     public class PodcastFeed
     {
-        public ObservableCollection<Feed> RequestFeedList()
+        private static ObservableCollection<Feed> _feeds;
+        public ObservableCollection<Feed> PodcastList
         {
-            var feeds = new ObservableCollection<Feed>();
+            get => _feeds;
+            private set => _feeds = value;
+        }
 
+        static PodcastFeed() => _feeds = new ObservableCollection<Feed>();
+
+        public void UpdateFeedList()
+        {
             Parallel.ForEach(GetFeedUrl(), url =>
             {
                 Feed feed = Task.Run(() =>
@@ -20,48 +27,14 @@ namespace WPFMVVM.MVVM.Core
                     return FeedReader.ReadAsync(url);
                 }).Result;
 
-                feeds.Add(feed);
+                _feeds.Add(feed);
 
                 Debug.WriteLine($"Done: {feed.Title} - {feed.Items.Count} episodes loaded.");
             });
-
-            return feeds;
         }
 
-        public Feed RequestFeed(string url) => Task.Run(() => FeedReader.ReadAsync(url)).Result;
-
-        //private BaseFeed GetPodcastType(Feed feed)
-        //{
-        //    switch (feed.Type)
-        //    {
-        //        case FeedType.Atom:
-        //            return null;
-        //        case FeedType.Rss_0_91:
-        //            return null;
-        //        case FeedType.Rss_0_92:
-        //            return null;
-        //        case FeedType.Rss_1_0:
-        //            return null;
-        //        case FeedType.Rss_2_0:
-        //            var rss20 = (Rss20Feed)feed.SpecificFeed;
-        //            if (rss20.Image.Url == null)
-        //                rss20.Image.Url = new CodeHollow.FeedReader.Feeds.Itunes.ItunesChannel(rss20.Element).Image.Href;
-        //            return rss20;
-        //        case FeedType.MediaRss:
-        //            var mediarss = (MediaRssFeed)feed.SpecificFeed;
-        //            if (mediarss.Image.Url == null)
-        //                mediarss.Image.Url = new CodeHollow.FeedReader.Feeds.Itunes.ItunesChannel(mediarss.Element).Image.Href;
-        //            return mediarss;
-        //        case FeedType.Rss:
-        //            return null;
-        //        case FeedType.Unknown:
-        //            Debug.WriteLine("Unknown format: " + feed.Title);
-        //            return null;
-        //        default:
-        //            Debug.WriteLine("Skip: Unknown type");
-        //            return null;
-        //    }
-        //}
+        public void AddFeed(string url) => PodcastList.Add(Task.Run(() => FeedReader.ReadAsync(url)).Result);
+        public void RemoveFeed(Feed feed) => PodcastList.Remove(feed);
 
         private List<string> GetFeedUrl()
         {

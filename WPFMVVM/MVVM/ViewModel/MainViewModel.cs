@@ -73,6 +73,7 @@ namespace WPFMVVM.MVVM.ViewModel
 
             if (result)
             {
+                new PodcastFeed().AddFeed(text);
             }
         }
     }
