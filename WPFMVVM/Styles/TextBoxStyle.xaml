@@ -1,4 +1,5 @@
 ﻿<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+                    xmlns:vm="clr-namespace:WPFMVVM.MVVM.ViewModel"
                     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
 
     <Style TargetType="{x:Type TextBox}" x:Key="SearchBoxStyle">
@@ -12,7 +13,6 @@
                         <Grid>
                             <Rectangle StrokeThickness="1"/>
                             <TextBox Margin="1"
-                                     Text="{TemplateBinding Text}"
                                      BorderThickness="0"
                                      Background="Transparent"
                                      VerticalContentAlignment="Center"
@@ -20,9 +20,20 @@
                                      FontSize="14"
                                      Foreground="{StaticResource DarkFont1}"
                                      x:Name="SearchBox"/>
+                            <Button Content="&#xf055;"
+                                    Command="{x:Static vm:MainViewModel.AddCommand}"
+                                    CommandParameter="{Binding ElementName=SearchBox, Path=Text}"
+                                    FontFamily="{StaticResource FontAwesomeSolid}"
+                                    FontSize="20"
+                                    Margin="10 0"
+                                    Foreground="{StaticResource DarkHighlight0}"
+                                    Background="Transparent"
+                                    BorderThickness="0"
+                                    HorizontalAlignment="Right"
+                                    ToolTip="Add new podcast"/>
 
                             <TextBlock IsHitTestVisible="False"
-                                       Text="Search"
+                                       Text="Search or Add Podcast"
                                        VerticalAlignment="Center"
                                        HorizontalAlignment="Left"
                                        Margin="10 0 0 0"

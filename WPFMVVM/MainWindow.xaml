@@ -63,13 +63,13 @@
                        FontFamily="{StaticResource BarlowSemiBold}"
                        FontWeight="Bold"
                        Margin="65 0 0 0"/>
-            <!--TextBox Grid.Column="1" Grid.ColumnSpan="2"
-                     Width="250"
+            <TextBox Grid.Column="1" Grid.ColumnSpan="2"
+                     Width="350"
                      Height="40"
                      VerticalContentAlignment="Center"
                      HorizontalAlignment="Right"
-                     Margin="5 5 150 5"
-                     Style="{StaticResource SearchBoxStyle}"/-->
+                     Margin="0 0 300 0"
+                     Style="{StaticResource SearchBoxStyle}"/>
 
             <!-- Menu -->
             <Grid Grid.Row="1" x:Name="sp_menu" Width="200">
