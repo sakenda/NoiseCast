@@ -1,4 +1,5 @@
-﻿using CodeHollow.FeedReader.Feeds;
+﻿using CodeHollow.FeedReader;
+using CodeHollow.FeedReader.Feeds;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -12,9 +13,9 @@ namespace WPFMVVM.MVVM.Core
 {
     public static class FeedReaderSaveToFileExtension
     {
-        public static void SaveToFile(this BaseFeed feed)
+        public static void SaveToFile(this Feed feed)
         {
-            string fileName = ApplicationSettings.SETTINGS_PODCAST_PATH + feed.Title + ".xml";
+            string fileName = ApplicationSettings.SETTINGS_PODCAST_PATH + feed.Link + ".xml";
 
             if (!File.Exists(fileName))
             {
@@ -25,14 +26,6 @@ namespace WPFMVVM.MVVM.Core
 
                 fs.Write(bytes, 0, bytes.Length);
             }
-
-            //XDocument xdoc = XDocument.Parse(feed.OriginalDocument);
-            //xdoc.Root.Save(fs);
-        }
-
-        private static Guid GetGuid()
-        {
-            return new Guid();
         }
     }
 }

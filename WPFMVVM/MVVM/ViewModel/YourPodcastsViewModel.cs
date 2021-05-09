@@ -12,32 +12,33 @@ namespace WPFMVVM.MVVM.ViewModel
 {
     public class YourPodcastsViewModel : ObservableObject
     {
-        public static ICommand PlayCommand { get; private set; }
+        public static ICommand PlayCommand { get; private set; }    // static damit das style für ListBox diesen Command aufrufen kann
 
         public ListCollectionView ViewPodcasts => _viewPodcasts;
         public ListCollectionView ViewEpisodes => _viewEpisodes;
-        public ObservableCollection<BaseFeed> PodcastList => _podcastList;
-        public ObservableCollection<BaseFeedItem> EpisodesList => _episodesList;
+        public ObservableCollection<Feed> PodcastList => _podcastList;
+        public ObservableCollection<FeedItem> EpisodesList => _episodesList;
 
         private ListCollectionView _viewPodcasts;
         private ListCollectionView _viewEpisodes;
-        private ObservableCollection<BaseFeed> _podcastList;
-        private ObservableCollection<BaseFeedItem> _episodesList;
+        private ObservableCollection<Feed> _podcastList;
+        private ObservableCollection<FeedItem> _episodesList;
 
         public YourPodcastsViewModel()
         {
             PlayCommand = new RelayCommand(PlayExecuted, PlayCanExecute);
 
             // Podcasts List Setup
-            _podcastList = new PodcastFeed().RequestFeeds();
+            //_podcastList = new PodcastFeed().RequestFeedList();
+            _podcastList = new ObservableCollection<Feed>();
             _viewPodcasts = new ListCollectionView(_podcastList);
 
             // Episodes List Setup
-            _episodesList = new ObservableCollection<BaseFeedItem>();
+            _episodesList = new ObservableCollection<FeedItem>();
             _viewEpisodes = new ListCollectionView(_episodesList);
 
             UpdateEpisodesList_PodcastChanged();
-            SortViewCollection(ViewPodcasts, nameof(Rss20Feed.LastBuildDate), ListSortDirection.Descending);
+            SortViewCollection(ViewPodcasts, nameof(Feed.LastUpdatedDate), ListSortDirection.Descending);
 
             ViewPodcasts.MoveCurrentToFirst();
             ViewEpisodes.MoveCurrentToFirst();
@@ -49,8 +50,12 @@ namespace WPFMVVM.MVVM.ViewModel
         {
             EpisodesList.Clear();
 
-            foreach (var item in ((BaseFeed)_viewPodcasts.CurrentItem).Items)
-                _episodesList.Add(item);
+            Feed feed = (Feed)_viewPodcasts.CurrentItem;
+            if (feed != null)
+            {
+                foreach (var item in ((Feed)_viewPodcasts.CurrentItem).Items)
+                    _episodesList.Add(item);
+            }
 
             ViewEpisodes.Refresh();
         }
@@ -67,25 +72,25 @@ namespace WPFMVVM.MVVM.ViewModel
         {
             // Add to Playlist, if CurrentEpisode is not null
 
-            BaseFeedItem feed = _viewEpisodes.CurrentItem as BaseFeedItem;
-            string mediaUrl = null;
-            string imageUrl = null;
+            Feed feed = _viewPodcasts.CurrentItem as Feed;
+            FeedItem feedItem = _viewEpisodes.CurrentItem as FeedItem;
 
-            switch (feed.GetType().Name)
+            string mediaUrl = null;
+            string imageUrl = feed.ImageUrl;
+
+            switch (feed.Type)
             {
-                case nameof(Rss20FeedItem):
-                    mediaUrl = ((Rss20FeedItem)feed).Enclosure.Url;
-                    imageUrl = ((Rss20Feed)_viewPodcasts.CurrentItem).Image.Url;
+                case FeedType.Rss_2_0:
+                    mediaUrl = ((Rss20FeedItem)feedItem.SpecificItem).Enclosure.Url;
                     break;
-                case nameof(MediaRssFeedItem):
-                    mediaUrl = ((MediaRssFeedItem)feed).Enclosure.Url;
-                    imageUrl = ((MediaRssFeed)_viewPodcasts.CurrentItem).Image.Url;
+                case FeedType.MediaRss:
+                    mediaUrl = ((MediaRssFeedItem)feedItem.SpecificItem).Enclosure.Url;
                     break;
                 default:
                     break;
             }
 
-            MainViewModel.PlayerVM.CurrentEpisode.ChangeEpisode(feed, mediaUrl, imageUrl);
+            MainViewModel.PlayerVM.CurrentEpisode.ChangeEpisode(feedItem, mediaUrl, imageUrl);
         }
     }
 }

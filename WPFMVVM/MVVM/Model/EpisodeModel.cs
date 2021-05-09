@@ -25,11 +25,11 @@ namespace WPFMVVM.MVVM.Model
     {
         public event EpisodeChangedEventHandler EpisodeChanged;
 
-        private BaseFeedItem _episodeFeed;
+        private FeedItem _episodeFeed;
         private string _imageUrl;
         private string _mediaUrl;
 
-        public BaseFeedItem EpisodeFeed
+        public FeedItem EpisodeFeed
         {
             get => _episodeFeed;
             private set => SetProperty(ref _episodeFeed, value);
@@ -49,7 +49,7 @@ namespace WPFMVVM.MVVM.Model
         {
         }
 
-        public void ChangeEpisode(BaseFeedItem episodeFeed, string mediaUrl, string imageUrl = null)
+        public void ChangeEpisode(FeedItem episodeFeed, string mediaUrl, string imageUrl = null)
         {
             ImageUrl = imageUrl;
             EpisodeFeed = episodeFeed;

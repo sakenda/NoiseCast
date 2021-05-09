@@ -57,7 +57,7 @@
                                 <Image Width="80"
                                        Height="80"
                                        x:Name="im_PodcastImage"
-                                       Source="{Binding Image.Url}"/>
+                                       Source="{Binding ImageUrl, TargetNullValue={x:Null}}"/>
                             </Border>
 
                             <TextBlock Grid.Column="1" Grid.Row="2"
@@ -76,7 +76,7 @@
                                        FontSize="14"/>
 
                             <TextBlock Grid.Column="1" Grid.Row="4"
-                                       Text="{Binding LastBuildDate, StringFormat=dd.MM.yy - HH:mm}"
+                                       Text="{Binding LastUpdatedDate, StringFormat=dd.MM.yy - HH:mm}"
                                        Foreground="{StaticResource DarkFont3}"
                                        Margin="5 0 0 0"
                                        VerticalAlignment="Bottom"

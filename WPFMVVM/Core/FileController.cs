@@ -1,11 +1,18 @@
-﻿using CodeHollow.FeedReader.Feeds;
-using System.Collections.Generic;
+﻿using System;
 using System.IO;
-using System.Text.Json;
 
 namespace WPFMVVM.Core
 {
     public class FileController
     {
+        public T FileExists<T>(string path, string name, Func<T> func)
+        {
+            if (File.Exists(path + name))
+            {
+                return func();
+            }
+
+            return default;
+        }
     }
 }

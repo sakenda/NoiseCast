@@ -68,7 +68,7 @@
                 </Border.Clip>
                 <Image Width="{Binding Width, ElementName=b_podcast}"
                        Height="{Binding Width, ElementName=b_podcast}"
-                       Source="{Binding Image.Url}"/>
+                       Source="{Binding ImageUrl}"/>
             </Border>
 
             <!-- Podcast Info -->
@@ -113,7 +113,7 @@
                     x:Name="btn_unsub"
                     Style="{StaticResource UnsubButton}"
                     HorizontalAlignment="Right"
-                    VerticalAlignment="Top"/>
+                    VerticalAlignment="Bottom"/>
 
             <!-- Podcast Beschreibung -->
             <Grid Grid.Row="3" Grid.Column="0" Grid.ColumnSpan="3"

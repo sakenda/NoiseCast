@@ -14,10 +14,6 @@
     <None Remove="Fonts\Font Awesome 5 Brands-Regular-400.otf" />
     <None Remove="Fonts\Font Awesome 5 Free-Regular-400.otf" />
     <None Remove="Fonts\Font Awesome 5 Free-Solid-900.otf" />
-    <None Remove="Images\hooked.jpg" />
-    <None Remove="Images\lage.png" />
-    <None Remove="Images\man.png" />
-    <None Remove="Images\stay.jpg" />
   </ItemGroup>
 
   <ItemGroup>
@@ -46,16 +42,10 @@
     <Resource Include="Fonts\Font Awesome 5 Free-Solid-900.otf">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Resource>
-    <Resource Include="Images\hooked.jpg">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Resource>
-    <Resource Include="Images\lage.png">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Resource>
-    <Resource Include="Images\man.png" />
-    <Resource Include="Images\stay.jpg">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Resource>
+  </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="Images\" />
   </ItemGroup>
 
 </Project>
