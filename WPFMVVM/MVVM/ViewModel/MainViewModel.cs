@@ -1,4 +1,5 @@
 ﻿using WPFMVVM.Core;
+using WPFMVVM.MVVM.Core;
 
 namespace WPFMVVM.MVVM.ViewModel
 {

@@ -11,7 +11,7 @@ namespace WPFMVVM.MVVM.ViewModel
     {
         private MediaElement _mediaElement;
         private DispatcherTimer _timer;
-        private Episode _currentEpisode;
+        private EpisodeModel _currentEpisode;
         private double _skipAmount;
         private double _position;
         private double _positionMaximum;
@@ -22,7 +22,7 @@ namespace WPFMVVM.MVVM.ViewModel
             get => _mediaElement;
             set => SetProperty(ref _mediaElement, value);
         }
-        public Episode CurrentEpisode
+        public EpisodeModel CurrentEpisode
         {
             get => _currentEpisode;
             set => SetProperty(ref _currentEpisode, value);
@@ -65,7 +65,7 @@ namespace WPFMVVM.MVVM.ViewModel
             LastCommand = new RelayCommand(LastExecuted, LastCanExecute);
             MuteCommand = new RelayCommand(MuteExecuted, MuteCanExecute);
 
-            _currentEpisode = new Episode();
+            _currentEpisode = new EpisodeModel();
             _currentEpisode.EpisodeChanged += _currentEpisode_EpisodeChanged;
 
             _timer = new DispatcherTimer();
@@ -88,7 +88,7 @@ namespace WPFMVVM.MVVM.ViewModel
             Position = 0;
             PositionMaximum = _mediaElement.NaturalDuration.TimeSpan.TotalSeconds;
         }
-        private void _currentEpisode_EpisodeChanged(Episode sender, EpisodeChangedEventArgs e)
+        private void _currentEpisode_EpisodeChanged(EpisodeModel sender, EpisodeChangedEventArgs e)
         {
             MediaElement.Source = new Uri(sender.MediaUrl);
             _mediaElement.Pause();

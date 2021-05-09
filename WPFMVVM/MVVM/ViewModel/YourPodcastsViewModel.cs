@@ -31,17 +31,16 @@ namespace WPFMVVM.MVVM.ViewModel
             // Podcasts List Setup
             _podcastList = new PodcastFeed().RequestFeeds();
             _viewPodcasts = new ListCollectionView(_podcastList);
-            SortViewCollection(_viewPodcasts, nameof(Rss20Feed.LastBuildDate), ListSortDirection.Ascending);
-            _viewPodcasts.MoveCurrentToFirst();
 
             // Episodes List Setup
             _episodesList = new ObservableCollection<BaseFeedItem>();
             _viewEpisodes = new ListCollectionView(_episodesList);
-            UpdateEpisodesList_PodcastChanged();
-            _viewEpisodes.MoveCurrentToFirst();
 
-            _viewPodcasts.Refresh();
-            _viewEpisodes.Refresh();
+            UpdateEpisodesList_PodcastChanged();
+            SortViewCollection(ViewPodcasts, nameof(Rss20Feed.LastBuildDate), ListSortDirection.Descending);
+
+            ViewPodcasts.MoveCurrentToFirst();
+            ViewEpisodes.MoveCurrentToFirst();
 
             _viewPodcasts.CurrentChanged += UpdateEpisodesList_PodcastChanged;
         }
@@ -66,6 +65,8 @@ namespace WPFMVVM.MVVM.ViewModel
         private bool PlayCanExecute(object arg) => true;
         private void PlayExecuted(object obj)
         {
+            // Add to Playlist, if CurrentEpisode is not null
+
             BaseFeedItem feed = _viewEpisodes.CurrentItem as BaseFeedItem;
             string mediaUrl = null;
             string imageUrl = null;

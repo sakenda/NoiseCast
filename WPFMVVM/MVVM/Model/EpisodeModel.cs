@@ -5,12 +5,12 @@ using WPFMVVM.Core;
 
 namespace WPFMVVM.MVVM.Model
 {
-    public delegate void EpisodeChangedEventHandler(Episode sender, EpisodeChangedEventArgs e);
+    public delegate void EpisodeChangedEventHandler(EpisodeModel sender, EpisodeChangedEventArgs e);
     public class EpisodeChangedEventArgs : EventArgs
     {
         public FeedType Type { get; set; }
 
-        public EpisodeChangedEventArgs(Episode episode)
+        public EpisodeChangedEventArgs(EpisodeModel episode)
         {
             Type = episode.EpisodeFeed.GetType().Name switch
             {
@@ -21,7 +21,7 @@ namespace WPFMVVM.MVVM.Model
         }
     }
 
-    public class Episode : ObservableObject
+    public class EpisodeModel : ObservableObject
     {
         public event EpisodeChangedEventHandler EpisodeChanged;
 
@@ -45,7 +45,7 @@ namespace WPFMVVM.MVVM.Model
             private set => SetProperty(ref _mediaUrl, value);
         }
 
-        public Episode()
+        public EpisodeModel()
         {
         }
 
