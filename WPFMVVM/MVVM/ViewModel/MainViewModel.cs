@@ -1,15 +1,9 @@
-﻿using System;
-using System.Diagnostics;
-using System.Windows.Input;
-using WPFMVVM.Core;
-using WPFMVVM.MVVM.Core;
+﻿using WPFMVVM.Core;
 
 namespace WPFMVVM.MVVM.ViewModel
 {
     public class MainViewModel : ObservableObject
     {
-        public static ICommand AddCommand { get; private set; }
-
         public RelayCommand YourPodcastsViewCommand { get; set; }
         public RelayCommand NewEpisodesViewCommand { get; set; }
         public RelayCommand DiscoveryViewCommand { get; set; }
@@ -41,8 +35,6 @@ namespace WPFMVVM.MVVM.ViewModel
 
         public MainViewModel()
         {
-            AddCommand = new RelayCommand(AddExecuted, AddCanExecute);
-
             YourPodcastsVM = new YourPodcastsViewModel();
             NewEpisodesVM = new NewEpisodesViewModel();
             DiscoveryVM = new DiscoverViewModel();
@@ -61,20 +53,6 @@ namespace WPFMVVM.MVVM.ViewModel
             DownloadsViewCommand = new RelayCommand(o => CurrentView = DownloadsVM);
             SettingsViewCommand = new RelayCommand(o => CurrentView = SettingsVM);
             PlayerViewCommand = new RelayCommand(o => PlayerView = PlayerVM);
-        }
-
-        private bool AddCanExecute(object arg) => !string.IsNullOrWhiteSpace(arg.ToString());
-        private void AddExecuted(object obj)
-        {
-            Uri uriResult;
-            string text = obj as string;
-
-            bool result = Uri.TryCreate(text, UriKind.Absolute, out uriResult) && (uriResult.Scheme == Uri.UriSchemeHttp || uriResult.Scheme == Uri.UriSchemeHttps);
-
-            if (result)
-            {
-                new PodcastFeed().AddFeed(text);
-            }
         }
     }
 }

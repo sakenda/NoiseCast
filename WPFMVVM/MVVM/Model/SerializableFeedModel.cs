@@ -1,32 +1,46 @@
-﻿using System;
+﻿using CodeHollow.FeedReader;
+using Newtonsoft.Json;
+using System;
 
 namespace WPFMVVM.MVVM.Model
 {
+    [JsonObject(MemberSerialization.OptIn)]
     public class SerializableFeedModel
     {
-        private Guid _id = Guid.Empty;
-        private string _feedUrl;
+        [JsonProperty("id")]
+        private Guid _ID;
+        [JsonProperty("originalDocument")]
+        private string _originalDocument => _feedObj.OriginalDocument;
 
-        public Guid Id
+        private Feed _feedObj;
+
+        public bool IsSaved => _ID != Guid.Empty;
+        public Feed FeedObj => _feedObj;
+
+        public SerializableFeedModel(Feed feedObj) : this(feedObj, Guid.Empty)
         {
-            get => _id;
-            private set => _id = value;
         }
-        public string FeedUrl
+        public SerializableFeedModel(Feed feedObj, Guid id)
         {
-            get => _feedUrl;
-            private set => _feedUrl = value;
+            _ID = id;
+            _feedObj = feedObj;
         }
 
-        public SerializableFeedModel(string feedDocument, Guid guid = new Guid())
+        [JsonConstructor]
+        public SerializableFeedModel(string originalDocument, Guid id)
         {
-            _id = guid == Guid.Empty ? GenerateNewGuid() : guid;
-            _feedUrl = feedDocument;
+            _ID = id;
+            _feedObj = FeedReader.ReadFromString(originalDocument);
         }
 
-        private Guid GenerateNewGuid()
+        public string GetID() => _ID.ToString();
+        public bool SetID()
         {
-            return new Guid();
+            if (_ID != Guid.Empty) return false;
+
+            _ID = Guid.NewGuid();
+            return true;
         }
+        public void UpdateFeed(Feed feed) => _feedObj = feed;
     }
 }

@@ -21,7 +21,7 @@
                                      Foreground="{StaticResource DarkFont1}"
                                      x:Name="SearchBox"/>
                             <Button Content="&#xf055;"
-                                    Command="{x:Static vm:MainViewModel.AddCommand}"
+                                    Command="{x:Static vm:YourPodcastsViewModel.AddCommand}"
                                     CommandParameter="{Binding ElementName=SearchBox, Path=Text}"
                                     FontFamily="{StaticResource FontAwesomeSolid}"
                                     FontSize="20"

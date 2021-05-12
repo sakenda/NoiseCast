@@ -3,6 +3,7 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:local="clr-namespace:WPFMVVM.MVVM.View"
+             xmlns:core="clr-namespace:WPFMVVM.MVVM.Core"
              xmlns:vm="clr-namespace:WPFMVVM.MVVM.ViewModel"
              x:Class="WPFMVVM.MVVM.View.YourPodcastsView"
              mc:Ignorable="d"
@@ -13,6 +14,7 @@
              d:DataContext="{d:DesignInstance Type=vm:YourPodcastsViewModel, IsDesignTimeCreatable=True}"
              FontFamily="{StaticResource BarlowRegular}">
     <UserControl.Resources>
+        <core:VisabilityConverter x:Key="VisibilityConverter"/>
         <vm:YourPodcastsViewModel x:Key="YourPodcastViewModel"/>
     </UserControl.Resources>
 
@@ -113,7 +115,14 @@
                     Command="{Binding ElementName=root, Path=DataContext.UnsubCommand}"
                     Style="{StaticResource UnsubButton}"
                     HorizontalAlignment="Right"
-                    VerticalAlignment="Bottom"/>
+                    VerticalAlignment="Bottom"
+                    Visibility="Hidden"/>
+            <Button Grid.Column="3" Grid.Row="0"
+                    Content="Subscribe"
+                    Command="{Binding ElementName=root, Path=DataContext.SubscribeCommand}"
+                    Style="{StaticResource UnsubButton}"
+                    HorizontalAlignment="Right"
+                    VerticalAlignment="{Binding ElementName=root, Path=DataContext.SubscribeCommand}"/>
 
             <!-- Podcast Beschreibung -->
             <Grid Grid.Row="3" Grid.Column="0" Grid.ColumnSpan="3"

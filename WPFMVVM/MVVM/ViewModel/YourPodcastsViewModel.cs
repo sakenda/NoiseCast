@@ -12,25 +12,31 @@ namespace WPFMVVM.MVVM.ViewModel
 {
     public class YourPodcastsViewModel : ObservableObject
     {
-        public static ICommand PlayCommand { get; private set; }    // static damit das style für ListBox diesen Command aufrufen kann
-        public static ICommand UnsubCommand { get; private set; }
+        private ListCollectionView _viewPodcasts;
+        private ListCollectionView _viewEpisodes;
+        private ObservableCollection<FeedItem> _episodesList;
+        private PodcastListController _podcastFeed;
 
+        public static ICommand AddCommand { get; private set; }
+        public static ICommand PlayCommand { get; private set; }
+        public static ICommand SubscribeCommand { get; private set; }
+        public static ICommand UnsubCommand { get; private set; }
         public ListCollectionView ViewPodcasts => _viewPodcasts;
         public ListCollectionView ViewEpisodes => _viewEpisodes;
         public ObservableCollection<FeedItem> EpisodesList => _episodesList;
 
-        private ListCollectionView _viewPodcasts;
-        private ListCollectionView _viewEpisodes;
-        private ObservableCollection<FeedItem> _episodesList;
-
         public YourPodcastsViewModel()
         {
+            AddCommand = new RelayCommand(AddExecuted, AddCanExecute);
             PlayCommand = new RelayCommand(PlayExecuted, PlayCanExecute);
+            SubscribeCommand = new RelayCommand(SubscribeExecuted, SubscribeCanExecute);
             UnsubCommand = new RelayCommand(UnsubExecuted, UnsubCanExecute);
 
+            _podcastFeed = new PodcastListController();
+            _podcastFeed.GetSubscribedFeeds();
+
             // Podcasts List Setup
-            //_podcastList = new PodcastFeed().RequestFeedList();
-            _viewPodcasts = new ListCollectionView(new PodcastFeed().PodcastList);
+            _viewPodcasts = new ListCollectionView(_podcastFeed.PodcastList);
 
             // Episodes List Setup
             _episodesList = new ObservableCollection<FeedItem>();
@@ -43,6 +49,13 @@ namespace WPFMVVM.MVVM.ViewModel
             ViewEpisodes.MoveCurrentToFirst();
 
             _viewPodcasts.CurrentChanged += UpdateEpisodesList_PodcastChanged;
+            _podcastFeed.PodcastList.CollectionChanged += UpdatePodcastList_CollectionChanged;
+        }
+
+        private void UpdatePodcastList_CollectionChanged(object sender, System.Collections.Specialized.NotifyCollectionChangedEventArgs e)
+        {
+            _viewPodcasts.Refresh();
+            SortViewCollection(_viewPodcasts, nameof(Feed.LastUpdatedDate), ListSortDirection.Descending);
         }
 
         private void UpdateEpisodesList_PodcastChanged(object sender = null, EventArgs e = null)
@@ -64,6 +77,18 @@ namespace WPFMVVM.MVVM.ViewModel
             list.SortDescriptions.Clear();
             list.SortDescriptions.Add(new SortDescription(property, direction));
             list.Refresh();
+        }
+
+        private bool AddCanExecute(object arg) => !string.IsNullOrWhiteSpace(arg.ToString());
+        private void AddExecuted(object obj)
+        {
+            string text = obj as string;
+
+            Uri uriResult;
+            bool result = Uri.TryCreate(text, UriKind.Absolute, out uriResult) && (uriResult.Scheme == Uri.UriSchemeHttp || uriResult.Scheme == Uri.UriSchemeHttps);
+
+            if (result)
+                _podcastFeed.AddFeed(text);
         }
 
         private bool PlayCanExecute(object arg) => true;
@@ -92,11 +117,21 @@ namespace WPFMVVM.MVVM.ViewModel
             MainViewModel.PlayerVM.CurrentEpisode.ChangeEpisode(feedItem, mediaUrl, imageUrl);
         }
 
-        private bool UnsubCanExecute(object arg) => true;
+        private bool SubscribeCanExecute(object arg)
+        {
+            return true;
+        }
+        private void SubscribeExecuted(object obj)
+        {
+            _podcastFeed.SaveFeed((Feed)_viewPodcasts.CurrentItem);
+        }
+
+        private bool UnsubCanExecute(object arg)
+        {
+            return false;
+        }
         private void UnsubExecuted(object obj)
         {
-            Feed feed = (Feed)_viewPodcasts.CurrentItem;
-            new PodcastFeed().RemoveFeed(feed);
         }
     }
 }
