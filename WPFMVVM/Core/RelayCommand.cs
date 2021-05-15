@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Windows.Input;
 
-namespace WPFMVVM.Core
+namespace NoiseCast.Core
 {
     public class RelayCommand : ICommand
     {

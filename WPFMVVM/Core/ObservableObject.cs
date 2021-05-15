@@ -3,7 +3,7 @@ using System.ComponentModel;
 using System.Runtime.CompilerServices;
 using System.Threading.Tasks;
 
-namespace WPFMVVM.Core
+namespace NoiseCast.Core
 {
     public class ObservableObject : INotifyPropertyChanged
     {

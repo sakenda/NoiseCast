@@ -1,6 +1,6 @@
 ﻿using System.Windows.Controls;
 
-namespace WPFMVVM.MVVM.View
+namespace NoiseCast.MVVM.View
 {
     public partial class PlayerView : UserControl
     {

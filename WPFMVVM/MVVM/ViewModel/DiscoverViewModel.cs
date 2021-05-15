@@ -3,9 +3,9 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using WPFMVVM.Core;
+using NoiseCast.Core;
 
-namespace WPFMVVM.MVVM.ViewModel
+namespace NoiseCast.MVVM.ViewModel
 {
     public class DiscoverViewModel : ObservableObject
     {

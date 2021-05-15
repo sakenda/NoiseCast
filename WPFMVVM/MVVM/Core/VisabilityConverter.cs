@@ -3,7 +3,7 @@ using System.Globalization;
 using System.Windows;
 using System.Windows.Data;
 
-namespace WPFMVVM.MVVM.Core
+namespace NoiseCast.MVVM.Core
 {
     [ValueConversion(typeof(bool), typeof(Visibility))]
     public class VisabilityConverter : IValueConverter

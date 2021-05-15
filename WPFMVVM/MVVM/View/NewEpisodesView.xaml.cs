@@ -13,7 +13,7 @@ using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
 
-namespace WPFMVVM.MVVM.View
+namespace NoiseCast.MVVM.View
 {
     /// <summary>
     /// Interaction logic for HomeView.xaml

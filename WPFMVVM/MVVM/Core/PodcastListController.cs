@@ -4,9 +4,9 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Diagnostics;
 using System.Threading.Tasks;
-using WPFMVVM.MVVM.Model;
+using NoiseCast.MVVM.Model;
 
-namespace WPFMVVM.MVVM.Core
+namespace NoiseCast.MVVM.Core
 {
     public class PodcastListController
     {
@@ -106,6 +106,10 @@ namespace WPFMVVM.MVVM.Core
             return _sFeeds[_sFeeds.Count - 1];
         }
 
+        public void SaveFeed(PodcastModel feed)
+        {
+            _serialization.Serialize(GetSerializableFeedModel(feed.Podcast));
+        }
         public void SaveFeed(Feed feed)
         {
             _serialization.Serialize(GetSerializableFeedModel(feed));

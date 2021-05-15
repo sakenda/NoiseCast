@@ -2,10 +2,10 @@
 using System.Windows.Controls;
 using System.Windows.Input;
 using System.Windows.Threading;
-using WPFMVVM.Core;
-using WPFMVVM.MVVM.Model;
+using NoiseCast.Core;
+using NoiseCast.MVVM.Model;
 
-namespace WPFMVVM.MVVM.ViewModel
+namespace NoiseCast.MVVM.ViewModel
 {
     public class PlayerViewModel : ObservableObject
     {

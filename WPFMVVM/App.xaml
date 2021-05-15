@@ -1,9 +1,9 @@
-﻿<Application x:Class="WPFMVVM.App"
+﻿<Application x:Class="NoiseCast.App"
              xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-             xmlns:local="clr-namespace:WPFMVVM"
-             xmlns:viewModel="clr-namespace:WPFMVVM.MVVM.ViewModel"
-             xmlns:view="clr-namespace:WPFMVVM.MVVM.View"
+             xmlns:local="clr-namespace:NoiseCast"
+             xmlns:viewModel="clr-namespace:NoiseCast.MVVM.ViewModel"
+             xmlns:view="clr-namespace:NoiseCast.MVVM.View"
              StartupUri="MainWindow.xaml">
     <Application.Resources>
         <ResourceDictionary>

@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.IO;
 
-namespace WPFMVVM.MVVM.Core
+namespace NoiseCast.MVVM.Core
 {
     public static class ApplicationSettings
     {

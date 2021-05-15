@@ -2,9 +2,9 @@
 using System;
 using System.Collections.Generic;
 using System.IO;
-using WPFMVVM.MVVM.Model;
+using NoiseCast.MVVM.Model;
 
-namespace WPFMVVM.MVVM.Core
+namespace NoiseCast.MVVM.Core
 {
     public class FeedSerialization
     {

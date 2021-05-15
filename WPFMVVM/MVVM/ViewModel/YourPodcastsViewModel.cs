@@ -5,10 +5,10 @@ using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Windows.Data;
 using System.Windows.Input;
-using WPFMVVM.Core;
-using WPFMVVM.MVVM.Core;
+using NoiseCast.Core;
+using NoiseCast.MVVM.Core;
 
-namespace WPFMVVM.MVVM.ViewModel
+namespace NoiseCast.MVVM.ViewModel
 {
     public class YourPodcastsViewModel : ObservableObject
     {

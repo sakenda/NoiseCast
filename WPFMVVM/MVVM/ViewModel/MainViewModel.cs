@@ -1,6 +1,6 @@
-﻿using WPFMVVM.Core;
+﻿using NoiseCast.Core;
 
-namespace WPFMVVM.MVVM.ViewModel
+namespace NoiseCast.MVVM.ViewModel
 {
     public class MainViewModel : ObservableObject
     {

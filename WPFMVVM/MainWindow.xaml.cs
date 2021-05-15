@@ -1,8 +1,8 @@
 ﻿using System.Windows;
 using System.Windows.Input;
-using WPFMVVM.Core;
+using NoiseCast.Core;
 
-namespace WPFMVVM
+namespace NoiseCast
 {
     public partial class MainWindow : Window
     {

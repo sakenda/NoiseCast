@@ -12,9 +12,9 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
-using WPFMVVM.MVVM.ViewModel;
+using NoiseCast.MVVM.ViewModel;
 
-namespace WPFMVVM.MVVM.View
+namespace NoiseCast.MVVM.View
 {
     /// <summary>
     /// Interaction logic for YourPodcastsView.xaml

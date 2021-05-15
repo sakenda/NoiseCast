@@ -1,26 +1,10 @@
 ﻿using CodeHollow.FeedReader;
 using CodeHollow.FeedReader.Feeds;
 using System;
-using WPFMVVM.Core;
+using NoiseCast.Core;
 
-namespace WPFMVVM.MVVM.Model
+namespace NoiseCast.MVVM.Model
 {
-    public delegate void EpisodeChangedEventHandler(EpisodeModel sender, EpisodeChangedEventArgs e);
-    public class EpisodeChangedEventArgs : EventArgs
-    {
-        public FeedType Type { get; set; }
-
-        public EpisodeChangedEventArgs(EpisodeModel episode)
-        {
-            Type = episode.EpisodeFeed.GetType().Name switch
-            {
-                nameof(Rss20FeedItem) => FeedType.Rss_2_0,
-                nameof(MediaRssFeedItem) => FeedType.MediaRss,
-                _ => FeedType.Unknown
-            };
-        }
-    }
-
     public class EpisodeModel : ObservableObject
     {
         public event EpisodeChangedEventHandler EpisodeChanged;

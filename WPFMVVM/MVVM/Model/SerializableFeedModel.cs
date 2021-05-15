@@ -2,7 +2,7 @@
 using Newtonsoft.Json;
 using System;
 
-namespace WPFMVVM.MVVM.Model
+namespace NoiseCast.MVVM.Model
 {
     [JsonObject(MemberSerialization.OptIn)]
     public class SerializableFeedModel

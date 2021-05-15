@@ -1,7 +1,7 @@
 ﻿using System;
 using System.IO;
 
-namespace WPFMVVM.Core
+namespace NoiseCast.Core
 {
     public class FileController
     {
