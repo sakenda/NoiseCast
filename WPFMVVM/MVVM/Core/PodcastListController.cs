@@ -1,48 +1,28 @@
 ﻿using CodeHollow.FeedReader;
-using System;
-using System.Collections.Generic;
-using System.Collections.ObjectModel;
-using System.Diagnostics;
-using System.Threading.Tasks;
 using NoiseCast.MVVM.Model;
+using System;
+using System.Collections.ObjectModel;
+using System.Threading.Tasks;
 
 namespace NoiseCast.MVVM.Core
 {
-    public class PodcastListController
+    public static class PodcastListController
     {
-        #region "Static Members"
-        private static ObservableCollection<Feed> _feeds;
+        public static ObservableCollection<PodcastModel> PodcastsList { get; set; }
+
         static PodcastListController()
         {
-            _feeds = new ObservableCollection<Feed>();
-        }
-        #endregion "Static Members"
-
-        #region "Instance Members"
-        private List<SerializableFeedModel> _sFeeds;
-        private FeedSerialization _serialization;
-
-        public ObservableCollection<Feed> PodcastList
-        {
-            get => _feeds;
-            private set => _feeds = value;
+            if (PodcastsList == null)
+                PodcastsList = new FeedSerialization().Deserialize();
         }
 
-        public PodcastListController()
-        {
-            _serialization = new FeedSerialization();
-            _sFeeds = new List<SerializableFeedModel>();
-        }
-
-        public void GetSubscribedFeeds()
-        {
-            _sFeeds = _serialization.Deserialize();
-
-            foreach (var feed in _serialization.Deserialize())
-                PodcastList.Add(feed.FeedObj);
-        }
-
-        public bool AddFeed(string url)
+        /// <summary>
+        /// Add a feed based on an url string.
+        /// </summary>
+        /// <param name="list"></param>
+        /// <param name="url"></param>
+        /// <returns>Returns <see cref="true"/> if adding was successful, <see cref="false"/> when podast is already added to list</returns>
+        public static bool AddFeed(this ObservableCollection<PodcastModel> list, string url)
         {
             Feed feed = null;
 
@@ -55,95 +35,33 @@ namespace NoiseCast.MVVM.Core
                 throw new Exception("Error: Could not load Feed from:" + url, ex);
             }
 
-            if (feed == null || _feeds.Contains(feed)) return false;
+            var podcastModel = new PodcastModel(feed);
 
-            PodcastList.Add(feed);
-            _sFeeds.Add(new SerializableFeedModel(feed));
+            if (feed == null || PodcastsList.Contains(podcastModel)) return false;
+
+            list.Add(podcastModel);
+            return true;
+        }
+
+        /// <summary>
+        /// Removes Podcast if it exist.
+        /// </summary>
+        /// <param name="podcast"></param>
+        /// <returns>Returns <see cref="true"/> if Podcast was Removed, <see cref="false"/> if it wasn't.</returns>
+        public static bool RemoveFeed(this PodcastModel podcast)
+        {
+            if (podcast == null) return false;
+            if (!PodcastsList.Contains(podcast)) return false;
+
+            PodcastsList.Remove(podcast);
 
             return true;
         }
 
-        public bool RemoveFeed(Feed feed)
-        {
-            if (feed == null) return false;
-            if (!_feeds.Contains(feed)) return false;
-
-            PodcastList.Remove(feed);
-
-            foreach (var item in _sFeeds)
-                if (item.FeedObj.Link == feed.Link) _sFeeds.Remove(item);
-
-            return true;
-        }
-
-        public bool CheckFeedIsSaved(Feed feed)
-        {
-            if (feed == null) return false;
-
-            foreach (var item in _sFeeds)
-            {
-                if (item.FeedObj.Link != feed.Link) continue;
-
-                if (item.GetID() == Guid.Empty.ToString()) return false;
-
-                return true;
-            }
-
-            return false;
-        }
-
-        public SerializableFeedModel GetSerializableFeedModel(Feed feed)
-        {
-            foreach (var item in _sFeeds)
-            {
-                if (item.FeedObj.Link != feed.Link) continue;
-
-                return item;
-            }
-
-            _sFeeds.Add(new SerializableFeedModel(feed));
-
-            return _sFeeds[_sFeeds.Count - 1];
-        }
-
-        public void SaveFeed(PodcastModel feed)
-        {
-            _serialization.Serialize(GetSerializableFeedModel(feed.Podcast));
-        }
-        public void SaveFeed(Feed feed)
-        {
-            _serialization.Serialize(GetSerializableFeedModel(feed));
-        }
-
-        public void UpdateFeedList()
-        {
-            try
-            {
-                Parallel.ForEach(_sFeeds, feed =>
-                {
-                    try
-                    {
-                        feed.UpdateFeed(
-                            Task.Run(() =>
-                            {
-                                return FeedReader.ReadAsync(feed.FeedObj.Link);
-                            }).Result
-                        );
-                    }
-                    catch (Exception ex)
-                    {
-                        throw new Exception("Error: Could not update feed from:" + feed.FeedObj.Link, ex);
-                    }
-
-                    Debug.WriteLine($"Done: {feed.FeedObj.Title} - {feed.FeedObj.Items.Count} episodes updated.");
-                });
-            }
-            catch (AggregateException)
-            {
-                throw;
-            }
-        }
-
-        #endregion "Instance Members"
+        /// <summary>
+        /// Serializes podcast locally
+        /// </summary>
+        /// <param name="podcast"></param>
+        public static void SaveFeed(this PodcastModel podcast) => new FeedSerialization().Serialize(podcast);
     }
 }

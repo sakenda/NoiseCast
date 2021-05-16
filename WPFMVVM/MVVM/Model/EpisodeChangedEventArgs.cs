@@ -11,12 +11,12 @@ namespace NoiseCast.MVVM.Model
 
         public EpisodeChangedEventArgs(EpisodeModel episode)
         {
-            Type = episode.EpisodeFeed.GetType().Name switch
-            {
-                nameof(Rss20FeedItem) => FeedType.Rss_2_0,
-                nameof(MediaRssFeedItem) => FeedType.MediaRss,
-                _ => FeedType.Unknown
-            };
+            //Type = episode.Episode.GetType().Name switch
+            //{
+            //    nameof(Rss20FeedItem) => FeedType.Rss_2_0,
+            //    nameof(MediaRssFeedItem) => FeedType.MediaRss,
+            //    _ => FeedType.Unknown
+            //};
         }
     }
 }

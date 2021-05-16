@@ -1,21 +1,22 @@
 ﻿using CodeHollow.FeedReader;
 using Newtonsoft.Json;
+using NoiseCast.Core;
 using NoiseCast.MVVM.Core;
 using System;
-using System.Collections.Generic;
+using System.Collections.ObjectModel;
+using System.Linq;
 
 namespace NoiseCast.MVVM.Model
 {
-    public class PodcastModel
+    public class PodcastModel : ObservableObject
     {
         [JsonProperty("originalDocument")] private string _originalDocument => _podcast.OriginalDocument;
         [JsonProperty("id")] private Guid _id;
-        [JsonProperty("episodesList")] private List<EpisodeModel> _episodes;
-        private Feed _podcast;
+        [JsonProperty("episodesList")] private ObservableCollection<EpisodeModel> _episodes;
         private string _imagePath;
-        private PodcastListController _controller = new PodcastListController();
+        private Feed _podcast;
 
-        [JsonIgnore] public List<EpisodeModel> Episodes => _episodes;
+        [JsonIgnore] public ObservableCollection<EpisodeModel> Episodes => _episodes;
         [JsonIgnore] public Feed Podcast => _podcast;
         [JsonIgnore] public string FilePath => ApplicationSettings.SETTINGS_PODCAST_PATH + _id.ToString() + ".json";
         [JsonIgnore] public bool IsSubscribed => _id != Guid.Empty;
@@ -26,15 +27,16 @@ namespace NoiseCast.MVVM.Model
         /// </summary>
         /// <param name="id">Internal id</param>
         /// <param name="originalDocument">Feed as XML-Document</param>
-        /// <param name="episodes">List of values relevant to each episode</param>
+        /// <param name="episodesList">List of values relevant to each episode</param>
         [JsonConstructor]
-        public PodcastModel(Guid id, string originalDocument, List<EpisodeModel> episodes)
+        public PodcastModel(Guid id, string originalDocument, ObservableCollection<EpisodeModel> episodesList)
         {
             _id = id;
             _podcast = FeedReader.ReadFromString(originalDocument);
-            _episodes = episodes;
+            _episodes = episodesList == null ? new ObservableCollection<EpisodeModel>() : episodesList;
 
             _imagePath = _podcast.ImageUrl; // TODO: Save image locally/set imagePath locally
+            InitializeEpisodes();
         }
 
         /// <summary>
@@ -45,7 +47,30 @@ namespace NoiseCast.MVVM.Model
         {
             _podcast = podcast;
             _id = Guid.Empty;
-            _episodes = new List<EpisodeModel>();
+            _imagePath = podcast.ImageUrl;
+            _episodes = new ObservableCollection<EpisodeModel>();
+            InitializeEpisodes();
+        }
+
+        /// <summary>
+        /// Initialize all episodes and skips if one already exists
+        /// </summary>
+        private void InitializeEpisodes()
+        {
+            foreach (var feedItem in _podcast.Items)
+            {
+                // Search for saved episodes, add FeedItem and continue
+                var temp = _episodes.FirstOrDefault(x => x.ID == feedItem.Id);
+                if (temp != null)
+                {
+                    temp.SetEpisodeFeed(feedItem);
+                    continue;
+                }
+
+                // add new episode
+                var episodeModel = new EpisodeModel(feedItem, feedItem.Id, _imagePath);
+                _episodes.Add(episodeModel);
+            }
         }
 
         /// <summary>
@@ -75,6 +100,6 @@ namespace NoiseCast.MVVM.Model
         /// <summary>
         /// Save Feed locally
         /// </summary>
-        public void Save() => _controller.SaveFeed(this);
+        public void Save() => PodcastListController.SaveFeed(this);
     }
 }

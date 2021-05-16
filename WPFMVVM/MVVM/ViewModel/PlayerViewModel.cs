@@ -2,6 +2,7 @@
 using System.Windows.Controls;
 using System.Windows.Input;
 using System.Windows.Threading;
+using CodeHollow.FeedReader;
 using NoiseCast.Core;
 using NoiseCast.MVVM.Model;
 
@@ -11,7 +12,7 @@ namespace NoiseCast.MVVM.ViewModel
     {
         private MediaElement _mediaElement;
         private DispatcherTimer _timer;
-        private EpisodeModel _currentEpisode;
+        private FeedItem _currentEpisode;
         private double _skipAmount;
         private double _position;
         private double _positionMaximum;
@@ -22,7 +23,7 @@ namespace NoiseCast.MVVM.ViewModel
             get => _mediaElement;
             set => SetProperty(ref _mediaElement, value);
         }
-        public EpisodeModel CurrentEpisode
+        public FeedItem CurrentEpisode
         {
             get => _currentEpisode;
             set => SetProperty(ref _currentEpisode, value);
@@ -65,8 +66,8 @@ namespace NoiseCast.MVVM.ViewModel
             LastCommand = new RelayCommand(LastExecuted, LastCanExecute);
             MuteCommand = new RelayCommand(MuteExecuted, MuteCanExecute);
 
-            _currentEpisode = new EpisodeModel();
-            _currentEpisode.EpisodeChanged += _currentEpisode_EpisodeChanged;
+            //_currentEpisode = new EpisodeModel();
+            //_currentEpisode.EpisodeChanged += _currentEpisode_EpisodeChanged;
 
             _timer = new DispatcherTimer();
             _timer.Interval = TimeSpan.FromSeconds(1);
@@ -90,7 +91,7 @@ namespace NoiseCast.MVVM.ViewModel
         }
         private void _currentEpisode_EpisodeChanged(EpisodeModel sender, EpisodeChangedEventArgs e)
         {
-            MediaElement.Source = new Uri(sender.MediaUrl);
+            MediaElement.Source = new Uri(sender.MediaPath);
             _mediaElement.Pause();
         }
 

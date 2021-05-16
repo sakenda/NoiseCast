@@ -1,4 +1,5 @@
 ﻿using NoiseCast.Core;
+using NoiseCast.MVVM.Core;
 
 namespace NoiseCast.MVVM.ViewModel
 {
