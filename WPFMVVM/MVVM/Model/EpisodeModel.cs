@@ -1,4 +1,5 @@
 ﻿using CodeHollow.FeedReader;
+using CodeHollow.FeedReader.Feeds;
 using Newtonsoft.Json;
 using NoiseCast.Core;
 
@@ -19,7 +20,7 @@ namespace NoiseCast.MVVM.Model
         [JsonIgnore] public FeedItem Episode => _episode;
         [JsonIgnore] public string ImagePath => _imagePath;
         [JsonIgnore] public string MediaPath => _mediaPath;
-        [JsonIgnore] public double DurationListened => _durationListened;
+        [JsonIgnore] public double DurationListened { get => _durationListened; set => SetProperty(ref _durationListened, value); }
         [JsonIgnore] public bool IsArchived => _durationListened == -1 ? true : false;
 
         /// <summary>
@@ -42,6 +43,7 @@ namespace NoiseCast.MVVM.Model
             _id = id;
             _imagePath = imagePath;
             _durationListened = 0;
+            _mediaPath = GetMediaPath();
         }
 
         /// <summary>
@@ -53,6 +55,27 @@ namespace NoiseCast.MVVM.Model
         /// Set <see cref="FeedItem"/>
         /// </summary>
         /// <param name="episode"></param>
-        public void SetEpisodeFeed(FeedItem episode) => _episode = episode;
+        public void SetEpisodeFeed(FeedItem episode)
+        {
+            _episode = episode;
+            _mediaPath = GetMediaPath();
+        }
+
+        /// <summary>
+        /// Set Path to the Enclosure URL depending on the FeedType
+        /// </summary>
+        private string GetMediaPath()
+        {
+            if (_episode == null) return null;
+
+            string type = _episode.SpecificItem.GetType().Name;
+
+            return type switch
+            {
+                nameof(Rss20FeedItem) => ((Rss20FeedItem)_episode.SpecificItem).Enclosure.Url,
+                nameof(MediaRssFeedItem) => ((MediaRssFeedItem)_episode.SpecificItem).Enclosure.Url,
+                _ => null
+            };
+        }
     }
 }

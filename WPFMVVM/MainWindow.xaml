@@ -13,7 +13,8 @@
         Background="Transparent"
         WindowStyle="None"
         AllowsTransparency="True"
-        FontFamily="{StaticResource BarlowRegular}">
+        FontFamily="{StaticResource BarlowRegular}"
+        Closing="Window_Closing">
     <Window.DataContext>
         <viewModel:MainViewModel/>
     </Window.DataContext>
@@ -49,6 +50,7 @@
                 <Button Background="#FF6157" BorderThickness="0"
                         Content="&#xf00d;"
                         Style="{StaticResource WindowControlButton}"
+                        Command="{Binding ExitCommand}"
                         Click="CloseApplication_Click"
                         ToolTip="Schließen"/>
             </StackPanel>

@@ -1,5 +1,6 @@
 ﻿using NoiseCast.Core;
 using NoiseCast.MVVM.Core;
+using System;
 
 namespace NoiseCast.MVVM.ViewModel
 {
@@ -12,6 +13,7 @@ namespace NoiseCast.MVVM.ViewModel
         public RelayCommand DownloadsViewCommand { get; set; }
         public RelayCommand SettingsViewCommand { get; set; }
         public RelayCommand PlayerViewCommand { get; set; }
+        public RelayCommand ExitCommand { get; set; }
 
         public static YourPodcastsViewModel YourPodcastsVM { get; set; }
         public static NewEpisodesViewModel NewEpisodesVM { get; set; }
@@ -54,6 +56,13 @@ namespace NoiseCast.MVVM.ViewModel
             DownloadsViewCommand = new RelayCommand(o => CurrentView = DownloadsVM);
             SettingsViewCommand = new RelayCommand(o => CurrentView = SettingsVM);
             PlayerViewCommand = new RelayCommand(o => PlayerView = PlayerVM);
+            ExitCommand = new RelayCommand(ExitExecuted, ExitCanExecute);
+        }
+
+        private bool ExitCanExecute(object arg) => true;
+        private void ExitExecuted(object obj)
+        {
+            new FeedSerialization().Serialize(PodcastListController.PodcastsList);
         }
     }
 }

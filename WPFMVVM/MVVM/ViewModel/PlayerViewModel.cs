@@ -2,7 +2,6 @@
 using System.Windows.Controls;
 using System.Windows.Input;
 using System.Windows.Threading;
-using CodeHollow.FeedReader;
 using NoiseCast.Core;
 using NoiseCast.MVVM.Model;
 
@@ -12,7 +11,7 @@ namespace NoiseCast.MVVM.ViewModel
     {
         private MediaElement _mediaElement;
         private DispatcherTimer _timer;
-        private FeedItem _currentEpisode;
+        private EpisodeModel _currentEpisode;
         private double _skipAmount;
         private double _position;
         private double _positionMaximum;
@@ -23,7 +22,7 @@ namespace NoiseCast.MVVM.ViewModel
             get => _mediaElement;
             set => SetProperty(ref _mediaElement, value);
         }
-        public FeedItem CurrentEpisode
+        public EpisodeModel CurrentEpisode
         {
             get => _currentEpisode;
             set => SetProperty(ref _currentEpisode, value);
@@ -66,8 +65,7 @@ namespace NoiseCast.MVVM.ViewModel
             LastCommand = new RelayCommand(LastExecuted, LastCanExecute);
             MuteCommand = new RelayCommand(MuteExecuted, MuteCanExecute);
 
-            //_currentEpisode = new EpisodeModel();
-            //_currentEpisode.EpisodeChanged += _currentEpisode_EpisodeChanged;
+            _currentEpisode = new EpisodeModel(null, null, null);
 
             _timer = new DispatcherTimer();
             _timer.Interval = TimeSpan.FromSeconds(1);
@@ -83,16 +81,25 @@ namespace NoiseCast.MVVM.ViewModel
             _mediaElement.Volume = .2;
         }
 
-        private void OnTimerTick(object sender, EventArgs e) => Position++;
+        public void SetEpisode(EpisodeModel episode)
+        {
+            CurrentEpisode = episode;
+            MediaElement.Source = new Uri(episode.MediaPath);
+
+            Position = episode.DurationListened;
+            MediaElement.Position = TimeSpan.FromSeconds(episode.DurationListened);
+
+            MediaElement.Pause();
+        }
+
+        private void OnTimerTick(object sender, EventArgs e)
+        {
+            Position++;
+            _currentEpisode.DurationListened = Position;
+        }
         private void MediaElement_MediaOpened(object sender, System.Windows.RoutedEventArgs e)
         {
-            Position = 0;
             PositionMaximum = _mediaElement.NaturalDuration.TimeSpan.TotalSeconds;
-        }
-        private void _currentEpisode_EpisodeChanged(EpisodeModel sender, EpisodeChangedEventArgs e)
-        {
-            MediaElement.Source = new Uri(sender.MediaPath);
-            _mediaElement.Pause();
         }
 
         private bool LastCanExecute(object arg) => false;

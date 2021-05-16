@@ -108,7 +108,7 @@ namespace NoiseCast.MVVM.ViewModel
         private bool PlayCanExecute(object arg) => true;
         private void PlayExecuted(object obj)
         {
-            MainViewModel.PlayerVM.CurrentEpisode = (FeedItem)obj;
+            MainViewModel.PlayerVM.SetEpisode((EpisodeModel)_viewEpisodes.CurrentItem);
         }
 
         private bool SubscribeCanExecute(object arg)

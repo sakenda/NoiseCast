@@ -36,7 +36,7 @@
                                    Rect="0,0,265,265"/>
             </Border.Clip>
 
-            <Image Margin="0 -10 0 10" Source="{Binding CurrentEpisode.ImageUrl, TargetNullValue={x:Null}}"/>
+            <Image Margin="0 -10 0 10" Source="{Binding CurrentEpisode.ImagePath, TargetNullValue={x:Null}}"/>
         </Border>
 
         <!-- EpisodeInfo's -->
@@ -46,8 +46,7 @@
                     Orientation="Vertical"
                     VerticalAlignment="Top"
                     Margin="0 0 0 10">
-            <TextBlock Text="{Binding CurrentEpisode.EpisodeFeed.Title}"
-                       d:Text="Überschrift"
+            <TextBlock Text="{Binding CurrentEpisode.Episode.Title}"
                        TextWrapping="NoWrap"
                        TextTrimming="WordEllipsis"
                        FontSize="16"
@@ -60,8 +59,7 @@
         <ScrollViewer Grid.Row="2"
                       Name="sc_info"
                       HorizontalScrollBarVisibility="Hidden">
-            <TextBlock Text="{Binding CurrentEpisode.EpisodeFeed.Description}"
-                       d:Text="Beschreibung"
+            <TextBlock Text="{Binding CurrentEpisode.Episode.Description}"
                        TextWrapping="WrapWithOverflow"
                        TextTrimming="WordEllipsis"
                        Width="{Binding ElementName=sc_info, Path=ViewportWidth}"

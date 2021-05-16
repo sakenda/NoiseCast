@@ -13,7 +13,7 @@ namespace NoiseCast.MVVM.Core
         /// Serializes a <see cref="List{PodcastModel}"/>. All items in the List will get an ID, if not already set.
         /// </summary>
         /// <param name="podcastModels"></param>
-        public void Serialize(List<PodcastModel> podcastModels)
+        public void Serialize(ObservableCollection<PodcastModel> podcastModels)
         {
             foreach (var feed in podcastModels)
             {
