@@ -1,6 +1,5 @@
 ﻿using NoiseCast.Core;
 using NoiseCast.MVVM.Core;
-using System;
 
 namespace NoiseCast.MVVM.ViewModel
 {
@@ -60,9 +59,6 @@ namespace NoiseCast.MVVM.ViewModel
         }
 
         private bool ExitCanExecute(object arg) => true;
-        private void ExitExecuted(object obj)
-        {
-            new FeedSerialization().Serialize(PodcastListController.PodcastsList);
-        }
+        private void ExitExecuted(object obj) => new FeedSerialization().Serialize(PodcastListController.PodcastsList);
     }
 }

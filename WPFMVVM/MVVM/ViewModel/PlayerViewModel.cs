@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
 using System.Windows.Threading;
@@ -37,6 +38,7 @@ namespace NoiseCast.MVVM.ViewModel
             get => _position;
             set
             {
+                // On changes higher than 1 second tick
                 if (value != _position + 1)
                     MediaElement.Position = TimeSpan.FromSeconds(value);
 
@@ -65,7 +67,7 @@ namespace NoiseCast.MVVM.ViewModel
             LastCommand = new RelayCommand(LastExecuted, LastCanExecute);
             MuteCommand = new RelayCommand(MuteExecuted, MuteCanExecute);
 
-            _currentEpisode = new EpisodeModel(null, null, null);
+            //_currentEpisode = new EpisodeModel(null, null, null);
 
             _timer = new DispatcherTimer();
             _timer.Interval = TimeSpan.FromSeconds(1);
@@ -76,11 +78,16 @@ namespace NoiseCast.MVVM.ViewModel
             _mediaElement.LoadedBehavior = MediaState.Manual;
             _mediaElement.UnloadedBehavior = MediaState.Manual;
             _mediaElement.MediaOpened += MediaElement_MediaOpened;
+            _mediaElement.MediaEnded += _mediaElement_MediaEnded;
 
             _skipAmount = 30;
             _mediaElement.Volume = .2;
         }
 
+        /// <summary>
+        /// Set episode and mediaelement source
+        /// </summary>
+        /// <param name="episode"></param>
         public void SetEpisode(EpisodeModel episode)
         {
             CurrentEpisode = episode;
@@ -89,17 +96,37 @@ namespace NoiseCast.MVVM.ViewModel
             Position = episode.DurationListened;
             MediaElement.Position = TimeSpan.FromSeconds(episode.DurationListened);
 
-            MediaElement.Pause();
+            _timer.Stop();
         }
 
+        /// <summary>
+        /// Timer for mediaplayer
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void OnTimerTick(object sender, EventArgs e)
         {
             Position++;
             _currentEpisode.DurationListened = Position;
         }
-        private void MediaElement_MediaOpened(object sender, System.Windows.RoutedEventArgs e)
+
+        /// <summary>
+        ///  Set Episode as archived.
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void _mediaElement_MediaEnded(object sender, RoutedEventArgs e) => _currentEpisode.SetIsArchived();
+
+        /// <summary>
+        /// Executes after Media is loaded
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void MediaElement_MediaOpened(object sender, RoutedEventArgs e)
         {
             PositionMaximum = _mediaElement.NaturalDuration.TimeSpan.TotalSeconds;
+            Position = _currentEpisode.DurationListened;
+            MediaElement.Position = TimeSpan.FromSeconds(_currentEpisode.DurationListened);
         }
 
         private bool LastCanExecute(object arg) => false;

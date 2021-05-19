@@ -1,5 +1,4 @@
 ﻿using CodeHollow.FeedReader;
-using CodeHollow.FeedReader.Feeds;
 using System;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
@@ -8,8 +7,6 @@ using System.Windows.Input;
 using NoiseCast.Core;
 using NoiseCast.MVVM.Core;
 using NoiseCast.MVVM.Model;
-using System.Linq;
-using System.Diagnostics;
 
 namespace NoiseCast.MVVM.ViewModel
 {

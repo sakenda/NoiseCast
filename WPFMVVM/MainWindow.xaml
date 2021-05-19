@@ -13,8 +13,7 @@
         Background="Transparent"
         WindowStyle="None"
         AllowsTransparency="True"
-        FontFamily="{StaticResource BarlowRegular}"
-        Closing="Window_Closing">
+        FontFamily="{StaticResource BarlowRegular}">
     <Window.DataContext>
         <viewModel:MainViewModel/>
     </Window.DataContext>

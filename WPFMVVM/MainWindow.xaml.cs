@@ -1,5 +1,4 @@
-﻿using NoiseCast.MVVM.ViewModel;
-using System.Windows;
+﻿using System.Windows;
 using System.Windows.Input;
 
 namespace NoiseCast
@@ -16,9 +15,5 @@ namespace NoiseCast
         private void CloseApplication_Click(object sender, RoutedEventArgs e) => Application.Current.MainWindow.Close();
         private void MinWindow_Click(object sender, RoutedEventArgs e) => WindowState = WindowState.Minimized;
         private void MaxWindow_Click(object sender, RoutedEventArgs e) => WindowState = WindowState == WindowState.Normal ? WindowState.Maximized : WindowState.Normal;
-
-        private void Window_Closing(object sender, System.ComponentModel.CancelEventArgs e)
-        {
-        }
     }
 }

@@ -20,7 +20,12 @@ namespace NoiseCast.MVVM.Model
         [JsonIgnore] public FeedItem Episode => _episode;
         [JsonIgnore] public string ImagePath => _imagePath;
         [JsonIgnore] public string MediaPath => _mediaPath;
-        [JsonIgnore] public double DurationListened { get => _durationListened; set => SetProperty(ref _durationListened, value); }
+        [JsonIgnore]
+        public double DurationListened
+        {
+            get => _durationListened;
+            set => SetProperty(ref _durationListened, value);
+        }
         [JsonIgnore] public bool IsArchived => _durationListened == -1 ? true : false;
 
         /// <summary>
