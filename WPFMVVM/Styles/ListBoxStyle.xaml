@@ -4,6 +4,7 @@
                     xmlns:core="clr-namespace:NoiseCast.MVVM.Core">
     <core:DoubleToTimeSpanConverter x:Key="DoubleToTime"/>
     <core:StringToTimeSpanConverter x:Key="StringToTime"/>
+    <core:OlderThanDateConverter x:Key="OlderThanDate"/>
 
     <Style x:Key="ListBoxStyle" TargetType="{x:Type ListBox}">
         <Setter Property="BorderThickness" Value="0"/>
@@ -79,12 +80,13 @@
                                        FontSize="14"/>
 
                             <TextBlock Grid.Column="1" Grid.Row="4"
-                                       Text="{Binding Podcast.LastUpdatedDate, StringFormat=dd.MM.yy - HH:mm}"
+                                       Text="{Binding Podcast.LastUpdatedDate, Converter={StaticResource OlderThanDate}}"
                                        Foreground="{StaticResource DarkFont3}"
                                        Margin="5 0 0 0"
                                        VerticalAlignment="Bottom"
                                        FontFamily="{StaticResource BarlowSemiBold}"
-                                       FontSize="14"/>
+                                       FontSize="14"
+                                       x:Name="tb_lastUpdates"/>
                         </Grid>
                     </Border>
 
@@ -208,7 +210,7 @@
                                        VerticalAlignment="Center"/>
 
                             <TextBlock Grid.Column="3" Grid.Row="0"
-                                       Text="{Binding Episode.PublishingDate, StringFormat=dd.MM.yyyy}"
+                                       Text="{Binding Episode.PublishingDate, Converter={StaticResource OlderThanDate}}"
                                        FontSize="14"
                                        VerticalAlignment="Center"/>
 

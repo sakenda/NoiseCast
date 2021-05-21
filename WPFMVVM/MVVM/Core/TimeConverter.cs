@@ -35,7 +35,7 @@ namespace NoiseCast.MVVM.Core
         {
             double? val = (double?)value;
 
-            if (!val.HasValue || val.Value == 0) val = 0; ;
+            if (!val.HasValue || val.Value == 0) val = 0;
 
             return string.Format("{0:00}:{1:00}", TimeSpan.FromSeconds(val.Value).Hours, TimeSpan.FromSeconds(val.Value).Minutes);
         }
