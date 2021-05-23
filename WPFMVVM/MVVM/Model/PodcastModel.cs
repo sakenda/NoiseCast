@@ -11,17 +11,18 @@ namespace NoiseCast.MVVM.Model
     public class PodcastModel : ObservableObject
     {
         [JsonProperty("originalDocument")] private string _originalDocument => _podcast.OriginalDocument;
-        [JsonProperty("id")] private Guid _id;
         [JsonProperty("episodesList")] private ObservableCollection<EpisodeModel> _episodes;
-        private string _imagePath;
+        [JsonProperty("id")] private Guid _id;
         private Feed _podcast;
+        private string _imagePath;
+        private bool _isSubscribed;
 
-        [JsonIgnore] public string PodcastName => _podcast.Title;
         [JsonIgnore] public ObservableCollection<EpisodeModel> Episodes => _episodes;
+        [JsonIgnore] public string PodcastTitle => _podcast.Title;
+        [JsonIgnore] public string ImagePath => _imagePath;
         [JsonIgnore] public Feed Podcast => _podcast;
         [JsonIgnore] public string FilePath => ApplicationSettings.SETTINGS_PODCAST_PATH + _id.ToString() + ".json";
-        [JsonIgnore] public bool IsSubscribed => _id != Guid.Empty;
-        [JsonIgnore] public string ImagePath => _imagePath;
+        [JsonIgnore] public bool IsSubscribed { get => _isSubscribed; private set => SetProperty(ref _isSubscribed, value); }
 
         /// <summary>
         /// Constructor for deserialized feeds with saved values
@@ -33,6 +34,7 @@ namespace NoiseCast.MVVM.Model
         public PodcastModel(Guid id, string originalDocument, ObservableCollection<EpisodeModel> episodesList)
         {
             _id = id;
+            _isSubscribed = true;
             _podcast = FeedReader.ReadFromString(originalDocument);
             _episodes = episodesList == null ? new ObservableCollection<EpisodeModel>() : episodesList;
 
@@ -48,6 +50,7 @@ namespace NoiseCast.MVVM.Model
         {
             _podcast = podcast;
             _id = Guid.Empty;
+            _isSubscribed = false;
             _imagePath = podcast.ImageUrl;
             _episodes = new ObservableCollection<EpisodeModel>();
             InitializeEpisodes();
@@ -89,6 +92,7 @@ namespace NoiseCast.MVVM.Model
             if (_id != Guid.Empty) return false;
 
             _id = Guid.NewGuid();
+            IsSubscribed = true;
             return true;
         }
 

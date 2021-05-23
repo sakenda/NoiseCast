@@ -138,7 +138,7 @@ namespace NoiseCast.MVVM.ViewModel
         /// <param name="e"></param>
         private void PodcastList_CollectionChanged(object sender, NotifyCollectionChangedEventArgs e)
         {
-            SortViewCollection(_viewPodcasts, nameof(PodcastModel.PodcastName), ListSortDirection.Descending);
+            SortViewCollection(_viewPodcasts, nameof(PodcastModel.PodcastTitle), ListSortDirection.Descending);
         }
     }
 }

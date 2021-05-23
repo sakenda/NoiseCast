@@ -3,6 +3,7 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:vm="clr-namespace:NoiseCast.MVVM.ViewModel"
+             xmlns:core="clr-namespace:NoiseCast.MVVM.Core"
              x:Class="NoiseCast.MVVM.View.YourPodcastsView"
              mc:Ignorable="d"
              Name="root"
@@ -13,6 +14,7 @@
              FontFamily="{StaticResource BarlowRegular}">
     <UserControl.Resources>
         <vm:YourPodcastsViewModel x:Key="YourPodcastViewModel"/>
+        <core:BoolToStringConverter x:Key="BoolToString"/>
     </UserControl.Resources>
 
     <Grid>
@@ -115,7 +117,7 @@
 
             <!-- #region "Subscribe Button" -->
             <Button Grid.Column="1" Grid.Row="1"
-                    Content="Subscribe"
+                    Content="{Binding IsSubscribed, Converter={StaticResource BoolToString}, UpdateSourceTrigger=PropertyChanged}"
                     Command="{Binding ElementName=root, Path=DataContext.SubscribeCommand}"
                     Style="{StaticResource UnsubButton}"
                     HorizontalAlignment="Right"
