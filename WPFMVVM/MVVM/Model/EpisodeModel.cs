@@ -67,6 +67,12 @@ namespace NoiseCast.MVVM.Model
         }
 
         /// <summary>
+        /// Sets imagepath
+        /// </summary>
+        /// <param name="path"></param>
+        public void SetImagePath(string path) => _imagePath = path;
+
+        /// <summary>
         /// Set Path to the Enclosure URL depending on the FeedType
         /// </summary>
         private string GetMediaPath()

@@ -1,6 +1,7 @@
 ﻿using NoiseCast.Core;
 using NoiseCast.MVVM.Core;
 using System.Diagnostics;
+using System.Threading.Tasks;
 
 namespace NoiseCast.MVVM.ViewModel
 {

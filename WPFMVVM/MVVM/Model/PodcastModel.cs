@@ -19,8 +19,8 @@ namespace NoiseCast.MVVM.Model
 
         [JsonIgnore] public ObservableCollection<EpisodeModel> Episodes => _episodes;
         [JsonIgnore] public string PodcastTitle => _podcast.Title;
-        [JsonIgnore] public string ImagePath => _imagePath;
         [JsonIgnore] public Feed Podcast => _podcast;
+        [JsonIgnore] public string ImagePath => _imagePath;
         [JsonIgnore] public string FilePath => ApplicationSettings.SETTINGS_PODCAST_PATH + _id.ToString() + ".json";
         [JsonIgnore] public bool IsSubscribed { get => _isSubscribed; private set => SetProperty(ref _isSubscribed, value); }
 
@@ -94,6 +94,19 @@ namespace NoiseCast.MVVM.Model
             _id = Guid.NewGuid();
             IsSubscribed = true;
             return true;
+        }
+
+        /// <summary>
+        /// Sets imagepath on thee <see cref="PodcastModel"/> and all <see cref="EpisodeModel"/>
+        /// </summary>
+        /// <param name="path"></param>
+        public void SetImagePath(string path)
+        {
+            _imagePath = path;
+            foreach (var item in Episodes)
+            {
+                item.SetImagePath(path);
+            }
         }
 
         /// <summary>

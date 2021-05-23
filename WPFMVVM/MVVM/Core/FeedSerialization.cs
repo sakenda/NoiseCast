@@ -1,4 +1,5 @@
 ﻿using Newtonsoft.Json;
+using NoiseCast.Core;
 using NoiseCast.MVVM.Model;
 using System;
 using System.Collections.Generic;
@@ -13,17 +14,20 @@ namespace NoiseCast.MVVM.Core
         /// Serializes a <see cref="List{PodcastModel}"/>. All items in the List will get an ID, if not already set.
         /// </summary>
         /// <param name="podcastModels"></param>
-        public void Serialize(ObservableCollection<PodcastModel> podcastModels)
+        public async void Serialize(ObservableCollection<PodcastModel> podcastModels)
         {
             foreach (var feed in podcastModels)
             {
                 if (feed == null) continue;
                 if (feed.GetID() == Guid.Empty.ToString()) feed.SetID();
 
-                string json = JsonConvert.SerializeObject(feed, Formatting.Indented);
+                string imagePath = ApplicationSettings.SETTINGS_IMAGE_PATH + feed.GetID();
+                if (imagePath != feed.ImagePath || !string.IsNullOrWhiteSpace(feed.ImagePath))
+                    feed.SetImagePath(await FileController.DownloadImageAndSave(feed.ImagePath, imagePath));
 
+                string json = JsonConvert.SerializeObject(feed, Formatting.Indented);
                 string path = ApplicationSettings.SETTINGS_PODCAST_PATH + feed.GetID() + ".json";
-                File.WriteAllText(path, json);
+                FileController.WriteAllText(path, json);
             }
         }
 
@@ -31,12 +35,15 @@ namespace NoiseCast.MVVM.Core
         /// Serializes one <see cref="PodcastModel"/>. ID will be set if ID is equal to <see cref="Guid.Empty"/>
         /// </summary>
         /// <param name="podcastModel"></param>
-        public void Serialize(PodcastModel podcastModel)
+        public async void Serialize(PodcastModel podcastModel)
         {
             if (podcastModel.GetID() == Guid.Empty.ToString()) podcastModel.SetID();
 
-            string json = JsonConvert.SerializeObject(podcastModel, Formatting.Indented);
+            string imagePath = ApplicationSettings.SETTINGS_IMAGE_PATH + podcastModel.GetID() + "jpg";
+            if (imagePath != podcastModel.ImagePath || !string.IsNullOrWhiteSpace(podcastModel.ImagePath))
+                podcastModel.SetImagePath(await FileController.DownloadImageAndSave(podcastModel.ImagePath, imagePath));
 
+            string json = JsonConvert.SerializeObject(podcastModel, Formatting.Indented);
             string path = ApplicationSettings.SETTINGS_PODCAST_PATH + podcastModel.GetID() + ".json";
             File.WriteAllText(path, json);
         }
