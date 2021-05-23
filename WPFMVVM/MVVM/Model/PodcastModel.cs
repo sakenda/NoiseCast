@@ -16,6 +16,7 @@ namespace NoiseCast.MVVM.Model
         private string _imagePath;
         private Feed _podcast;
 
+        [JsonIgnore] public string PodcastName => _podcast.Title;
         [JsonIgnore] public ObservableCollection<EpisodeModel> Episodes => _episodes;
         [JsonIgnore] public Feed Podcast => _podcast;
         [JsonIgnore] public string FilePath => ApplicationSettings.SETTINGS_PODCAST_PATH + _id.ToString() + ".json";

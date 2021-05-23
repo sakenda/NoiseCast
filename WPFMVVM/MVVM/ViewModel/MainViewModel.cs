@@ -1,5 +1,6 @@
 ﻿using NoiseCast.Core;
 using NoiseCast.MVVM.Core;
+using System.Diagnostics;
 
 namespace NoiseCast.MVVM.ViewModel
 {
@@ -37,6 +38,9 @@ namespace NoiseCast.MVVM.ViewModel
 
         public MainViewModel()
         {
+            Stopwatch sw = new Stopwatch();
+            sw.Start();
+
             YourPodcastsVM = new YourPodcastsViewModel();
             NewEpisodesVM = new NewEpisodesViewModel();
             DiscoveryVM = new DiscoverViewModel();
@@ -56,6 +60,9 @@ namespace NoiseCast.MVVM.ViewModel
             SettingsViewCommand = new RelayCommand(o => CurrentView = SettingsVM);
             PlayerViewCommand = new RelayCommand(o => PlayerView = PlayerVM);
             ExitCommand = new RelayCommand(ExitExecuted, ExitCanExecute);
+
+            sw.Stop();
+            Debug.WriteLine("Full MainViewModel time: " + sw.Elapsed);
         }
 
         private bool ExitCanExecute(object arg) => true;

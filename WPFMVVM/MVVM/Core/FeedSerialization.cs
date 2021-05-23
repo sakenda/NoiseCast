@@ -1,9 +1,9 @@
 ﻿using Newtonsoft.Json;
+using NoiseCast.MVVM.Model;
 using System;
 using System.Collections.Generic;
-using System.IO;
-using NoiseCast.MVVM.Model;
 using System.Collections.ObjectModel;
+using System.IO;
 
 namespace NoiseCast.MVVM.Core
 {
@@ -17,6 +17,7 @@ namespace NoiseCast.MVVM.Core
         {
             foreach (var feed in podcastModels)
             {
+                if (feed == null) continue;
                 if (feed.GetID() == Guid.Empty.ToString()) feed.SetID();
 
                 string json = JsonConvert.SerializeObject(feed, Formatting.Indented);

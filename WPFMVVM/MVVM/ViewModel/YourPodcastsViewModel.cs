@@ -1,12 +1,13 @@
-﻿using CodeHollow.FeedReader;
-using System;
-using System.Collections.ObjectModel;
-using System.ComponentModel;
-using System.Windows.Data;
-using System.Windows.Input;
-using NoiseCast.Core;
+﻿using NoiseCast.Core;
 using NoiseCast.MVVM.Core;
 using NoiseCast.MVVM.Model;
+using System;
+using System.Collections.ObjectModel;
+using System.Collections.Specialized;
+using System.ComponentModel;
+using System.Diagnostics;
+using System.Windows.Data;
+using System.Windows.Input;
 
 namespace NoiseCast.MVVM.ViewModel
 {
@@ -25,56 +26,24 @@ namespace NoiseCast.MVVM.ViewModel
 
         public YourPodcastsViewModel()
         {
+            Stopwatch sw = new Stopwatch();
+            sw.Start();
+
             AddCommand = new RelayCommand(AddExecuted, AddCanExecute);
             PlayCommand = new RelayCommand(PlayExecuted, PlayCanExecute);
             SubscribeCommand = new RelayCommand(SubscribeExecuted, SubscribeCanExecute);
-            _episodesList = new ObservableCollection<EpisodeModel>();
 
+            _episodesList = new ObservableCollection<EpisodeModel>();
             _viewPodcasts = new ListCollectionView(PodcastListController.PodcastsList);
             _viewEpisodes = new ListCollectionView(_episodesList);
-            UpdateEpisodesList();
 
-            SortViewCollection(ViewPodcasts, nameof(Feed.LastUpdatedDate), ListSortDirection.Descending);
+            PodcastListController.PodcastsList.CollectionChanged += PodcastList_CollectionChanged;
+            _viewPodcasts.CurrentChanged += ViewPodcasts_CurrentChanged;
+
             ViewPodcasts.MoveCurrentToFirst();
 
-            PodcastListController.PodcastsList.CollectionChanged += UpdatePodcastList_CollectionChanged;
-            _viewPodcasts.CurrentChanged += UpdateEpisodesList;
-        }
-
-        /// <summary>
-        /// Updates <see cref="EpisodesList"/> depending on the current podcast selected
-        /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="e"></param>
-        private void UpdateEpisodesList(object sender = null, EventArgs e = null)
-        {
-            // PERFORMANCE!!!
-
-            if (_episodesList == null) _episodesList = new ObservableCollection<EpisodeModel>();
-
-            _episodesList.Clear();
-
-            var podcast = (PodcastModel)_viewPodcasts.CurrentItem;
-
-            if (podcast != null)
-            {
-                foreach (var item in podcast.Episodes)
-                    _episodesList.Add(item);
-            }
-
-            ViewEpisodes.Refresh();
-            ViewEpisodes.MoveCurrentToFirst();
-        }
-
-        /// <summary>
-        /// Event: When the content of the <see cref="ListCollectionView"/> is changed
-        /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="e"></param>
-        private void UpdatePodcastList_CollectionChanged(object sender, System.Collections.Specialized.NotifyCollectionChangedEventArgs e)
-        {
-            ViewPodcasts.Refresh();
-            SortViewCollection(_viewPodcasts, nameof(Feed.LastUpdatedDate), ListSortDirection.Descending);
+            sw.Stop();
+            Debug.WriteLine("Full YourPodcastViewModel Constructor time: " + sw.Elapsed);
         }
 
         /// <summary>
@@ -85,12 +54,14 @@ namespace NoiseCast.MVVM.ViewModel
         /// <param name="direction"><see cref="ListSortDirection.Ascending"/> or <see cref="ListSortDirection.Descending"/></param>
         private void SortViewCollection(ListCollectionView list, string property, ListSortDirection direction)
         {
-            list.SortDescriptions.Clear();
-            list.SortDescriptions.Add(new SortDescription(property, direction));
-            list.Refresh();
+            //list.SortDescriptions.Clear();
+            //list.SortDescriptions.Add(new SortDescription(property, direction));
         }
 
-        private bool AddCanExecute(object arg) => !string.IsNullOrWhiteSpace(arg.ToString());
+        /// <summary>
+        /// Check if Url does exist and add podcast to collection
+        /// </summary>
+        /// <param name="obj"></param>
         private void AddExecuted(object obj)
         {
             string text = obj as string;
@@ -101,13 +72,26 @@ namespace NoiseCast.MVVM.ViewModel
             if (result)
                 PodcastListController.PodcastsList.AddFeed(text);
         }
+        private bool AddCanExecute(object arg) => !string.IsNullOrWhiteSpace(arg.ToString());
 
-        private bool PlayCanExecute(object arg) => true;
+        /// <summary>
+        /// Sends current selected episode to <see cref="PlayerViewModel"/>
+        /// </summary>
+        /// <param name="obj"></param>
         private void PlayExecuted(object obj)
         {
             MainViewModel.PlayerVM.SetEpisode((EpisodeModel)_viewEpisodes.CurrentItem);
         }
+        private bool PlayCanExecute(object arg) => true;
 
+        /// <summary>
+        /// Saves the current <see cref="PodcastModel"/> locally
+        /// </summary>
+        /// <param name="obj"></param>
+        private void SubscribeExecuted(object obj)
+        {
+            ((PodcastModel)_viewPodcasts.CurrentItem).SaveFeed();
+        }
         private bool SubscribeCanExecute(object arg)
         {
             var item = (PodcastModel)_viewPodcasts.CurrentItem;
@@ -116,9 +100,45 @@ namespace NoiseCast.MVVM.ViewModel
 
             return item.IsSubscribed != true;
         }
-        private void SubscribeExecuted(object obj)
+
+        /// <summary>
+        /// Updates <see cref="EpisodesList"/> depending on the current podcast selected
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void ViewPodcasts_CurrentChanged(object sender, EventArgs e)
         {
-            ((PodcastModel)_viewPodcasts.CurrentItem).SaveFeed();
+            Stopwatch sw = new Stopwatch();
+            sw.Start();
+
+            if (_episodesList == null) _episodesList = new ObservableCollection<EpisodeModel>();
+
+            _episodesList.Clear();
+
+            var podcast = (PodcastModel)_viewPodcasts.CurrentItem;
+
+            if (podcast != null)
+            {
+                foreach (var item in podcast.Episodes)
+                    EpisodesList.Add(item);
+            }
+
+            SortViewCollection(_viewEpisodes, nameof(EpisodeModel.ID), ListSortDirection.Descending);
+
+            ViewEpisodes.MoveCurrentToFirst();
+
+            sw.Stop();
+            Debug.WriteLine("Add all Episodes: " + sw.Elapsed);
+        }
+
+        /// <summary>
+        /// Event: When the content of the <see cref="ListCollectionView"/> is changed
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void PodcastList_CollectionChanged(object sender, NotifyCollectionChangedEventArgs e)
+        {
+            SortViewCollection(_viewPodcasts, nameof(PodcastModel.PodcastName), ListSortDirection.Descending);
         }
     }
 }

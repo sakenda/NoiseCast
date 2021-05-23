@@ -74,7 +74,7 @@
                     Height="155"
                     Orientation="Vertical">
 
-            <ContentControl Content="{Binding MediaPlayer}"/>
+            <ContentControl Content="{Binding MediaElement}"/>
 
             <!-- Playback Position -->
             <StackPanel Orientation="Vertical" Margin="0 10">
