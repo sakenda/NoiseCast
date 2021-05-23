@@ -2,6 +2,9 @@
 using CodeHollow.FeedReader.Feeds;
 using Newtonsoft.Json;
 using NoiseCast.Core;
+using NoiseCast.MVVM.ViewModel;
+using System;
+using System.Windows.Controls;
 
 namespace NoiseCast.MVVM.Model
 {
@@ -12,7 +15,7 @@ namespace NoiseCast.MVVM.Model
 
         [JsonProperty("id")] private string _id;
         [JsonProperty("imagePath")] private string _imagePath;
-        [JsonProperty("duration")] private double _durationListened;
+        [JsonProperty("duration")] private double _durationRemaining;
         private string _mediaPath;
         private FeedItem _episode;
 
@@ -20,13 +23,14 @@ namespace NoiseCast.MVVM.Model
         [JsonIgnore] public FeedItem Episode => _episode;
         [JsonIgnore] public string ImagePath => _imagePath;
         [JsonIgnore] public string MediaPath => _mediaPath;
+
         [JsonIgnore]
-        public double DurationListened
+        public double DurationRemaining
         {
-            get => _durationListened;
-            set => SetProperty(ref _durationListened, value);
+            get => _durationRemaining;
+            set => SetProperty(ref _durationRemaining, value);
         }
-        [JsonIgnore] public bool IsArchived => _durationListened == -1 ? true : false;
+        [JsonIgnore] public bool IsArchived => _durationRemaining == -1 ? true : false;
 
         /// <summary>
         /// Constructor for Json-Serialization
@@ -36,7 +40,7 @@ namespace NoiseCast.MVVM.Model
         {
             _id = id;
             _imagePath = imagePath;
-            _durationListened = duration;
+            _durationRemaining = duration;
         }
 
         /// <summary>
@@ -47,14 +51,14 @@ namespace NoiseCast.MVVM.Model
             _episode = episode;
             _id = id;
             _imagePath = imagePath;
-            _durationListened = 0;
+            _durationRemaining = 0;
             _mediaPath = GetMediaPath();
         }
 
         /// <summary>
         /// Set <see cref="DurationListened"/> to -1, so that <see cref="IsArchived"/> returns true
         /// </summary>
-        public void SetIsArchived() => _durationListened = -1;
+        public void SetIsArchived() => _durationRemaining = -1;
 
         /// <summary>
         /// Set <see cref="FeedItem"/>

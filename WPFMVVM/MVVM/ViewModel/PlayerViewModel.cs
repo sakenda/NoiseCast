@@ -67,8 +67,6 @@ namespace NoiseCast.MVVM.ViewModel
             LastCommand = new RelayCommand(LastExecuted, LastCanExecute);
             MuteCommand = new RelayCommand(MuteExecuted, MuteCanExecute);
 
-            //_currentEpisode = new EpisodeModel(null, null, null);
-
             _timer = new DispatcherTimer();
             _timer.Interval = TimeSpan.FromSeconds(1);
             _timer.Stop();
@@ -93,8 +91,12 @@ namespace NoiseCast.MVVM.ViewModel
             CurrentEpisode = episode;
             MediaElement.Source = new Uri(episode.MediaPath);
 
-            Position = episode.DurationListened;
-            MediaElement.Position = TimeSpan.FromSeconds(episode.DurationListened);
+            if (_currentEpisode.DurationRemaining == 0)
+                Position = 0;
+            else
+                Position = _positionMaximum - episode.DurationRemaining;
+
+            MediaElement.Position = TimeSpan.FromSeconds(_position);
 
             _timer.Stop();
         }
@@ -107,7 +109,9 @@ namespace NoiseCast.MVVM.ViewModel
         private void OnTimerTick(object sender, EventArgs e)
         {
             Position++;
-            _currentEpisode.DurationListened = Position;
+
+            if (_mediaElement.NaturalDuration.HasTimeSpan)
+                _currentEpisode.DurationRemaining = _positionMaximum - Position;
         }
 
         /// <summary>
@@ -125,8 +129,13 @@ namespace NoiseCast.MVVM.ViewModel
         private void MediaElement_MediaOpened(object sender, RoutedEventArgs e)
         {
             PositionMaximum = _mediaElement.NaturalDuration.TimeSpan.TotalSeconds;
-            Position = _currentEpisode.DurationListened;
-            MediaElement.Position = TimeSpan.FromSeconds(_currentEpisode.DurationListened);
+
+            if (_currentEpisode.DurationRemaining == 0)
+                Position = 0;
+            else
+                Position = _positionMaximum - _currentEpisode.DurationRemaining;
+
+            MediaElement.Position = TimeSpan.FromSeconds(_position);
         }
 
         private bool LastCanExecute(object arg) => false;

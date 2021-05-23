@@ -22,7 +22,7 @@
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="{Binding ElementName=lb_podcastList, Path=ActualWidth}"/>
             <ColumnDefinition Width="Auto"/>
-            <ColumnDefinition/>
+            <ColumnDefinition x:Name="column2"/>
             <ColumnDefinition Width="Auto"/>
         </Grid.ColumnDefinitions>
         <Grid.RowDefinitions>
