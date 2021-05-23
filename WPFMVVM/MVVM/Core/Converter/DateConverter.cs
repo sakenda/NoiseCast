@@ -4,9 +4,10 @@ using System.Windows.Data;
 
 namespace NoiseCast.MVVM.Core
 {
-    [ValueConversion(typeof(string), typeof(double))]
+    [ValueConversion(typeof(DateTime), typeof(string))]
     public class OlderThanDateConverter : IValueConverter
     {
+        public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture) => null;
         public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
         {
             DateTime? val = (DateTime?)value;
@@ -22,11 +23,6 @@ namespace NoiseCast.MVVM.Core
             if (val.Value >= (DateTime.Now - new TimeSpan(1, 0, 0, 0))) return "6 days ago";
 
             return val.Value.ToShortDateString();
-        }
-
-        public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
-        {
-            return null;
         }
     }
 }
