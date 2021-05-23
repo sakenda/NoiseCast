@@ -4,12 +4,16 @@ using System.Windows.Controls;
 using System.Windows.Input;
 using System.Windows.Threading;
 using NoiseCast.Core;
+using NoiseCast.MVVM.Core;
 using NoiseCast.MVVM.Model;
 
 namespace NoiseCast.MVVM.ViewModel
 {
     public class PlayerViewModel : ObservableObject
     {
+        public event MediaChangedEventHandler MediaChanged;
+        public virtual void OnMediaChanged(MediaChangedEventArgs e) => MediaChanged?.Invoke(this, e);
+
         private MediaElement _mediaElement;
         private DispatcherTimer _timer;
         private EpisodeModel _currentEpisode;
@@ -26,7 +30,11 @@ namespace NoiseCast.MVVM.ViewModel
         public EpisodeModel CurrentEpisode
         {
             get => _currentEpisode;
-            set => SetProperty(ref _currentEpisode, value);
+            set
+            {
+                OnMediaChanged(new MediaChangedEventArgs(value));
+                SetProperty(ref _currentEpisode, value);
+            }
         }
         public double SkipAmount
         {
@@ -79,7 +87,7 @@ namespace NoiseCast.MVVM.ViewModel
             _mediaElement.MediaEnded += _mediaElement_MediaEnded;
 
             _skipAmount = 30;
-            _mediaElement.Volume = .2;
+            _mediaElement.Volume = 0.5;
         }
 
         /// <summary>
@@ -91,14 +99,14 @@ namespace NoiseCast.MVVM.ViewModel
             CurrentEpisode = episode;
             MediaElement.Source = new Uri(episode.MediaPath);
 
-            if (_currentEpisode.DurationRemaining == 0)
-                Position = 0;
-            else
-                Position = _positionMaximum - episode.DurationRemaining;
+            if (_currentEpisode.DurationRemaining == 0) Position = 0;
+            else Position = _positionMaximum - episode.DurationRemaining;
 
             MediaElement.Position = TimeSpan.FromSeconds(_position);
 
-            _timer.Stop();
+            // Just to update Slider in View
+            _mediaElement.Play();
+            _mediaElement.Stop();
         }
 
         /// <summary>
@@ -109,9 +117,7 @@ namespace NoiseCast.MVVM.ViewModel
         private void OnTimerTick(object sender, EventArgs e)
         {
             Position++;
-
-            if (_mediaElement.NaturalDuration.HasTimeSpan)
-                _currentEpisode.DurationRemaining = _positionMaximum - Position;
+            _currentEpisode.DurationRemaining = _positionMaximum - Position;
         }
 
         /// <summary>
@@ -130,10 +136,8 @@ namespace NoiseCast.MVVM.ViewModel
         {
             PositionMaximum = _mediaElement.NaturalDuration.TimeSpan.TotalSeconds;
 
-            if (_currentEpisode.DurationRemaining == 0)
-                Position = 0;
-            else
-                Position = _positionMaximum - _currentEpisode.DurationRemaining;
+            if (_currentEpisode.DurationRemaining == 0) Position = 0;
+            else Position = _positionMaximum - _currentEpisode.DurationRemaining;
 
             MediaElement.Position = TimeSpan.FromSeconds(_position);
         }

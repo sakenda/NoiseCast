@@ -1,11 +1,10 @@
 ﻿using NoiseCast.Core;
-using NoiseCast.MVVM.Core;
 using NoiseCast.MVVM.Model;
+using NoiseCast.MVVM.ViewModel.Controller;
 using System;
 using System.Collections.ObjectModel;
 using System.Collections.Specialized;
 using System.ComponentModel;
-using System.Diagnostics;
 using System.Windows.Data;
 using System.Windows.Input;
 
@@ -26,9 +25,6 @@ namespace NoiseCast.MVVM.ViewModel
 
         public YourPodcastsViewModel()
         {
-            Stopwatch sw = new Stopwatch();
-            sw.Start();
-
             AddCommand = new RelayCommand(AddExecuted, AddCanExecute);
             PlayCommand = new RelayCommand(PlayExecuted, PlayCanExecute);
             SubscribeCommand = new RelayCommand(SubscribeExecuted, SubscribeCanExecute);
@@ -41,9 +37,6 @@ namespace NoiseCast.MVVM.ViewModel
             _viewPodcasts.CurrentChanged += ViewPodcasts_CurrentChanged;
 
             ViewPodcasts.MoveCurrentToFirst();
-
-            sw.Stop();
-            Debug.WriteLine("Full YourPodcastViewModel Constructor time: " + sw.Elapsed);
         }
 
         /// <summary>
@@ -54,8 +47,8 @@ namespace NoiseCast.MVVM.ViewModel
         /// <param name="direction"><see cref="ListSortDirection.Ascending"/> or <see cref="ListSortDirection.Descending"/></param>
         private void SortViewCollection(ListCollectionView list, string property, ListSortDirection direction)
         {
-            //list.SortDescriptions.Clear();
-            //list.SortDescriptions.Add(new SortDescription(property, direction));
+            list.SortDescriptions.Clear();
+            list.SortDescriptions.Add(new SortDescription(property, direction));
         }
 
         /// <summary>
@@ -108,27 +101,16 @@ namespace NoiseCast.MVVM.ViewModel
         /// <param name="e"></param>
         private void ViewPodcasts_CurrentChanged(object sender, EventArgs e)
         {
-            Stopwatch sw = new Stopwatch();
-            sw.Start();
-
             if (_episodesList == null) _episodesList = new ObservableCollection<EpisodeModel>();
 
             _episodesList.Clear();
-
             var podcast = (PodcastModel)_viewPodcasts.CurrentItem;
-
             if (podcast != null)
-            {
                 foreach (var item in podcast.Episodes)
                     EpisodesList.Add(item);
-            }
 
             SortViewCollection(_viewEpisodes, nameof(EpisodeModel.ID), ListSortDirection.Descending);
-
             ViewEpisodes.MoveCurrentToFirst();
-
-            sw.Stop();
-            Debug.WriteLine("Add all Episodes: " + sw.Elapsed);
         }
 
         /// <summary>

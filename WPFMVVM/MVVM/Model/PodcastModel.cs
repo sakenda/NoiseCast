@@ -2,6 +2,7 @@
 using Newtonsoft.Json;
 using NoiseCast.Core;
 using NoiseCast.MVVM.Core;
+using NoiseCast.MVVM.ViewModel.Controller;
 using System;
 using System.Collections.ObjectModel;
 using System.Linq;

@@ -1,15 +1,22 @@
 ﻿using CodeHollow.FeedReader;
+using NoiseCast.MVVM.Core;
 using NoiseCast.MVVM.Model;
 using System;
 using System.Collections.ObjectModel;
 using System.Threading.Tasks;
 
-namespace NoiseCast.MVVM.Core
+namespace NoiseCast.MVVM.ViewModel.Controller
 {
     public static class PodcastListController
     {
+        /// <summary>
+        /// Main <see cref="ObservableCollection{PodcastModel}"/> to store podcasts
+        /// </summary>
         public static ObservableCollection<PodcastModel> PodcastsList { get; set; }
 
+        /// <summary>
+        /// Static default constructor
+        /// </summary>
         static PodcastListController()
         {
             if (PodcastsList == null)

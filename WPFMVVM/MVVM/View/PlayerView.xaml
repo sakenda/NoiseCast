@@ -3,7 +3,7 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
-             xmlns:core="clr-namespace:NoiseCast.MVVM.Core"
+             xmlns:converter="clr-namespace:NoiseCast.MVVM.ViewModel.Converter"
              xmlns:vm="clr-namespace:NoiseCast.MVVM.ViewModel"
              mc:Ignorable="d"
              Height="825"
@@ -12,7 +12,7 @@
              d:DataContext="{d:DesignInstance Type=vm:PlayerViewModel, IsDesignTimeCreatable=True}"
              x:Name="main">
     <UserControl.Resources>
-        <core:DoubleToTimeSpanConverter x:Key="TimeConverter"/>
+        <converter:DoubleToTimeSpanConverter x:Key="TimeConverter"/>
         <vm:PlayerViewModel x:Key="PlayerViewModel"/>
     </UserControl.Resources>
 
@@ -25,7 +25,7 @@
             <RowDefinition Height="190"/>
         </Grid.RowDefinitions>
 
-        <!-- Podcast/Episode Image -->
+        <!-- #region "Podcast/Episode Image" -->
         <Border Grid.Row="0"
                 Width="270"
                 Margin="0 0 5 0"
@@ -38,8 +38,9 @@
 
             <Image Margin="0 -10 0 10" Source="{Binding CurrentEpisode.ImagePath, TargetNullValue={x:Null}}"/>
         </Border>
+        <!-- #endregion "Podcast/Episode Image" -->
 
-        <!-- EpisodeInfo's -->
+        <!-- #region "EpisodeInfo's" -->
         <StackPanel Grid.Row="1"
                     x:Name="sp_episodeInfo"
                     MaxHeight="110"
@@ -54,8 +55,9 @@
                        FontFamily="{StaticResource BarlowSemiBold}"
                        Foreground="{StaticResource DarkFont2}"/>
         </StackPanel>
+        <!-- #endregion "EpisodeInfo's" -->
 
-        <!-- EpisodeDescription -->
+        <!-- #region "EpisodeDescription" -->
         <ScrollViewer Grid.Row="2"
                       Name="sc_info"
                       HorizontalScrollBarVisibility="Hidden">
@@ -67,21 +69,22 @@
                        FontSize="14"
                        Foreground="{StaticResource DarkFont1}"/>
         </ScrollViewer>
+        <!-- #endregion "EpisodeDescription" -->
 
-        <!-- PlayerControls -->
+        <!-- #region "PlayerControls" -->
         <StackPanel Grid.Row="3"
                     x:Name="sp_player"
                     Height="155"
                     Orientation="Vertical">
 
-            <ContentControl Content="{Binding MediaElement}"/>
+            <MediaElement Source="{Binding MediaElement}"/>
 
-            <!-- Playback Position -->
+            <!-- #region "Playback Position" -->
             <StackPanel Orientation="Vertical" Margin="0 10">
                 <Slider Style="{StaticResource Horizontal_Slider}"
                         Minimum="0"
                         Maximum="{Binding PositionMaximum}"
-                        Value="{Binding Position, Mode=TwoWay}"/>
+                        Value="{Binding Position, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged, Delay=1000}"/>
                 <Grid Margin="10 0">
                     <TextBlock Text="{Binding Position, Converter={StaticResource TimeConverter}, StringFormat={}{0:hh\\:mm\\:ss}}"
                                Foreground="{StaticResource DarkFont2}"
@@ -93,8 +96,9 @@
                                HorizontalAlignment="Right"/>
                 </Grid>
             </StackPanel>
+            <!-- #endregion "Playback Position" -->
 
-            <!-- Control -->
+            <!-- #region "Control" -->
             <Grid HorizontalAlignment="Stretch" Margin="0 0 0 5">
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="0.2*"/>
@@ -130,8 +134,9 @@
                         Style="{StaticResource PlayerButton}"
                         FontSize="20"/>
             </Grid>
+            <!-- #endregion "Control" -->
 
-            <!-- Volume -->
+            <!-- #region "Volume" -->
             <StackPanel Orientation="Horizontal"
                         HorizontalAlignment="Center">
                 <Button Content="&#xf028;"
@@ -144,6 +149,8 @@
                         Width="200"
                         VerticalAlignment="Center"/>
             </StackPanel>
+            <!-- #endregion "Volume" -->
         </StackPanel>
+        <!-- #endregion "PlayerControls" -->
     </Grid>
 </UserControl>

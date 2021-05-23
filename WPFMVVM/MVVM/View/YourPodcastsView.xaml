@@ -3,7 +3,7 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:vm="clr-namespace:NoiseCast.MVVM.ViewModel"
-             xmlns:core="clr-namespace:NoiseCast.MVVM.Core"
+             xmlns:converter="clr-namespace:NoiseCast.MVVM.ViewModel.Converter"
              x:Class="NoiseCast.MVVM.View.YourPodcastsView"
              mc:Ignorable="d"
              Name="root"
@@ -14,7 +14,7 @@
              FontFamily="{StaticResource BarlowRegular}">
     <UserControl.Resources>
         <vm:YourPodcastsViewModel x:Key="YourPodcastViewModel"/>
-        <core:BoolToStringConverter x:Key="BoolToString"/>
+        <converter:BoolToStringConverter x:Key="BoolToString"/>
     </UserControl.Resources>
 
     <Grid>

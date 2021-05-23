@@ -2,17 +2,11 @@
 using CodeHollow.FeedReader.Feeds;
 using Newtonsoft.Json;
 using NoiseCast.Core;
-using NoiseCast.MVVM.ViewModel;
-using System;
-using System.Windows.Controls;
 
 namespace NoiseCast.MVVM.Model
 {
     public class EpisodeModel : ObservableObject
     {
-        public event EpisodeChangedEventHandler EpisodeChanged;
-        public virtual void OnEpisodeChanged(EpisodeChangedEventArgs e) => EpisodeChanged?.Invoke(this, e);
-
         [JsonProperty("id")] private string _id;
         [JsonProperty("imagePath")] private string _imagePath;
         [JsonProperty("duration")] private double _durationRemaining;

@@ -1,10 +1,10 @@
 ﻿<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
                     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
                     xmlns:vm="clr-namespace:NoiseCast.MVVM.ViewModel"
-                    xmlns:core="clr-namespace:NoiseCast.MVVM.Core">
-    <core:DoubleToTimeSpanConverter x:Key="DoubleToTime"/>
-    <core:StringToTimeSpanConverter x:Key="StringToTime"/>
-    <core:OlderThanDateConverter x:Key="OlderThanDate"/>
+                    xmlns:converter="clr-namespace:NoiseCast.MVVM.ViewModel.Converter">
+    <converter:DoubleToTimeSpanConverter x:Key="DoubleToTime"/>
+    <converter:StringToTimeSpanConverter x:Key="StringToTime"/>
+    <converter:OlderThanDateConverter x:Key="OlderThanDate"/>
 
     <Style x:Key="ListBoxStyle" TargetType="{x:Type ListBox}">
         <Setter Property="BorderThickness" Value="0"/>

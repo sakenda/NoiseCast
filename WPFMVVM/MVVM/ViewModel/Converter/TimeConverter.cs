@@ -2,7 +2,7 @@
 using System.Globalization;
 using System.Windows.Data;
 
-namespace NoiseCast.MVVM.Core
+namespace NoiseCast.MVVM.ViewModel.Converter
 {
     [ValueConversion(typeof(double), typeof(TimeSpan))]
     public class DoubleToTimeSpanConverter : IValueConverter
