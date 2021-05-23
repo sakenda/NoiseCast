@@ -1,6 +1,4 @@
-﻿using System;
-using System.IO;
-using System.Net;
+﻿using System.IO;
 using System.Net.Http;
 using System.Threading.Tasks;
 
@@ -21,21 +19,26 @@ namespace NoiseCast.Core
             File.WriteAllText(path, content);
         }
 
+        /// <summary>
+        /// Download and save image
+        /// </summary>
+        /// <param name="webPath">Webpath to file</param>
+        /// <param name="localPath">Localpath to save to</param>
+        /// <returns></returns>
         public async static Task<string> DownloadImageAndSave(string webPath, string localPath)
         {
-            if (string.IsNullOrWhiteSpace(webPath) || string.IsNullOrWhiteSpace(localPath)) return null;
+            if (string.IsNullOrWhiteSpace(webPath) && string.IsNullOrWhiteSpace(localPath)) return null;
 
-            using (var client = new HttpClient())
+            if (!File.Exists(localPath))
             {
-                string uriWithoutQuery = new Uri(webPath).GetLeftPart(UriPartial.Path);
-                string fileExtension = Path.GetExtension(uriWithoutQuery);
-                string path = localPath + fileExtension;
-
-                byte[] imageBytes = await client.GetByteArrayAsync(webPath);
-                await File.WriteAllBytesAsync(path, imageBytes);
-
-                return path;
+                using (var client = new HttpClient())
+                {
+                    byte[] imageBytes = await client.GetByteArrayAsync(webPath);
+                    await File.WriteAllBytesAsync(localPath, imageBytes);
+                }
             }
+
+            return localPath;
         }
     }
 }
