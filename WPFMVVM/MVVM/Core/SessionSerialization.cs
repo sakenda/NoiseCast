@@ -35,7 +35,7 @@ namespace NoiseCast.MVVM.Core
             }
             else
             {
-                settings = new SettingsModel(null);
+                settings = new SettingsModel(null, 0.5, 30);
                 Serialize(settings);
             }
 

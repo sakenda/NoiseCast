@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Linq;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
@@ -6,14 +7,12 @@ using System.Windows.Threading;
 using NoiseCast.Core;
 using NoiseCast.MVVM.Core;
 using NoiseCast.MVVM.Model;
+using NoiseCast.MVVM.ViewModel.Controller;
 
 namespace NoiseCast.MVVM.ViewModel
 {
     public class PlayerViewModel : ObservableObject
     {
-        public event MediaChangedEventHandler MediaChanged;
-        public virtual void OnMediaChanged(MediaChangedEventArgs e) => MediaChanged?.Invoke(this, e);
-
         private MediaElement _mediaElement;
         private DispatcherTimer _timer;
         private EpisodeModel _currentEpisode;
@@ -21,6 +20,7 @@ namespace NoiseCast.MVVM.ViewModel
         private double _position;
         private double _positionMaximum;
         private double _tempVolume;
+        private double _volume;
 
         public MediaElement MediaElement
         {
@@ -30,11 +30,7 @@ namespace NoiseCast.MVVM.ViewModel
         public EpisodeModel CurrentEpisode
         {
             get => _currentEpisode;
-            set
-            {
-                OnMediaChanged(new MediaChangedEventArgs(value));
-                SetProperty(ref _currentEpisode, value);
-            }
+            set => SetProperty(ref _currentEpisode, value);
         }
         public double SkipAmount
         {
@@ -58,6 +54,15 @@ namespace NoiseCast.MVVM.ViewModel
             get => _positionMaximum;
             set => SetProperty(ref _positionMaximum, value);
         }
+        public double Volume
+        {
+            get => _volume;
+            set
+            {
+                SetVolume(value);
+                SetProperty(ref _volume, value);
+            }
+        }
 
         public ICommand RewindCommand { get; private set; }
         public ICommand SkipCommand { get; private set; }
@@ -77,17 +82,28 @@ namespace NoiseCast.MVVM.ViewModel
 
             _timer = new DispatcherTimer();
             _timer.Interval = TimeSpan.FromSeconds(1);
-            _timer.Stop();
             _timer.Tick += OnTimerTick;
 
             _mediaElement = new MediaElement();
             _mediaElement.LoadedBehavior = MediaState.Manual;
             _mediaElement.UnloadedBehavior = MediaState.Manual;
             _mediaElement.MediaOpened += MediaElement_MediaOpened;
-            _mediaElement.MediaEnded += _mediaElement_MediaEnded;
 
             _skipAmount = 30;
-            _mediaElement.Volume = 0.5;
+        }
+
+        /// <summary>
+        /// Setup sessionvalues on startup
+        /// </summary>
+        /// <param name="session">The deserialized values</param>
+        public void InitializeSession(SettingsModel session)
+        {
+            Volume = session.PlayerVolume;
+
+            var podcast = PodcastListController.PodcastsList.FirstOrDefault(x => x.GetID() == session.LastSelectedID[0]);
+            var episode = podcast.Episodes.FirstOrDefault(x => x.ID == session.LastSelectedID[1]);
+
+            SetEpisode(episode);
         }
 
         /// <summary>
@@ -96,36 +112,42 @@ namespace NoiseCast.MVVM.ViewModel
         /// <param name="episode"></param>
         public void SetEpisode(EpisodeModel episode)
         {
+            if (episode == null) return;
             CurrentEpisode = episode;
             MediaElement.Source = new Uri(episode.MediaPath);
 
-            if (_currentEpisode.DurationRemaining == 0) Position = 0;
-            else Position = _positionMaximum - episode.DurationRemaining;
-
-            MediaElement.Position = TimeSpan.FromSeconds(_position);
-
-            // Just to update Slider in View
+            // To trigger MediaOpened
             _mediaElement.Play();
             _mediaElement.Stop();
         }
 
         /// <summary>
-        /// Timer for mediaplayer
+        /// Set Volume
+        /// </summary>
+        /// <param name="value">A value between 0 and 1</param>
+        private void SetVolume(double value) => _mediaElement.Volume = value;
+
+        /// <summary>
+        /// Timer for mediaplayer. If the remaining duration is lower than 1, episode will
+        /// set archived and player position set to 0.
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
         private void OnTimerTick(object sender, EventArgs e)
         {
+            if (_currentEpisode.DurationRemaining < 1)
+            {
+                _currentEpisode.SetIsArchived();
+                Position = 0;
+                _timer.Stop();
+                _mediaElement.Stop();
+
+                return;
+            }
+
             Position++;
             _currentEpisode.DurationRemaining = _positionMaximum - Position;
         }
-
-        /// <summary>
-        ///  Set Episode as archived.
-        /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="e"></param>
-        private void _mediaElement_MediaEnded(object sender, RoutedEventArgs e) => _currentEpisode.SetIsArchived();
 
         /// <summary>
         /// Executes after Media is loaded
@@ -136,7 +158,7 @@ namespace NoiseCast.MVVM.ViewModel
         {
             PositionMaximum = _mediaElement.NaturalDuration.TimeSpan.TotalSeconds;
 
-            if (_currentEpisode.DurationRemaining == 0) Position = 0;
+            if (_currentEpisode.DurationRemaining <= 0) Position = 0;
             else Position = _positionMaximum - _currentEpisode.DurationRemaining;
 
             MediaElement.Position = TimeSpan.FromSeconds(_position);

@@ -50,6 +50,8 @@ namespace NoiseCast.MVVM.ViewModel
             CurrentView = YourPodcastsVM;
             PlayerView = PlayerVM;
 
+            SessionSetup();
+
             YourPodcastsViewCommand = new RelayCommand(o => CurrentView = YourPodcastsVM);
             NewEpisodesViewCommand = new RelayCommand(o => CurrentView = NewEpisodesVM);
             DiscoveryViewCommand = new RelayCommand(o => CurrentView = DiscoveryVM);
@@ -58,29 +60,19 @@ namespace NoiseCast.MVVM.ViewModel
             SettingsViewCommand = new RelayCommand(o => CurrentView = SettingsVM);
             PlayerViewCommand = new RelayCommand(o => PlayerView = PlayerVM);
             ExitCommand = new RelayCommand(ExitExecuted, ExitCanExecute);
-
-            SessionSetup();
         }
 
         private void SessionSetup()
         {
             ApplicationSettings.Settings = SessionSerialization.Deserialize();
+            PodcastListController.PodcastsList = FeedSerialization.Deserialize();
 
-            foreach (var podcast in PodcastListController.PodcastsList)
-            {
-                foreach (var episode in podcast.Episodes)
-                {
-                    if (episode.ID == ApplicationSettings.Settings.PlayerEpisodeID)
-                    {
-                        PlayerVM.SetEpisode(episode);
-                        YourPodcastsVM.ViewPodcasts.MoveCurrentTo(podcast);
-                        YourPodcastsVM.ViewEpisodes.MoveCurrentTo(episode);
-                    }
-                }
-            }
+            var session = ApplicationSettings.Settings;
+
+            PlayerVM.InitializeSession(session);
         }
 
         private bool ExitCanExecute(object arg) => true;
-        private void ExitExecuted(object obj) => new FeedSerialization().Serialize(PodcastListController.PodcastsList);
+        private void ExitExecuted(object obj) => FeedSerialization.Serialize(PodcastListController.PodcastsList);
     }
 }
