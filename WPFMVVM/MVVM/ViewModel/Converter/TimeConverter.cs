@@ -28,6 +28,7 @@ namespace NoiseCast.MVVM.ViewModel.Converter
             double? val = (double?)value;
 
             if (!val.HasValue || val.Value == 0) val = 0;
+            if (val.Value == -1) return "finished";
 
             return string.Format("{0:00}:{1:00}", TimeSpan.FromSeconds(val.Value).Hours, TimeSpan.FromSeconds(val.Value).Minutes);
         }

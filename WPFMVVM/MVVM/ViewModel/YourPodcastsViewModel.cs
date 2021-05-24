@@ -1,4 +1,5 @@
 ﻿using NoiseCast.Core;
+using NoiseCast.MVVM.Core;
 using NoiseCast.MVVM.Model;
 using NoiseCast.MVVM.ViewModel.Controller;
 using System;
@@ -33,10 +34,10 @@ namespace NoiseCast.MVVM.ViewModel
             _viewPodcasts = new ListCollectionView(PodcastListController.PodcastsList);
             _viewEpisodes = new ListCollectionView(_episodesList);
 
+            ViewPodcasts.MoveCurrentToFirst();
+
             PodcastListController.PodcastsList.CollectionChanged += PodcastList_CollectionChanged;
             _viewPodcasts.CurrentChanged += ViewPodcasts_CurrentChanged;
-
-            ViewPodcasts.MoveCurrentToFirst();
         }
 
         /// <summary>

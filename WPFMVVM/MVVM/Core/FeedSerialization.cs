@@ -8,13 +8,13 @@ using System.IO;
 
 namespace NoiseCast.MVVM.Core
 {
-    public class FeedSerialization
+    public static class FeedSerialization
     {
         /// <summary>
         /// Serializes a <see cref="List{PodcastModel}"/>. All items in the List will get an ID, if not already set.
         /// </summary>
         /// <param name="podcastModels"></param>
-        public void Serialize(ObservableCollection<PodcastModel> podcastModels)
+        public static void Serialize(ObservableCollection<PodcastModel> podcastModels)
         {
             foreach (var feed in podcastModels)
             {
@@ -33,7 +33,7 @@ namespace NoiseCast.MVVM.Core
         /// Serializes one <see cref="PodcastModel"/>. ID will be set if ID is equal to <see cref="Guid.Empty"/>
         /// </summary>
         /// <param name="podcastModel"></param>
-        public void Serialize(PodcastModel podcastModel)
+        public static void Serialize(PodcastModel podcastModel)
         {
             if (podcastModel.GetID() == Guid.Empty.ToString()) podcastModel.SetID();
 
@@ -48,7 +48,7 @@ namespace NoiseCast.MVVM.Core
         /// Deserializes all Files in .../podcasts/ path at startup
         /// </summary>
         /// <returns>A <see cref="List{PodcastModel}"/>Returns a List with all deserialized Podcasts if <see cref="true"/>, else a new empty List</returns>
-        public ObservableCollection<PodcastModel> Deserialize()
+        public static ObservableCollection<PodcastModel> Deserialize()
         {
             var feedList = new ObservableCollection<PodcastModel>();
 
@@ -72,7 +72,7 @@ namespace NoiseCast.MVVM.Core
         /// Check if localpath and webpath ar valid and saves image
         /// </summary>
         /// <param name="podcastModel"></param>
-        private async static void SaveImage(PodcastModel podcastModel)
+        private static async void SaveImage(PodcastModel podcastModel)
         {
             string imagePath = ApplicationSettings.SETTINGS_IMAGE_PATH + podcastModel.GetID() + Path.GetExtension(podcastModel.ImagePath);
             bool isWebPath = Uri.TryCreate(podcastModel.ImagePath, UriKind.Absolute, out Uri webPath) && (webPath.Scheme == Uri.UriSchemeHttp || webPath.Scheme == Uri.UriSchemeHttps);

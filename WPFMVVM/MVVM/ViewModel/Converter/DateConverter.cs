@@ -16,11 +16,8 @@ namespace NoiseCast.MVVM.ViewModel.Converter
 
             if (val.Value == DateTime.Today) return "Today";
             if (val.Value >= (DateTime.Now - new TimeSpan(1, 0, 0, 0))) return "Yesterday";
-            if (val.Value >= (DateTime.Now - new TimeSpan(1, 0, 0, 0))) return "2 days ago";
-            if (val.Value >= (DateTime.Now - new TimeSpan(1, 0, 0, 0))) return "3 days ago";
-            if (val.Value >= (DateTime.Now - new TimeSpan(1, 0, 0, 0))) return "4 days ago";
-            if (val.Value >= (DateTime.Now - new TimeSpan(1, 0, 0, 0))) return "5 days ago";
-            if (val.Value >= (DateTime.Now - new TimeSpan(1, 0, 0, 0))) return "6 days ago";
+            if (val.Value >= (DateTime.Now - new TimeSpan(2, 0, 0, 0))) return "2 days ago";
+            if (val.Value >= (DateTime.Now - new TimeSpan(3, 0, 0, 0))) return "3 days ago";
 
             return val.Value.ToShortDateString();
         }

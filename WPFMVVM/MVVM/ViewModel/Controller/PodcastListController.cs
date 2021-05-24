@@ -19,8 +19,7 @@ namespace NoiseCast.MVVM.ViewModel.Controller
         /// </summary>
         static PodcastListController()
         {
-            if (PodcastsList == null)
-                PodcastsList = new FeedSerialization().Deserialize();
+            if (PodcastsList == null) PodcastsList = FeedSerialization.Deserialize();
         }
 
         /// <summary>
@@ -69,6 +68,6 @@ namespace NoiseCast.MVVM.ViewModel.Controller
         /// Serializes podcast locally
         /// </summary>
         /// <param name="podcast"></param>
-        public static void SaveFeed(this PodcastModel podcast) => new FeedSerialization().Serialize(podcast);
+        public static void SaveFeed(this PodcastModel podcast) => FeedSerialization.Serialize(podcast);
     }
 }
