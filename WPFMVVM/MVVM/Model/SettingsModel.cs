@@ -24,6 +24,11 @@ namespace NoiseCast.MVVM.Model
 
         public void SubscribePropertyChanged(PlayerViewModel pVM) => pVM.PropertyChanged += PlayerVM_PropertyChanged;
 
+        /// <summary>
+        /// Gather all relevant properties to save in the session.json
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void PlayerVM_PropertyChanged(object sender, PropertyChangedEventArgs e)
         {
             if (sender is PlayerViewModel playerVM)
@@ -31,18 +36,11 @@ namespace NoiseCast.MVVM.Model
                 if (playerVM.CurrentEpisode == null)
                     return;
 
+                _lastSelectedID[0] = playerVM.CurrentEpisode.ParentPodcast.GetID();
                 _lastSelectedID[1] = playerVM.CurrentEpisode.ID;
                 _playerVolume = playerVM.Volume;
-                _skipValue = playerVM.SkipAmount;
-            }
-
-            foreach (var podcast in PodcastListController.PodcastsList)
-            {
-                foreach (var episode in podcast.Episodes)
-                {
-                    if (episode.ID == _lastSelectedID[1])
-                        _lastSelectedID[0] = podcast.GetID();
-                }
+                _skipValue = 30;
+                //_skipValue = playerVM.SkipAmount;
             }
 
             SessionSerialization.Serialize(this);
