@@ -1,6 +1,5 @@
 ﻿using NoiseCast.MVVM.Core;
 using NoiseCast.MVVM.ViewModel;
-using NoiseCast.MVVM.ViewModel.Controller;
 using System.ComponentModel;
 
 namespace NoiseCast.MVVM.Model
@@ -22,6 +21,10 @@ namespace NoiseCast.MVVM.Model
             _skipValue = skipValue;
         }
 
+        /// <summary>
+        /// Subscribe (at the right time) to Player.PropertyChanged
+        /// </summary>
+        /// <param name="pVM"></param>
         public void SubscribePropertyChanged(PlayerViewModel pVM) => pVM.PropertyChanged += PlayerVM_PropertyChanged;
 
         /// <summary>

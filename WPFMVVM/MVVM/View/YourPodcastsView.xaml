@@ -10,11 +10,11 @@
              d:DesignHeight="800"
              d:DesignWidth="1200"
              d:Background="White"
-             d:DataContext="{d:DesignInstance Type=vm:YourPodcastsViewModel, IsDesignTimeCreatable=True}"
+             d:DataContext="{d:DesignInstance Type=vm:YourPodcastsViewModel, IsDesignTimeCreatable=True, CreateList=False}"
              FontFamily="{StaticResource BarlowRegular}">
     <UserControl.Resources>
         <vm:YourPodcastsViewModel x:Key="YourPodcastViewModel"/>
-        <converter:BoolToStringConverter x:Key="BoolToString"/>
+        <converter:IsSubscribedBoolToStringConverter x:Key="BoolToString"/>
     </UserControl.Resources>
 
     <Grid>
@@ -144,7 +144,8 @@
                  ItemsSource="{Binding ViewEpisodes}"
                  Style="{StaticResource ListBoxStyle}"
                  ItemContainerStyle="{StaticResource EpisodesListBoxItem}"
-                 ScrollViewer.CanContentScroll="False"/>
+                 ScrollViewer.CanContentScroll="False"
+                 VirtualizingPanel.IsVirtualizing="True"/>
         <!-- #endregion -->
     </Grid>
 </UserControl>

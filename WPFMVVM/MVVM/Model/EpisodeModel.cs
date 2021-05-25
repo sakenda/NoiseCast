@@ -18,8 +18,8 @@ namespace NoiseCast.MVVM.Model
         [JsonProperty("id")] public string ID => _id;
         [JsonProperty("imagePath")] public string ImagePath => _imagePath;
         [JsonProperty("duration")] public double DurationRemaining { get => _durationRemaining; set => SetProperty(ref _durationRemaining, value); }
+        [JsonProperty("isArchived")] public bool IsArchived { get => _isArchived; set => SetProperty(ref _isArchived, value); }
         [JsonIgnore] public string MediaPath => _mediaPath;
-        [JsonIgnore] public bool IsArchived => _isArchived;
         [JsonIgnore] public FeedItem Episode => _episode;
         [JsonIgnore] public PodcastModel ParentPodcast => _parentPodcast;
 
@@ -27,11 +27,12 @@ namespace NoiseCast.MVVM.Model
         /// Json-Deserialization Constructor
         /// </summary>
         [JsonConstructor]
-        public EpisodeModel(string id, string imagePath, double duration)
+        public EpisodeModel(string id, string imagePath, double duration, bool isArchived)
         {
             _id = id;
             _imagePath = imagePath;
             _durationRemaining = duration;
+            _isArchived = isArchived;
         }
 
         /// <summary>

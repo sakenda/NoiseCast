@@ -14,7 +14,7 @@ namespace NoiseCast.MVVM.Core
         /// Serializes a <see cref="List{PodcastModel}"/>. All items in the List will get an ID, if not already set.
         /// </summary>
         /// <param name="podcastModels"></param>
-        public static void Serialize(ObservableCollection<PodcastModel> podcastModels)
+        public static void Serialize(this ObservableCollection<PodcastModel> podcastModels)
         {
             foreach (var feed in podcastModels)
             {
@@ -33,7 +33,7 @@ namespace NoiseCast.MVVM.Core
         /// Serializes one <see cref="PodcastModel"/>. ID will be set if ID is equal to <see cref="Guid.Empty"/>
         /// </summary>
         /// <param name="podcastModel"></param>
-        public static void Serialize(PodcastModel podcastModel)
+        public static void Serialize(this PodcastModel podcastModel)
         {
             if (podcastModel.GetID() == Guid.Empty.ToString()) podcastModel.SetID();
 
@@ -72,7 +72,7 @@ namespace NoiseCast.MVVM.Core
         /// Check if localpath and webpath ar valid and saves image
         /// </summary>
         /// <param name="podcastModel"></param>
-        private static async void SaveImage(PodcastModel podcastModel)
+        private static async void SaveImage(this PodcastModel podcastModel)
         {
             string imagePath = ApplicationSettings.IMAGE_PATH + podcastModel.GetID() + ".jpg";
             bool isWebPath = Uri.TryCreate(podcastModel.ImagePath, UriKind.Absolute, out Uri webPath) && (webPath.Scheme == Uri.UriSchemeHttp || webPath.Scheme == Uri.UriSchemeHttps);

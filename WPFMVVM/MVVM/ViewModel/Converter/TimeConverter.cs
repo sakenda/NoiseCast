@@ -30,7 +30,10 @@ namespace NoiseCast.MVVM.ViewModel.Converter
             if (!val.HasValue || val.Value == 0) val = 0;
             if (val.Value == -1) return "finished";
 
-            return string.Format("{0:00}:{1:00}", TimeSpan.FromSeconds(val.Value).Hours, TimeSpan.FromSeconds(val.Value).Minutes);
+            if (TimeSpan.FromSeconds(val.Value) > TimeSpan.FromHours(1))
+                return string.Format("{0:00}:{1:00} hours left", TimeSpan.FromSeconds(val.Value).Hours, TimeSpan.FromSeconds(val.Value).Minutes);
+
+            return string.Format("{0:00} minutes left", TimeSpan.FromSeconds(val.Value).TotalMinutes);
         }
     }
 }

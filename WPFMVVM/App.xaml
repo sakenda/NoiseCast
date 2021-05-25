@@ -1,7 +1,6 @@
 ﻿<Application x:Class="NoiseCast.App"
              xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-             xmlns:local="clr-namespace:NoiseCast"
              xmlns:viewModel="clr-namespace:NoiseCast.MVVM.ViewModel"
              xmlns:view="clr-namespace:NoiseCast.MVVM.View"
              StartupUri="MainWindow.xaml">
@@ -17,6 +16,7 @@
                 <ResourceDictionary Source="/Styles/SliderStyle.xaml"/>
                 <ResourceDictionary Source="/Styles/TextStyle.xaml"/>
                 <ResourceDictionary Source="/Styles/ListBoxStyle.xaml"/>
+                <ResourceDictionary Source="/Styles/CheckBoxStyle.xaml"/>
             </ResourceDictionary.MergedDictionaries>
 
             <DataTemplate DataType="{x:Type viewModel:YourPodcastsViewModel}">

@@ -64,10 +64,11 @@ namespace NoiseCast.MVVM.Model
         {
             foreach (var feedItem in _podcast.Items)
             {
-                // Search for saved episodes, add FeedItem and continue
+                // Search for existing episodes
                 var temp = _episodes.FirstOrDefault(x => x.ID == feedItem.Id);
                 if (temp != null)
                 {
+                    // Add additional items to existing episode
                     temp.SetEpisodeFeed(feedItem, this);
                     continue;
                 }
