@@ -24,7 +24,7 @@ namespace NoiseCast.MVVM.Core
                 SaveImage(feed);
 
                 string json = JsonConvert.SerializeObject(feed, Formatting.Indented);
-                string path = ApplicationSettings.SETTINGS_PODCAST_PATH + feed.GetID() + ".json";
+                string path = ApplicationSettings.PODCAST_PATH + feed.GetID() + ".json";
                 FileController.WriteAllText(path, json);
             }
         }
@@ -40,7 +40,7 @@ namespace NoiseCast.MVVM.Core
             SaveImage(podcastModel);
 
             string json = JsonConvert.SerializeObject(podcastModel, Formatting.Indented);
-            string path = ApplicationSettings.SETTINGS_PODCAST_PATH + podcastModel.GetID() + ".json";
+            string path = ApplicationSettings.PODCAST_PATH + podcastModel.GetID() + ".json";
             File.WriteAllText(path, json);
         }
 
@@ -52,7 +52,7 @@ namespace NoiseCast.MVVM.Core
         {
             var feedList = new ObservableCollection<PodcastModel>();
 
-            string[] files = Directory.GetFiles(ApplicationSettings.SETTINGS_PODCAST_PATH, "*.json", SearchOption.TopDirectoryOnly);
+            string[] files = Directory.GetFiles(ApplicationSettings.PODCAST_PATH, "*.json", SearchOption.TopDirectoryOnly);
 
             foreach (string file in files)
             {
@@ -74,7 +74,7 @@ namespace NoiseCast.MVVM.Core
         /// <param name="podcastModel"></param>
         private static async void SaveImage(PodcastModel podcastModel)
         {
-            string imagePath = ApplicationSettings.SETTINGS_IMAGE_PATH + podcastModel.GetID() + Path.GetExtension(podcastModel.ImagePath);
+            string imagePath = ApplicationSettings.IMAGE_PATH + podcastModel.GetID() + ".jpg";
             bool isWebPath = Uri.TryCreate(podcastModel.ImagePath, UriKind.Absolute, out Uri webPath) && (webPath.Scheme == Uri.UriSchemeHttp || webPath.Scheme == Uri.UriSchemeHttps);
 
             if (isWebPath)
