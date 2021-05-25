@@ -20,9 +20,9 @@ namespace NoiseCast.MVVM.Model
             _lastSelectedID = lastSelectedID != null ? lastSelectedID : new string[2] { "", "" };
             _playerVolume = playerVolume;
             _skipValue = skipValue;
-
-            MainViewModel.PlayerVM.PropertyChanged += PlayerVM_PropertyChanged;
         }
+
+        public void SubscribePropertyChanged(PlayerViewModel pVM) => pVM.PropertyChanged += PlayerVM_PropertyChanged;
 
         private void PlayerVM_PropertyChanged(object sender, PropertyChangedEventArgs e)
         {

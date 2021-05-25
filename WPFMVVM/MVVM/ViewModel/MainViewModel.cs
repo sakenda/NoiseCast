@@ -1,6 +1,7 @@
 ﻿using NoiseCast.Core;
 using NoiseCast.MVVM.Core;
 using NoiseCast.MVVM.ViewModel.Controller;
+using System;
 using System.Diagnostics;
 
 namespace NoiseCast.MVVM.ViewModel
@@ -39,6 +40,8 @@ namespace NoiseCast.MVVM.ViewModel
 
         public MainViewModel()
         {
+            DeserializeData();
+
             YourPodcastsVM = new YourPodcastsViewModel();
             NewEpisodesVM = new NewEpisodesViewModel();
             DiscoveryVM = new DiscoverViewModel();
@@ -62,13 +65,15 @@ namespace NoiseCast.MVVM.ViewModel
             ExitCommand = new RelayCommand(ExitExecuted, ExitCanExecute);
         }
 
-        private void SessionSetup()
+        private void DeserializeData()
         {
             ApplicationSettings.Settings = SessionSerialization.Deserialize();
             PodcastListController.PodcastsList = FeedSerialization.Deserialize();
+        }
 
+        private void SessionSetup()
+        {
             var session = ApplicationSettings.Settings;
-
             PlayerVM.InitializeSession(session);
         }
 

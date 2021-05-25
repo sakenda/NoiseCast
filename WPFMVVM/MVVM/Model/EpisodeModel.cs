@@ -7,27 +7,24 @@ namespace NoiseCast.MVVM.Model
 {
     public class EpisodeModel : ObservableObject
     {
-        [JsonProperty("id")] private string _id;
-        [JsonProperty("imagePath")] private string _imagePath;
-        [JsonProperty("duration")] private double _durationRemaining;
+        private string _id;
+        private string _imagePath;
+        private double _durationRemaining;
         private string _mediaPath;
+        private bool _isArchived;
         private FeedItem _episode;
+        private PodcastModel _parentPodcast;
 
-        [JsonIgnore] public string ID => _id;
-        [JsonIgnore] public FeedItem Episode => _episode;
-        [JsonIgnore] public string ImagePath => _imagePath;
+        [JsonProperty("id")] public string ID => _id;
+        [JsonProperty("imagePath")] public string ImagePath => _imagePath;
+        [JsonProperty("duration")] public double DurationRemaining { get => _durationRemaining; set => SetProperty(ref _durationRemaining, value); }
         [JsonIgnore] public string MediaPath => _mediaPath;
-
-        [JsonIgnore]
-        public double DurationRemaining
-        {
-            get => _durationRemaining;
-            set => SetProperty(ref _durationRemaining, value);
-        }
-        [JsonIgnore] public bool IsArchived => _durationRemaining == -1 ? true : false;
+        [JsonIgnore] public bool IsArchived => _isArchived;
+        [JsonIgnore] public FeedItem Episode => _episode;
+        [JsonIgnore] public PodcastModel ParentPodcast => _parentPodcast;
 
         /// <summary>
-        /// Constructor for Json-Serialization
+        /// Json-Deserialization Constructor
         /// </summary>
         [JsonConstructor]
         public EpisodeModel(string id, string imagePath, double duration)
@@ -50,18 +47,24 @@ namespace NoiseCast.MVVM.Model
         }
 
         /// <summary>
-        /// Set <see cref="DurationListened"/> to -1, so that <see cref="IsArchived"/> returns true
+        /// Set episode as archived
         /// </summary>
-        public void SetIsArchived() => _durationRemaining = -1;
+        public void SetIsArchived()
+        {
+            _isArchived = true;
+            DurationRemaining = -1;
+            _parentPodcast.Save();
+        }
 
         /// <summary>
         /// Set <see cref="FeedItem"/>
         /// </summary>
         /// <param name="episode"></param>
-        public void SetEpisodeFeed(FeedItem episode)
+        public void SetEpisodeFeed(FeedItem episode, PodcastModel podcastModel)
         {
             _episode = episode;
             _mediaPath = GetMediaPath();
+            _parentPodcast = podcastModel;
         }
 
         /// <summary>

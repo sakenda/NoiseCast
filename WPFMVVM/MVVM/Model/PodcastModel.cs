@@ -22,7 +22,7 @@ namespace NoiseCast.MVVM.Model
         [JsonIgnore] public string PodcastTitle => _podcast.Title;
         [JsonIgnore] public Feed Podcast => _podcast;
         [JsonIgnore] public string ImagePath => _imagePath;
-        [JsonIgnore] public string FilePath => ApplicationSettings.SETTINGS_PODCAST_PATH + _id.ToString() + ".json";
+        [JsonIgnore] public string FilePath => ApplicationSettings.PODCAST_PATH + _id.ToString() + ".json";
         [JsonIgnore] public bool IsSubscribed { get => _isSubscribed; private set => SetProperty(ref _isSubscribed, value); }
 
         /// <summary>
@@ -39,7 +39,7 @@ namespace NoiseCast.MVVM.Model
             _podcast = FeedReader.ReadFromString(originalDocument);
             _episodes = episodesList == null ? new ObservableCollection<EpisodeModel>() : episodesList;
 
-            _imagePath = _podcast.ImageUrl; // TODO: Save image locally/set imagePath locally
+            _imagePath = _podcast.ImageUrl;
             InitializeEpisodes();
         }
 
@@ -68,7 +68,7 @@ namespace NoiseCast.MVVM.Model
                 var temp = _episodes.FirstOrDefault(x => x.ID == feedItem.Id);
                 if (temp != null)
                 {
-                    temp.SetEpisodeFeed(feedItem);
+                    temp.SetEpisodeFeed(feedItem, this);
                     continue;
                 }
 

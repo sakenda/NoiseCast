@@ -21,6 +21,7 @@ namespace NoiseCast.MVVM.ViewModel
         private double _positionMaximum;
         private double _tempVolume;
         private double _volume;
+        private int _tickCounter;
 
         public MediaElement MediaElement
         {
@@ -83,13 +84,14 @@ namespace NoiseCast.MVVM.ViewModel
             _timer = new DispatcherTimer();
             _timer.Interval = TimeSpan.FromSeconds(1);
             _timer.Tick += OnTimerTick;
+            _tickCounter = 0;
 
             _mediaElement = new MediaElement();
             _mediaElement.LoadedBehavior = MediaState.Manual;
             _mediaElement.UnloadedBehavior = MediaState.Manual;
             _mediaElement.MediaOpened += MediaElement_MediaOpened;
 
-            _skipAmount = 30;
+            ApplicationSettings.Settings.SubscribePropertyChanged(this);
         }
 
         /// <summary>
@@ -99,6 +101,8 @@ namespace NoiseCast.MVVM.ViewModel
         public void InitializeSession(SettingsModel session)
         {
             Volume = session.PlayerVolume;
+
+            if (string.IsNullOrWhiteSpace(session.LastSelectedID[0]) || string.IsNullOrWhiteSpace(session.LastSelectedID[1])) return;
 
             var podcast = PodcastListController.PodcastsList.FirstOrDefault(x => x.GetID() == session.LastSelectedID[0]);
             var episode = podcast.Episodes.FirstOrDefault(x => x.ID == session.LastSelectedID[1]);
@@ -135,18 +139,40 @@ namespace NoiseCast.MVVM.ViewModel
         /// <param name="e"></param>
         private void OnTimerTick(object sender, EventArgs e)
         {
+            AutoSave();
+            if (CheckDurationFull()) return;
+
+            Position++;
+            _currentEpisode.DurationRemaining = _positionMaximum - _position;
+        }
+
+        /// <summary>
+        /// Checks if <see cref="_tickCounter"/> is dividable by 60 (one minute) and saves podcast.
+        /// </summary>
+        private void AutoSave()
+        {
+            if (_tickCounter++ % 60 == 0) _currentEpisode.ParentPodcast.Save();
+        }
+
+        /// <summary>
+        /// When Episodes duration ist full, set episode as IsArchived and stop timer and player
+        /// </summary>
+        /// <returns>True if duration is full</returns>
+        private bool CheckDurationFull()
+        {
             if (_currentEpisode.DurationRemaining < 1)
             {
-                _currentEpisode.SetIsArchived();
+                if (!_currentEpisode.IsArchived) _currentEpisode.SetIsArchived();
+
                 Position = 0;
+
                 _timer.Stop();
                 _mediaElement.Stop();
 
-                return;
+                return true;
             }
 
-            Position++;
-            _currentEpisode.DurationRemaining = _positionMaximum - Position;
+            return false;
         }
 
         /// <summary>
@@ -158,7 +184,11 @@ namespace NoiseCast.MVVM.ViewModel
         {
             PositionMaximum = _mediaElement.NaturalDuration.TimeSpan.TotalSeconds;
 
-            if (_currentEpisode.DurationRemaining <= 0) Position = 0;
+            if (_currentEpisode.DurationRemaining <= 0)
+            {
+                Position = 0;
+                _currentEpisode.DurationRemaining = _positionMaximum;
+            }
             else Position = _positionMaximum - _currentEpisode.DurationRemaining;
 
             MediaElement.Position = TimeSpan.FromSeconds(_position);
