@@ -80,6 +80,26 @@ namespace NoiseCast.MVVM.Model
         }
 
         /// <summary>
+        /// Returns a <see cref="ObservableCollection{EpisodeModel}"/>. Generates a new list if no item is current attached
+        /// or returns the populated list
+        /// </summary>
+        /// <returns></returns>
+        public ObservableCollection<EpisodeModel> GetEpisodes()
+        {
+            if (_episodes != null || _episodes.Count != 0) return _episodes;
+
+            ObservableCollection<EpisodeModel> episodesList = new ObservableCollection<EpisodeModel>();
+
+            foreach (var episode in _podcast.Items)
+            {
+                var episodeModel = new EpisodeModel(episode, GetID(), _imagePath);
+                episodesList.Add(episodeModel);
+            }
+
+            return episodesList;
+        }
+
+        /// <summary>
         /// Get ID as string
         /// </summary>
         /// <returns></returns>

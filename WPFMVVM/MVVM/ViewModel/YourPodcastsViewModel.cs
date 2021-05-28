@@ -21,8 +21,8 @@ namespace NoiseCast.MVVM.ViewModel
         public static ICommand PlayCommand { get; private set; }
         public static ICommand SubscribeCommand { get; private set; }
         public ListCollectionView ViewPodcasts => _viewPodcasts;
-        public ListCollectionView ViewEpisodes => _viewEpisodes;
-        public ObservableCollection<EpisodeModel> EpisodesList => _episodesList;
+        public ListCollectionView ViewEpisodes { get => _viewEpisodes; set => SetProperty(ref _viewEpisodes, value); }
+        public ObservableCollection<EpisodeModel> EpisodesList { get => _episodesList; set => SetProperty(ref _episodesList, value); }
 
         public YourPodcastsViewModel()
         {
@@ -64,7 +64,10 @@ namespace NoiseCast.MVVM.ViewModel
             bool result = Uri.TryCreate(text, UriKind.Absolute, out uriResult) && (uriResult.Scheme == Uri.UriSchemeHttp || uriResult.Scheme == Uri.UriSchemeHttps);
 
             if (result)
-                PodcastListController.PodcastsList.AddFeed(text);
+            {
+                var podcastList = (ObservableCollection<PodcastModel>)ViewPodcasts.SourceCollection;
+                podcastList.AddFeed(text);
+            }
         }
         private bool AddCanExecute(object arg) => !string.IsNullOrWhiteSpace(arg.ToString());
 
@@ -104,12 +107,13 @@ namespace NoiseCast.MVVM.ViewModel
         {
             if (_episodesList == null) _episodesList = new ObservableCollection<EpisodeModel>();
 
-            _episodesList.Clear();
-            var podcast = (PodcastModel)_viewPodcasts.CurrentItem;
-            if (podcast != null)
-                foreach (var item in podcast.Episodes)
-                    EpisodesList.Add(item);
+            if (_viewPodcasts.CurrentItem is PodcastModel podcast && podcast != null)
+            {
+                EpisodesList = null;
+                EpisodesList = podcast.GetEpisodes();
+            }
 
+            ViewEpisodes = new ListCollectionView(_episodesList);
             SortViewCollection(_viewEpisodes, nameof(EpisodeModel.ID), ListSortDirection.Descending);
             ViewEpisodes.MoveCurrentToFirst();
         }

@@ -39,6 +39,9 @@ namespace NoiseCast.MVVM.Model
                 if (playerVM.CurrentEpisode == null)
                     return;
 
+                if (playerVM.CurrentEpisode.ParentPodcast == null)
+                    return;
+
                 _lastSelectedID[0] = playerVM.CurrentEpisode.ParentPodcast.GetID();
                 _lastSelectedID[1] = playerVM.CurrentEpisode.ID;
                 _playerVolume = playerVM.Volume;
