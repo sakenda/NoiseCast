@@ -1,50 +1,84 @@
 ﻿using CodeHollow.FeedReader;
-using CodeHollow.FeedReader.Feeds;
 using Newtonsoft.Json;
 using NoiseCast.Core;
+using System;
 
 namespace NoiseCast.MVVM.Model
 {
     public class EpisodeModel : ObservableObject
     {
-        private string _id;
-        private string _imagePath;
         private double _durationRemaining;
-        private string _mediaPath;
         private bool _isArchived;
-        private FeedItem _episode;
-        private PodcastModel _parentPodcast;
+        private string _title;
+        private string _description;
+        private string _author;
+        private DateTime? _publishingDate;
+        private string _link;
 
-        [JsonProperty("id")] public string ID => _id;
-        [JsonProperty("imagePath")] public string ImagePath => _imagePath;
-        [JsonProperty("duration")] public double DurationRemaining { get => _durationRemaining; set => SetProperty(ref _durationRemaining, value); }
-        [JsonProperty("isArchived")] public bool IsArchived { get => _isArchived; set => SetProperty(ref _isArchived, value); }
-        [JsonIgnore] public string MediaPath => _mediaPath;
-        [JsonIgnore] public FeedItem Episode => _episode;
-        [JsonIgnore] public PodcastModel ParentPodcast => _parentPodcast;
+        public string Id { get; private set; }
+        public bool IsArchived { get => _isArchived; set => SetProperty(ref _isArchived, value); }
+        public double DurationRemaining { get => _durationRemaining; set => SetProperty(ref _durationRemaining, value); }
+        [JsonIgnore] public PodcastModel ParentPodcastModel { get; set; }
+        [JsonIgnore] public string ImagePath { get; private set; }
+        [JsonIgnore] public string MediaPath { get; private set; }
+        [JsonIgnore] public string Title { get => _title; set => SetProperty(ref _title, value); }
+        [JsonIgnore] public string Description { get => _description; set => SetProperty(ref _description, value); }
+        [JsonIgnore] public string Author { get => _author; set => SetProperty(ref _author, value); }
+        [JsonIgnore] public DateTime? PublishingDate { get => _publishingDate; set => SetProperty(ref _publishingDate, value); }
+        [JsonIgnore] public string Link { get => _link; set => SetProperty(ref _link, value); }
 
         /// <summary>
-        /// Json-Deserialization Constructor
+        /// Constructor for json deserializiation
         /// </summary>
+        /// <param name="id"></param>
+        /// <param name="isArchived"></param>
+        /// <param name="durationRemaining"></param>
         [JsonConstructor]
-        public EpisodeModel(string id, string imagePath, double duration, bool isArchived)
+        public EpisodeModel(string id, bool isArchived, double durationRemaining)
         {
-            _id = id;
-            _imagePath = imagePath;
-            _durationRemaining = duration;
-            _isArchived = isArchived;
+            Id = id;
+            IsArchived = isArchived;
+            DurationRemaining = durationRemaining;
         }
 
         /// <summary>
         /// New episode constructor
         /// </summary>
-        public EpisodeModel(FeedItem episode, string id, string imagePath)
+        public EpisodeModel(FeedItem feedItem, PodcastModel podcast)
         {
-            _episode = episode;
-            _id = id;
-            _imagePath = imagePath;
+            if (feedItem == null || podcast == null) return;
+
+            Id = feedItem.Id;
             _durationRemaining = 0;
-            _mediaPath = GetMediaPath();
+            _isArchived = false;
+
+            ParentPodcastModel = podcast;
+            ImagePath = podcast.ImagePath;
+            MediaPath = podcast.GetMediaPath(Id);
+
+            InitializeEpisode(feedItem);
+        }
+
+        /// <summary>
+        /// Initializes episode properties
+        /// </summary>
+        /// <param name="feedItem"></param>
+        public void InitializeEpisode(FeedItem feedItem, PodcastModel podcast = null)
+        {
+            if (feedItem == null) return;
+
+            _title = feedItem.Title;
+            _description = feedItem.Description;
+            _author = feedItem.Author;
+            _publishingDate = feedItem.PublishingDate;
+            _link = feedItem.Link;
+
+            if (podcast != null)
+            {
+                ParentPodcastModel = podcast;
+                MediaPath = podcast.GetMediaPath(Id);
+                ImagePath = podcast.ImagePath;
+            }
         }
 
         /// <summary>
@@ -54,41 +88,12 @@ namespace NoiseCast.MVVM.Model
         {
             _isArchived = true;
             DurationRemaining = -1;
-            _parentPodcast.Save();
-        }
-
-        /// <summary>
-        /// Set <see cref="FeedItem"/>
-        /// </summary>
-        /// <param name="episode"></param>
-        public void SetEpisodeFeed(FeedItem episode, PodcastModel podcastModel)
-        {
-            _episode = episode;
-            _mediaPath = GetMediaPath();
-            _parentPodcast = podcastModel;
         }
 
         /// <summary>
         /// Sets imagepath
         /// </summary>
         /// <param name="path"></param>
-        public void SetImagePath(string path) => _imagePath = path;
-
-        /// <summary>
-        /// Set Path to the Enclosure URL depending on the FeedType
-        /// </summary>
-        private string GetMediaPath()
-        {
-            if (_episode == null) return null;
-
-            string type = _episode.SpecificItem.GetType().Name;
-
-            return type switch
-            {
-                nameof(Rss20FeedItem) => ((Rss20FeedItem)_episode.SpecificItem).Enclosure.Url,
-                nameof(MediaRssFeedItem) => ((MediaRssFeedItem)_episode.SpecificItem).Enclosure.Url,
-                _ => null
-            };
-        }
+        public void SetImagePath(string path) => ImagePath = path;
     }
 }

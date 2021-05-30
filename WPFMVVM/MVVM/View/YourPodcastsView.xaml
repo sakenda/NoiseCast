@@ -20,7 +20,7 @@
     <Grid>
         <!-- #region "GridDefinitions" -->
         <Grid.ColumnDefinitions>
-            <ColumnDefinition Width="{Binding ElementName=lb_podcastList, Path=ActualWidth}"/>
+            <ColumnDefinition Width="300"/>
             <ColumnDefinition Width="Auto"/>
             <ColumnDefinition x:Name="column2"/>
             <ColumnDefinition Width="Auto"/>
@@ -36,7 +36,8 @@
                  x:Name="lb_podcastList"
                  ItemsSource="{Binding ViewPodcasts}"
                  SelectedIndex="1"
-                 Width="300" Margin="0 -5 0 0"
+                 Width="300"
+                 Margin="0 -5 0 0"
                  Style="{StaticResource ListBoxStyle}"
                  ItemContainerStyle="{StaticResource PodcastListBoxItem}"
                  ScrollViewer.CanContentScroll="False"/>
@@ -83,16 +84,16 @@
                         VerticalAlignment="Top"
                         Margin="10 0 0 0">
 
-                <TextBlock Text="{Binding Podcast.Title}"
+                <TextBlock Text="{Binding Title}"
                            FontFamily="{StaticResource BarlowBold}"
                            FontSize="28"/>
-                <TextBlock Text="{Binding Podcast.Copyright}"
+                <TextBlock Text="{Binding Copyright}"
                            FontFamily="{StaticResource BarlowSemiBold}"
                            FontSize="20"/>
                 <TextBlock FontFamily="{StaticResource BarlowRegular}"
                            FontSize="18">
-                    <Hyperlink NavigateUri="{Binding Podcast.Link}">
-                        <TextBlock Text="{Binding Podcast.Link}"/>
+                    <Hyperlink NavigateUri="{Binding Link}">
+                        <TextBlock Text="{Binding Link}"/>
                     </Hyperlink>
                 </TextBlock>
             </StackPanel>
@@ -103,12 +104,12 @@
                         Orientation="Horizontal"
                         VerticalAlignment="Bottom"
                         Margin="10 0 0 0">
-                <TextBlock Text="{Binding Podcast.Items.Count, StringFormat={}{0} episodes}"
+                <TextBlock Text="{Binding Episodes.Count, StringFormat={}{0} episodes}"
                            Foreground="{StaticResource DarkFont3}"
                            FontFamily="{StaticResource BarlowSemiBold}"
                            FontSize="16"
                            Margin="0 0 30 0"/>
-                <TextBlock Text="{Binding Podcast.Items.Count, StringFormat={}{0} played}"
+                <TextBlock Text="{Binding Episodes.Count, StringFormat={}{0} played}"
                            Foreground="{StaticResource DarkFont3}"
                            FontFamily="{StaticResource BarlowSemiBold}"
                            FontSize="16"/>
@@ -130,7 +131,7 @@
                 <ScrollViewer HorizontalScrollBarVisibility="Disabled"
                               VerticalAlignment="Top"
                               CanContentScroll="False">
-                    <TextBlock Text="{Binding Podcast.Description}"
+                    <TextBlock Text="{Binding Description}"
                                TextWrapping="Wrap"
                                FontSize="18"/>
                 </ScrollViewer>
@@ -143,9 +144,7 @@
         <ListBox Grid.Row="1" Grid.Column="2" Grid.ColumnSpan="3"
                  ItemsSource="{Binding ViewEpisodes}"
                  Style="{StaticResource ListBoxStyle}"
-                 ItemContainerStyle="{StaticResource EpisodesListBoxItem}"
-                 ScrollViewer.CanContentScroll="False"
-                 VirtualizingPanel.IsVirtualizing="True"/>
+                 ItemContainerStyle="{StaticResource EpisodesListBoxItem}"/>
         <!-- #endregion -->
     </Grid>
 </UserControl>

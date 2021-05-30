@@ -39,11 +39,8 @@ namespace NoiseCast.MVVM.Model
                 if (playerVM.CurrentEpisode == null)
                     return;
 
-                if (playerVM.CurrentEpisode.ParentPodcast == null)
-                    return;
-
-                _lastSelectedID[0] = playerVM.CurrentEpisode.ParentPodcast.GetID();
-                _lastSelectedID[1] = playerVM.CurrentEpisode.ID;
+                _lastSelectedID[0] = playerVM.CurrentEpisode.ParentPodcastModel.Id;
+                _lastSelectedID[1] = playerVM.CurrentEpisode.Id;
                 _playerVolume = playerVM.Volume;
                 _skipValue = 30;
                 //_skipValue = playerVM.SkipAmount;

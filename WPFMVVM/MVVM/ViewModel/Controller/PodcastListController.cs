@@ -15,14 +15,6 @@ namespace NoiseCast.MVVM.ViewModel.Controller
         public static ObservableCollection<PodcastModel> PodcastsList { get; set; }
 
         /// <summary>
-        /// Static default constructor
-        /// </summary>
-        static PodcastListController()
-        {
-            if (PodcastsList == null) PodcastsList = FeedSerialization.Deserialize();
-        }
-
-        /// <summary>
         /// Add a feed based on an url string.
         /// </summary>
         /// <param name="list"></param>
@@ -41,11 +33,11 @@ namespace NoiseCast.MVVM.ViewModel.Controller
                 throw new Exception("Error: Could not load Feed from:" + url, ex);
             }
 
+            if (feed == null) return false;
+
             var podcastModel = new PodcastModel(feed);
-
-            if (feed == null || PodcastsList.Contains(podcastModel)) return false;
-
             list.Add(podcastModel);
+
             return true;
         }
 
@@ -58,6 +50,8 @@ namespace NoiseCast.MVVM.ViewModel.Controller
         {
             if (podcast == null) return false;
             if (!PodcastsList.Contains(podcast)) return false;
+
+            // TODO: Remove local podcast files
 
             PodcastsList.Remove(podcast);
 

@@ -27,7 +27,7 @@ namespace NoiseCast.MVVM.ViewModel.Converter
         {
             double? val = (double?)value;
 
-            if (!val.HasValue || val.Value == 0) val = 0;
+            if (!val.HasValue || val.Value == 0) return "unplayed";
             if (val.Value == -1) return "finished";
 
             if (TimeSpan.FromSeconds(val.Value) > TimeSpan.FromHours(1))

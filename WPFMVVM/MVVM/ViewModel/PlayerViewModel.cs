@@ -23,21 +23,10 @@ namespace NoiseCast.MVVM.ViewModel
         private double _volume;
         private int _tickCounter;
 
-        public MediaElement MediaElement
-        {
-            get => _mediaElement;
-            set => SetProperty(ref _mediaElement, value);
-        }
-        public EpisodeModel CurrentEpisode
-        {
-            get => _currentEpisode;
-            set => SetProperty(ref _currentEpisode, value);
-        }
-        public double SkipAmount
-        {
-            get => _skipAmount;
-            set => SetProperty(ref _skipAmount, value);
-        }
+        public MediaElement MediaElement { get => _mediaElement; set => SetProperty(ref _mediaElement, value); }
+        public EpisodeModel CurrentEpisode { get => _currentEpisode; set => SetProperty(ref _currentEpisode, value); }
+        public double SkipAmount { get => _skipAmount; set => SetProperty(ref _skipAmount, value); }
+        public double PositionMaximum { get => _positionMaximum; set => SetProperty(ref _positionMaximum, value); }
         public double Position
         {
             get => _position;
@@ -49,11 +38,6 @@ namespace NoiseCast.MVVM.ViewModel
 
                 SetProperty(ref _position, value);
             }
-        }
-        public double PositionMaximum
-        {
-            get => _positionMaximum;
-            set => SetProperty(ref _positionMaximum, value);
         }
         public double Volume
         {
@@ -104,8 +88,8 @@ namespace NoiseCast.MVVM.ViewModel
 
             if (string.IsNullOrWhiteSpace(session.LastSelectedID[0]) || string.IsNullOrWhiteSpace(session.LastSelectedID[1])) return;
 
-            var podcast = PodcastListController.PodcastsList.FirstOrDefault(x => x.GetID() == session.LastSelectedID[0]);
-            var episode = podcast.Episodes.FirstOrDefault(x => x.ID == session.LastSelectedID[1]);
+            var podcast = PodcastListController.PodcastsList.FirstOrDefault(x => x.Id == session.LastSelectedID[0]);
+            var episode = podcast.Episodes.FirstOrDefault(x => x.Id == session.LastSelectedID[1]);
 
             SetEpisode(episode);
         }
@@ -151,7 +135,7 @@ namespace NoiseCast.MVVM.ViewModel
         /// </summary>
         private void AutoSave()
         {
-            if (_tickCounter++ % 60 == 0) _currentEpisode.ParentPodcast.Save();
+            if (_tickCounter++ % 60 == 0) FeedSerialization.Serialize(PodcastListController.PodcastsList);
         }
 
         /// <summary>
@@ -194,13 +178,12 @@ namespace NoiseCast.MVVM.ViewModel
             MediaElement.Position = TimeSpan.FromSeconds(_position);
         }
 
-        private bool LastCanExecute(object arg) => false;
         private void LastExecuted(object obj) => throw new NotImplementedException();
+        private bool LastCanExecute(object arg) => false;
 
-        private bool NextCanExecute(object arg) => false;
         private void NextExecuted(object obj) => throw new NotImplementedException();
+        private bool NextCanExecute(object arg) => false;
 
-        private bool PlayCanExecute(object arg) => _mediaElement.Source != null;
         private void PlayExecuted(object obj)
         {
             if (_timer.IsEnabled)
@@ -213,8 +196,8 @@ namespace NoiseCast.MVVM.ViewModel
             _timer.Start();
             _mediaElement.Play();
         }
+        private bool PlayCanExecute(object arg) => _mediaElement.Source != null;
 
-        private bool SkipCanExecute(object arg) => _mediaElement.Source != null;
         private void SkipExecuted(object obj)
         {
             TimeSpan targetTime = _mediaElement.Position + TimeSpan.FromSeconds(_skipAmount);
@@ -229,8 +212,8 @@ namespace NoiseCast.MVVM.ViewModel
             _mediaElement.Position = targetTime;
             Position = targetTime.TotalSeconds;
         }
+        private bool SkipCanExecute(object arg) => _mediaElement.Source != null;
 
-        private bool RewindCanExecute(object arg) => _mediaElement.Source != null;
         private void RewindExecuted(object obj)
         {
             TimeSpan targetTime = _mediaElement.Position - TimeSpan.FromSeconds(_skipAmount);
@@ -245,8 +228,8 @@ namespace NoiseCast.MVVM.ViewModel
             _mediaElement.Position = targetTime;
             Position = targetTime.TotalSeconds;
         }
+        private bool RewindCanExecute(object arg) => _mediaElement.Source != null;
 
-        private bool MuteCanExecute(object arg) => true;
         private void MuteExecuted(object obj)
         {
             if (_mediaElement.Volume > 0)
@@ -258,5 +241,6 @@ namespace NoiseCast.MVVM.ViewModel
 
             _mediaElement.Volume = _tempVolume;
         }
+        private bool MuteCanExecute(object arg) => true;
     }
 }

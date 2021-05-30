@@ -1,13 +1,26 @@
 ﻿using NoiseCast.Core;
 using NoiseCast.MVVM.Core;
 using NoiseCast.MVVM.ViewModel.Controller;
-using System;
 using System.Diagnostics;
 
 namespace NoiseCast.MVVM.ViewModel
 {
     public class MainViewModel : ObservableObject
     {
+        private object currentView;
+        private object playerView;
+
+        public object CurrentView
+        {
+            get => currentView;
+            set => SetProperty(ref currentView, value);
+        }
+        public object PlayerView
+        {
+            get => playerView;
+            set => SetProperty(ref playerView, value);
+        }
+
         public RelayCommand YourPodcastsViewCommand { get; set; }
         public RelayCommand NewEpisodesViewCommand { get; set; }
         public RelayCommand DiscoveryViewCommand { get; set; }
@@ -25,21 +38,11 @@ namespace NoiseCast.MVVM.ViewModel
         public static SettingsViewModel SettingsVM { get; set; }
         public static PlayerViewModel PlayerVM { get; set; }
 
-        private object currentView;
-        public object CurrentView
-        {
-            get => currentView;
-            set => SetProperty(ref currentView, value);
-        }
-        private object playerView;
-        public object PlayerView
-        {
-            get => playerView;
-            set => SetProperty(ref playerView, value);
-        }
-
         public MainViewModel()
         {
+            Stopwatch sw = new Stopwatch();
+            sw.Start();
+
             DeserializeData();
 
             YourPodcastsVM = new YourPodcastsViewModel();
@@ -63,6 +66,9 @@ namespace NoiseCast.MVVM.ViewModel
             SettingsViewCommand = new RelayCommand(o => CurrentView = SettingsVM);
             PlayerViewCommand = new RelayCommand(o => PlayerView = PlayerVM);
             ExitCommand = new RelayCommand(ExitExecuted, ExitCanExecute);
+
+            sw.Stop();
+            Debug.WriteLine("Starttime: " + sw.Elapsed);
         }
 
         private void DeserializeData()

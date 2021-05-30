@@ -1,29 +1,35 @@
 ﻿using CodeHollow.FeedReader;
+using CodeHollow.FeedReader.Feeds;
 using Newtonsoft.Json;
 using NoiseCast.Core;
 using NoiseCast.MVVM.Core;
-using NoiseCast.MVVM.ViewModel.Controller;
 using System;
 using System.Collections.ObjectModel;
+using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
+using System.Runtime.Serialization;
+using System.Threading.Tasks;
 
 namespace NoiseCast.MVVM.Model
 {
+    [JsonObject]
     public class PodcastModel : ObservableObject
     {
-        [JsonProperty("originalDocument")] private string _originalDocument => _podcast.OriginalDocument;
-        [JsonProperty("episodesList")] private ObservableCollection<EpisodeModel> _episodes;
-        [JsonProperty("id")] private Guid _id;
-        private Feed _podcast;
-        private string _imagePath;
+        private Guid _id;
         private bool _isSubscribed;
 
-        [JsonIgnore] public ObservableCollection<EpisodeModel> Episodes => _episodes;
-        [JsonIgnore] public string PodcastTitle => _podcast.Title;
-        [JsonIgnore] public Feed Podcast => _podcast;
-        [JsonIgnore] public string ImagePath => _imagePath;
-        [JsonIgnore] public string FilePath => ApplicationSettings.PODCAST_PATH + _id.ToString() + ".json";
+        [JsonProperty] public string Id => _id.ToString();
+        [JsonProperty] public string OriginalDocument { get; }
+        [JsonProperty] public ObservableCollection<EpisodeModel> Episodes { get; private set; }
+        [JsonIgnore] public string Title { get; private set; }
+        [JsonIgnore] public string Description { get; private set; }
+        [JsonIgnore] public string Copyright { get; private set; }
+        [JsonIgnore] public DateTime? LastUpdatedDate { get; private set; }
+        [JsonIgnore] public string Link { get; private set; }
+        [JsonIgnore] public string ImagePath { get; private set; }
         [JsonIgnore] public bool IsSubscribed { get => _isSubscribed; private set => SetProperty(ref _isSubscribed, value); }
+        [JsonIgnore] public string FilePath => ApplicationSettings.PODCAST_PATH + _id.ToString() + ".json";
 
         /// <summary>
         /// Constructor for deserialized feeds with saved values
@@ -32,78 +38,104 @@ namespace NoiseCast.MVVM.Model
         /// <param name="originalDocument">Feed as XML-Document</param>
         /// <param name="episodesList">List of values relevant to each episode</param>
         [JsonConstructor]
-        public PodcastModel(Guid id, string originalDocument, ObservableCollection<EpisodeModel> episodesList)
+        public PodcastModel(Guid id, string originalDocument, ObservableCollection<EpisodeModel> episodes)
         {
             _id = id;
-            _isSubscribed = true;
-            _podcast = FeedReader.ReadFromString(originalDocument);
-            _episodes = episodesList == null ? new ObservableCollection<EpisodeModel>() : episodesList;
+            OriginalDocument = originalDocument;
+            Episodes = episodes;
+            IsSubscribed = true;
 
-            _imagePath = _podcast.ImageUrl;
-            InitializeEpisodes();
+            Feed feed = FeedReader.ReadFromString(originalDocument);
+            InitializePodcast(feed);
+
+            int count = 0;
+            Parallel.ForEach(Episodes, episode =>
+            {
+                FeedItem feedItem = feed.Items.FirstOrDefault(x => x.Id == episode.Id);
+                episode.InitializeEpisode(feedItem, this);
+
+                Debug.WriteLine("Loaded: " + count++ + "/" + feed.Items.Count + " PODCAST: " + feed.Title);
+            });
         }
 
         /// <summary>
         /// Constructor for new Podcasts with no ID
         /// </summary>
         /// <param name="podcast"></param>
-        public PodcastModel(Feed podcast)
+        public PodcastModel(Feed feed)
         {
-            _podcast = podcast;
             _id = Guid.Empty;
+            OriginalDocument = feed.OriginalDocument;
             _isSubscribed = false;
-            _imagePath = podcast.ImageUrl;
-            _episodes = new ObservableCollection<EpisodeModel>();
-            InitializeEpisodes();
+            Episodes = new ObservableCollection<EpisodeModel>();
+
+            InitializePodcast(feed);
+            InitializeEpisodes(feed);
         }
 
         /// <summary>
-        /// Initialize all episodes and skips if one already exists
+        /// Initialize all podcastinfo's
         /// </summary>
-        private void InitializeEpisodes()
+        private void InitializePodcast(Feed feed)
         {
-            foreach (var feedItem in _podcast.Items)
-            {
-                // Search for existing episodes
-                var temp = _episodes.FirstOrDefault(x => x.ID == feedItem.Id);
-                if (temp != null)
-                {
-                    // Add additional items to existing episode
-                    temp.SetEpisodeFeed(feedItem, this);
-                    continue;
-                }
+            Title = feed.Title;
+            Description = feed.Description;
+            ImagePath = feed.ImageUrl;
+            Link = feed.Link;
+            Copyright = feed.Copyright;
+            LastUpdatedDate = feed.LastUpdatedDate.HasValue ? feed.LastUpdatedDate.Value : null;
+        }
 
-                // add new episode
-                var episodeModel = new EpisodeModel(feedItem, feedItem.Id, _imagePath);
-                _episodes.Add(episodeModel);
+        /// <summary>
+        /// Initializes all episodes as a EpisodeModel
+        /// </summary>
+        /// <param name="feed"></param>
+        private void InitializeEpisodes(Feed feed)
+        {
+            if (feed == null) return;
+
+            foreach (var item in feed.Items)
+            {
+                if (item == null) continue;
+
+                EpisodeModel episode = new EpisodeModel(item, this);
+
+                Episodes.Add(episode);
             }
         }
 
         /// <summary>
-        /// Returns a <see cref="ObservableCollection{EpisodeModel}"/>. Generates a new list if no item is current attached
-        /// or returns the populated list
+        /// Set Path to the Enclosure URL depending on the FeedType
         /// </summary>
-        /// <returns></returns>
-        public ObservableCollection<EpisodeModel> GetEpisodes()
+        public string GetMediaPath(string id)
         {
-            if (_episodes != null || _episodes.Count != 0) return _episodes;
+            Feed feed = FeedReader.ReadFromString(OriginalDocument);
+            FeedItem feedItem = feed.Items.FirstOrDefault(x => x.Id == id);
 
-            ObservableCollection<EpisodeModel> episodesList = new ObservableCollection<EpisodeModel>();
+            if (feed == null || feedItem == null) return null;
 
-            foreach (var episode in _podcast.Items)
+            string type = feedItem.SpecificItem.GetType().Name;
+
+            return feed.Type switch
             {
-                var episodeModel = new EpisodeModel(episode, GetID(), _imagePath);
-                episodesList.Add(episodeModel);
-            }
-
-            return episodesList;
+                FeedType.Rss_2_0 => ((Rss20FeedItem)feedItem.SpecificItem).Enclosure.Url,
+                FeedType.MediaRss => ((MediaRssFeedItem)feedItem.SpecificItem).Enclosure.Url,
+                FeedType.Unknown => null,
+                _ => null
+            };
         }
 
         /// <summary>
-        /// Get ID as string
+        /// Sets imagepath on thee <see cref="PodcastModel"/> and all <see cref="EpisodeModel"/>
         /// </summary>
-        /// <returns></returns>
-        public string GetID() => _id.ToString();
+        /// <param name="path"></param>
+        public void SetImagePath(string path)
+        {
+            ImagePath = path;
+
+            foreach (var item in Episodes)
+                item.SetImagePath(path);
+        }
 
         /// <summary>
         /// Sets ID if ID = <see cref="Guid.Empty"/>
@@ -115,31 +147,20 @@ namespace NoiseCast.MVVM.Model
 
             _id = Guid.NewGuid();
             IsSubscribed = true;
+
             return true;
         }
 
         /// <summary>
-        /// Sets imagepath on thee <see cref="PodcastModel"/> and all <see cref="EpisodeModel"/>
+        /// Returns a <see cref="ObservableCollection{EpisodeModel}"/>. Generates a new list if no item is current attached
+        /// or returns the populated list
         /// </summary>
-        /// <param name="path"></param>
-        public void SetImagePath(string path)
+        /// <returns></returns>
+        public ObservableCollection<EpisodeModel> GetEpisodes()
         {
-            _imagePath = path;
-            foreach (var item in Episodes)
-            {
-                item.SetImagePath(path);
-            }
+            if (Episodes == null || Episodes.Count == 0) return Episodes = new ObservableCollection<EpisodeModel>();
+
+            return Episodes;
         }
-
-        /// <summary>
-        /// On changes in feed, feedObj will be updated
-        /// </summary>
-        /// <param name="feed">Updated Feed</param>
-        public void UpdateFeed(Feed feed) => _podcast = feed;
-
-        /// <summary>
-        /// Save Feed locally
-        /// </summary>
-        public void Save() => PodcastListController.SaveFeed(this);
     }
 }
