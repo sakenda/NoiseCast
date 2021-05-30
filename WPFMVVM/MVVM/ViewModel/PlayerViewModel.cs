@@ -16,16 +16,16 @@ namespace NoiseCast.MVVM.ViewModel
         private MediaElement _mediaElement;
         private DispatcherTimer _timer;
         private EpisodeModel _currentEpisode;
-        private double _skipAmount;
         private double _position;
         private double _positionMaximum;
         private double _tempVolume;
         private double _volume;
         private int _tickCounter;
 
+        public DispatcherTimer Timer => _timer;
+        public double SkipAmount => ApplicationSettings.Settings.SkipValue;
         public MediaElement MediaElement { get => _mediaElement; set => SetProperty(ref _mediaElement, value); }
         public EpisodeModel CurrentEpisode { get => _currentEpisode; set => SetProperty(ref _currentEpisode, value); }
-        public double SkipAmount { get => _skipAmount; set => SetProperty(ref _skipAmount, value); }
         public double PositionMaximum { get => _positionMaximum; set => SetProperty(ref _positionMaximum, value); }
         public double Position
         {
@@ -200,7 +200,7 @@ namespace NoiseCast.MVVM.ViewModel
 
         private void SkipExecuted(object obj)
         {
-            TimeSpan targetTime = _mediaElement.Position + TimeSpan.FromSeconds(_skipAmount);
+            TimeSpan targetTime = _mediaElement.Position + TimeSpan.FromSeconds(SkipAmount);
 
             if (targetTime > _mediaElement.NaturalDuration.TimeSpan)
             {
@@ -216,7 +216,7 @@ namespace NoiseCast.MVVM.ViewModel
 
         private void RewindExecuted(object obj)
         {
-            TimeSpan targetTime = _mediaElement.Position - TimeSpan.FromSeconds(_skipAmount);
+            TimeSpan targetTime = _mediaElement.Position - TimeSpan.FromSeconds(SkipAmount);
 
             if (targetTime <= TimeSpan.Zero)
             {

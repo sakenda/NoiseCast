@@ -5,10 +5,8 @@ using NoiseCast.Core;
 using NoiseCast.MVVM.Core;
 using System;
 using System.Collections.ObjectModel;
-using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
-using System.Runtime.Serialization;
 using System.Threading.Tasks;
 
 namespace NoiseCast.MVVM.Model
