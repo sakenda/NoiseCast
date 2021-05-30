@@ -7,7 +7,7 @@
     <converter:OlderThanDateConverter x:Key="OlderThanDate"/>
     <converter:IsArchivedBoolToStringConverter x:Key="IsArchivedConverter"/>
 
-    <Style x:Key="ListBoxStyle" TargetType="{x:Type ListBox}">
+    <!--<Style x:Key="ListBoxStyle" TargetType="{x:Type ListBox}">
         <Setter Property="BorderThickness" Value="0"/>
         <Setter Property="Background" Value="Transparent"/>
         <Setter Property="Template">
@@ -21,6 +21,17 @@
                         </ScrollViewer>
                     </Border>
                 </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>-->
+    <Style x:Key="ListBoxStyle" TargetType="{x:Type ListBox}">
+        <Setter Property="BorderThickness" Value="0"/>
+        <Setter Property="Background" Value="Transparent"/>
+        <Setter Property="ItemsControl.ItemsPanel">
+            <Setter.Value>
+                <ItemsPanelTemplate>
+                    <VirtualizingStackPanel IsVirtualizing="True" VirtualizationMode="Recycling"/>
+                </ItemsPanelTemplate>
             </Setter.Value>
         </Setter>
     </Style>
@@ -65,14 +76,14 @@
                             </Border>
 
                             <TextBlock Grid.Column="1" Grid.Row="2"
-                                       Text="{Binding Podcast.Title}"
+                                       Text="{Binding Title}"
                                        TextTrimming="WordEllipsis"
                                        Margin="5 0 0 0"
                                        FontFamily="{StaticResource BarlowSemiBold}"
                                        FontSize="16"/>
 
                             <TextBlock Grid.Column="1" Grid.Row="3"
-                                       Text="{Binding Podcast.Copyright}"
+                                       Text="{Binding Copyright}"
                                        TextTrimming="WordEllipsis"
                                        Margin="5 0 0 0"
                                        VerticalAlignment="Top"
@@ -80,7 +91,7 @@
                                        FontSize="14"/>
 
                             <TextBlock Grid.Column="1" Grid.Row="4"
-                                       Text="{Binding Podcast.LastUpdatedDate, Converter={StaticResource OlderThanDate}}"
+                                       Text="{Binding LastUpdatedDate, Converter={StaticResource OlderThanDate}}"
                                        Foreground="{StaticResource DarkFont3}"
                                        Margin="5 0 0 0"
                                        VerticalAlignment="Bottom"
@@ -185,7 +196,7 @@
                             </Grid.RowDefinitions>
 
                             <TextBlock Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="2"
-                                       Text="{Binding Episode.Title}"
+                                       Text="{Binding Title}"
                                        TextWrapping="WrapWithOverflow"
                                        TextTrimming="WordEllipsis"
                                        FontFamily="{StaticResource BarlowSemiBold}"
@@ -204,7 +215,7 @@
                                     FontSize="40"/>
 
                             <StackPanel Grid.Row="1" Grid.Column="1" Orientation="Vertical">
-                                <TextBlock Text="{Binding Episode.Description}"
+                                <TextBlock Text="{Binding Description}"
                                            x:Name="tb_desc"
                                            TextWrapping="WrapWithOverflow"
                                            TextTrimming="WordEllipsis"
@@ -226,7 +237,7 @@
                                     <Label Content="&#xf382;"
                                            Margin="5 0 5 0"
                                            FontFamily="{StaticResource FontAwesomeSolid}"/>
-                                    <TextBlock Text="{Binding Episode.PublishingDate, Converter={StaticResource OlderThanDate}}"
+                                    <TextBlock Text="{Binding PublishingDate, Converter={StaticResource OlderThanDate}}"
                                                FontSize="14"
                                                VerticalAlignment="Center"/>
 
