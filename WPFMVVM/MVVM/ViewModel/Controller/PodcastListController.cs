@@ -43,7 +43,7 @@ namespace NoiseCast.MVVM.ViewModel.Controller
         }
 
         /// <summary>
-        /// Removes Podcast if it exist.
+        /// Removes Podcast if it exist. Removes saved files from subscribed podcast
         /// </summary>
         /// <param name="podcast"></param>
         /// <returns>Returns <see cref="true"/> if Podcast was Removed, <see cref="false"/> if it wasn't.</returns>

@@ -1,6 +1,7 @@
 ﻿using CodeHollow.FeedReader;
 using Newtonsoft.Json;
 using NoiseCast.Core;
+using NoiseCast.MVVM.ViewModel.Controller;
 using System;
 
 namespace NoiseCast.MVVM.Model
@@ -86,8 +87,11 @@ namespace NoiseCast.MVVM.Model
         /// </summary>
         public void SetIsArchived()
         {
-            _isArchived = true;
+            IsArchived = true;
             DurationRemaining = -1;
+            ParentPodcastModel.IsArchivedCount++;
+
+            ParentPodcastModel.SaveFeed();
         }
 
         /// <summary>

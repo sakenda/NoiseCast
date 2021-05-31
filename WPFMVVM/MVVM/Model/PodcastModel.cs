@@ -16,10 +16,12 @@ namespace NoiseCast.MVVM.Model
     {
         private Guid _id;
         private bool _isSubscribed;
+        private int _isArchivedCount;
 
         [JsonProperty] public string Id => _id.ToString();
         [JsonProperty] public string OriginalDocument { get; }
         [JsonProperty] public ObservableCollection<EpisodeModel> Episodes { get; private set; }
+        [JsonIgnore] public int IsArchivedCount { get => _isArchivedCount; set => SetProperty(ref _isArchivedCount, value); }
         [JsonIgnore] public string Title { get; private set; }
         [JsonIgnore] public string Description { get; private set; }
         [JsonIgnore] public string Copyright { get; private set; }
@@ -42,6 +44,7 @@ namespace NoiseCast.MVVM.Model
             OriginalDocument = originalDocument;
             Episodes = episodes;
             IsSubscribed = true;
+            _isArchivedCount = 0;
 
             Feed feed = FeedReader.ReadFromString(originalDocument);
             InitializePodcast(feed);
@@ -51,6 +54,8 @@ namespace NoiseCast.MVVM.Model
             {
                 FeedItem feedItem = feed.Items.FirstOrDefault(x => x.Id == episode.Id);
                 episode.InitializeEpisode(feedItem, this);
+
+                if (episode.IsArchived) _isArchivedCount++;
 
                 Debug.WriteLine("Loaded: " + count++ + "/" + feed.Items.Count + " PODCAST: " + feed.Title);
             });

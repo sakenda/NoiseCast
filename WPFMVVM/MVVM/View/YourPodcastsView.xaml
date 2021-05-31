@@ -109,7 +109,7 @@
                            FontFamily="{StaticResource BarlowSemiBold}"
                            FontSize="16"
                            Margin="0 0 30 0"/>
-                <TextBlock Text="{Binding Episodes.Count, StringFormat={}{0} played}"
+                <TextBlock Text="{Binding IsArchivedCount, StringFormat={}{0} played}"
                            Foreground="{StaticResource DarkFont3}"
                            FontFamily="{StaticResource BarlowSemiBold}"
                            FontSize="16"/>
