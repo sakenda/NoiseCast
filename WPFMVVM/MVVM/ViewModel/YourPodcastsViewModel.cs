@@ -5,6 +5,7 @@ using System;
 using System.Collections.ObjectModel;
 using System.Collections.Specialized;
 using System.ComponentModel;
+using System.Diagnostics;
 using System.Windows.Data;
 using System.Windows.Input;
 
@@ -86,16 +87,18 @@ namespace NoiseCast.MVVM.ViewModel
         /// <param name="obj"></param>
         private void SubscribeExecuted(object obj)
         {
-            ((PodcastModel)_viewPodcasts.CurrentItem).SaveFeed();
-        }
-        private bool SubscribeCanExecute(object arg)
-        {
-            var item = (PodcastModel)_viewPodcasts.CurrentItem;
+            PodcastModel podcast = (PodcastModel)_viewPodcasts.CurrentItem;
 
-            if (item == null) return false;
+            if (!podcast.IsSubscribed)
+            {
+                podcast.SaveFeed();
+                return;
+            }
 
-            return item.IsSubscribed != true;
+            PodcastListController.RemoveFeed(podcast);
+            ViewPodcasts.Refresh();
         }
+        private bool SubscribeCanExecute(object arg) => true;
 
         /// <summary>
         /// Updates <see cref="EpisodesList"/> depending on the current podcast selected

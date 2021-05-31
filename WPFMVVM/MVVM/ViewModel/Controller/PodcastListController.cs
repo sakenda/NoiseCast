@@ -1,4 +1,5 @@
 ﻿using CodeHollow.FeedReader;
+using NoiseCast.Core;
 using NoiseCast.MVVM.Core;
 using NoiseCast.MVVM.Model;
 using System;
@@ -51,7 +52,16 @@ namespace NoiseCast.MVVM.ViewModel.Controller
             if (podcast == null) return false;
             if (!PodcastsList.Contains(podcast)) return false;
 
-            // TODO: Remove local podcast files
+            if (podcast.IsSubscribed)
+            {
+                string[] filePaths = new string[]
+                {
+                    podcast.ImagePath,
+                    podcast.FilePath
+                };
+
+                FileController.DeleteFile(filePaths);
+            }
 
             PodcastsList.Remove(podcast);
 

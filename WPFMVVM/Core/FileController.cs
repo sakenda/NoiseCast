@@ -40,5 +40,30 @@ namespace NoiseCast.Core
 
             return localPath;
         }
+
+        /// <summary>
+        /// Delete single file
+        /// </summary>
+        /// <param name="filePath"></param>
+        public static void DeleteFile(string filePath)
+        {
+            if (!File.Exists(filePath)) return;
+
+            File.Delete(filePath);
+        }
+
+        /// <summary>
+        /// Delete multiple files
+        /// </summary>
+        /// <param name="filePath"></param>
+        public static void DeleteFile(string[] filePaths)
+        {
+            foreach (var filePath in filePaths)
+            {
+                if (!File.Exists(filePath)) continue;
+
+                File.Delete(filePath);
+            }
+        }
     }
 }
