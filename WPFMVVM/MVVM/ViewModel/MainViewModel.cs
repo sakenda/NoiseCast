@@ -1,6 +1,6 @@
 ﻿using NoiseCast.Core;
 using NoiseCast.MVVM.Model;
-using NoiseCast.MVVM.ViewModel.Controller;
+using System.Collections.ObjectModel;
 using System.Diagnostics;
 
 namespace NoiseCast.MVVM.ViewModel
@@ -22,11 +22,17 @@ namespace NoiseCast.MVVM.ViewModel
         }
 
         private static ApplicationSettingsModel _applicationSettings;
+        public static ObservableCollection<PodcastModel> _podcastsList;
 
         public static ApplicationSettingsModel ApplicationSettings
         {
             get => _applicationSettings;
             set => _applicationSettings = value;
+        }
+        public static ObservableCollection<PodcastModel> PodcastsList
+        {
+            get => _podcastsList;
+            set => _podcastsList = value;
         }
         public RelayCommand YourPodcastsViewCommand { get; set; }
         public RelayCommand NewEpisodesViewCommand { get; set; }
@@ -81,7 +87,7 @@ namespace NoiseCast.MVVM.ViewModel
         private void DeserializeData()
         {
             _applicationSettings = SessionSerialization.Deserialize();
-            PodcastListController.PodcastsList = FeedSerialization.Deserialize();
+            _podcastsList = FeedSerialization.Deserialize();
         }
 
         private void SessionSetup()
@@ -90,6 +96,6 @@ namespace NoiseCast.MVVM.ViewModel
         }
 
         private bool ExitCanExecute(object arg) => true;
-        private void ExitExecuted(object obj) => FeedSerialization.Serialize(PodcastListController.PodcastsList);
+        private void ExitExecuted(object obj) => FeedSerialization.Serialize(_podcastsList);
     }
 }

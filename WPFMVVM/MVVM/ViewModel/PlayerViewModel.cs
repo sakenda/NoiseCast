@@ -6,7 +6,6 @@ using System.Windows.Input;
 using System.Windows.Threading;
 using NoiseCast.Core;
 using NoiseCast.MVVM.Model;
-using NoiseCast.MVVM.ViewModel.Controller;
 
 namespace NoiseCast.MVVM.ViewModel
 {
@@ -87,7 +86,7 @@ namespace NoiseCast.MVVM.ViewModel
 
             if (string.IsNullOrWhiteSpace(session.LastSelectedID[0]) || string.IsNullOrWhiteSpace(session.LastSelectedID[1])) return;
 
-            var podcast = PodcastListController.PodcastsList.FirstOrDefault(x => x.Id == session.LastSelectedID[0]);
+            var podcast = MainViewModel.PodcastsList.FirstOrDefault(x => x.Id == session.LastSelectedID[0]);
             var episode = podcast.Episodes.FirstOrDefault(x => x.Id == session.LastSelectedID[1]);
 
             SetEpisode(episode);
@@ -134,7 +133,7 @@ namespace NoiseCast.MVVM.ViewModel
         /// </summary>
         private void AutoSave()
         {
-            if (_tickCounter++ % 60 == 0) FeedSerialization.Serialize(PodcastListController.PodcastsList);
+            if (_tickCounter++ % 60 == 0) FeedSerialization.Serialize(MainViewModel.PodcastsList);
         }
 
         /// <summary>

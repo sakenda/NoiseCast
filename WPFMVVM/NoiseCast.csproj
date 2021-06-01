@@ -47,6 +47,7 @@
 
   <ItemGroup>
     <Folder Include="Images\" />
+    <Folder Include="MVVM\ViewModel\Controller\" />
   </ItemGroup>
 
 </Project>

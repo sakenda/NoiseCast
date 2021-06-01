@@ -10,11 +10,6 @@ namespace NoiseCast.MVVM.ViewModel.Controller
     public static class PodcastListController
     {
         /// <summary>
-        /// Main <see cref="ObservableCollection{PodcastModel}"/> to store podcasts
-        /// </summary>
-        public static ObservableCollection<PodcastModel> PodcastsList { get; set; }
-
-        /// <summary>
         /// Add a feed based on an url string.
         /// </summary>
         /// <param name="list"></param>
@@ -49,7 +44,7 @@ namespace NoiseCast.MVVM.ViewModel.Controller
         public static bool RemoveFeed(this PodcastModel podcast)
         {
             if (podcast == null) return false;
-            if (!PodcastsList.Contains(podcast)) return false;
+            if (!MainViewModel.PodcastsList.Contains(podcast)) return false;
 
             if (podcast.IsSubscribed)
             {
@@ -62,7 +57,7 @@ namespace NoiseCast.MVVM.ViewModel.Controller
                 FileController.DeleteFile(filePaths);
             }
 
-            PodcastsList.Remove(podcast);
+            MainViewModel.PodcastsList.Remove(podcast);
 
             return true;
         }
