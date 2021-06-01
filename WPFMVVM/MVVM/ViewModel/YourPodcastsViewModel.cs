@@ -31,12 +31,12 @@ namespace NoiseCast.MVVM.ViewModel
             SubscribeCommand = new RelayCommand(SubscribeExecuted, SubscribeCanExecute);
 
             _episodesList = new ObservableCollection<EpisodeModel>();
-            _viewPodcasts = new ListCollectionView(PodcastListController.PodcastsList);
+            _viewPodcasts = new ListCollectionView(MainViewModel.PodcastsList);
             _viewEpisodes = new ListCollectionView(_episodesList);
 
             ViewPodcasts.MoveCurrentToFirst();
 
-            PodcastListController.PodcastsList.CollectionChanged += PodcastList_CollectionChanged;
+            MainViewModel.PodcastsList.CollectionChanged += PodcastList_CollectionChanged;
             _viewPodcasts.CurrentChanged += ViewPodcasts_CurrentChanged;
         }
 
