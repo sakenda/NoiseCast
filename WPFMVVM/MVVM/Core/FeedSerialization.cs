@@ -1,13 +1,13 @@
 ﻿using Newtonsoft.Json;
 using NoiseCast.Core;
-using NoiseCast.MVVM.Model;
+using NoiseCast.MVVM.ViewModel;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.IO;
 using System.Threading.Tasks;
 
-namespace NoiseCast.MVVM.Core
+namespace NoiseCast.MVVM.Model
 {
     public static class FeedSerialization
     {
@@ -25,7 +25,7 @@ namespace NoiseCast.MVVM.Core
                 SaveImage(podcast);
 
                 string json = JsonConvert.SerializeObject(podcast, Formatting.Indented);
-                string path = ApplicationSettings.PODCAST_PATH + podcast.Id + ".json";
+                string path = MainViewModel.ApplicationSettings.GetPodcastPath() + podcast.Id + ".json";
                 FileController.WriteAllText(path, json);
             }
         }
@@ -41,7 +41,7 @@ namespace NoiseCast.MVVM.Core
             SaveImage(podcastModel);
 
             string json = JsonConvert.SerializeObject(podcastModel, Formatting.Indented);
-            string path = ApplicationSettings.PODCAST_PATH + podcastModel.Id + ".json";
+            string path = MainViewModel.ApplicationSettings.GetPodcastPath() + podcastModel.Id + ".json";
             File.WriteAllText(path, json);
         }
 
@@ -53,7 +53,7 @@ namespace NoiseCast.MVVM.Core
         {
             var feedList = new ObservableCollection<PodcastModel>();
 
-            string[] files = Directory.GetFiles(ApplicationSettings.PODCAST_PATH, "*.json", SearchOption.TopDirectoryOnly);
+            string[] files = Directory.GetFiles(MainViewModel.ApplicationSettings.GetPodcastPath(), "*.json", SearchOption.TopDirectoryOnly);
 
             Parallel.ForEach(files, file =>
             {
@@ -75,7 +75,7 @@ namespace NoiseCast.MVVM.Core
         /// <param name="podcastModel"></param>
         private static async void SaveImage(this PodcastModel podcastModel)
         {
-            string imagePath = ApplicationSettings.IMAGE_PATH + podcastModel.Id + ".jpg";
+            string imagePath = MainViewModel.ApplicationSettings.GetImagePath() + podcastModel.Id + ".jpg";
             bool isWebPath = Uri.TryCreate(podcastModel.ImagePath, UriKind.Absolute, out Uri webPath) && (webPath.Scheme == Uri.UriSchemeHttp || webPath.Scheme == Uri.UriSchemeHttps);
 
             if (isWebPath)

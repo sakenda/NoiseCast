@@ -1,5 +1,5 @@
 ﻿using NoiseCast.Core;
-using NoiseCast.MVVM.Core;
+using NoiseCast.MVVM.Model;
 using NoiseCast.MVVM.ViewModel.Controller;
 using System.Diagnostics;
 
@@ -21,6 +21,13 @@ namespace NoiseCast.MVVM.ViewModel
             set => SetProperty(ref playerView, value);
         }
 
+        private static ApplicationSettingsModel _applicationSettings;
+
+        public static ApplicationSettingsModel ApplicationSettings
+        {
+            get => _applicationSettings;
+            set => _applicationSettings = value;
+        }
         public RelayCommand YourPodcastsViewCommand { get; set; }
         public RelayCommand NewEpisodesViewCommand { get; set; }
         public RelayCommand DiscoveryViewCommand { get; set; }
@@ -73,14 +80,13 @@ namespace NoiseCast.MVVM.ViewModel
 
         private void DeserializeData()
         {
-            ApplicationSettings.Settings = SessionSerialization.Deserialize();
+            _applicationSettings = SessionSerialization.Deserialize();
             PodcastListController.PodcastsList = FeedSerialization.Deserialize();
         }
 
         private void SessionSetup()
         {
-            var session = ApplicationSettings.Settings;
-            PlayerVM.InitializeSession(session);
+            PlayerVM.InitializeSession(_applicationSettings.Settings);
         }
 
         private bool ExitCanExecute(object arg) => true;

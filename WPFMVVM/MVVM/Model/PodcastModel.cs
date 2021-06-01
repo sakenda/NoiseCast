@@ -2,7 +2,8 @@
 using CodeHollow.FeedReader.Feeds;
 using Newtonsoft.Json;
 using NoiseCast.Core;
-using NoiseCast.MVVM.Core;
+using NoiseCast.MVVM.Model;
+using NoiseCast.MVVM.ViewModel;
 using System;
 using System.Collections.ObjectModel;
 using System.Diagnostics;
@@ -29,7 +30,7 @@ namespace NoiseCast.MVVM.Model
         [JsonIgnore] public string Link { get; private set; }
         [JsonIgnore] public string ImagePath { get; private set; }
         [JsonIgnore] public bool IsSubscribed { get => _isSubscribed; private set => SetProperty(ref _isSubscribed, value); }
-        [JsonIgnore] public string FilePath => ApplicationSettings.PODCAST_PATH + _id.ToString() + ".json";
+        [JsonIgnore] public string FilePath => MainViewModel.SettingsVM.AppSettings.GetPodcastPath() + _id.ToString() + ".json";
 
         /// <summary>
         /// Constructor for deserialized feeds with saved values

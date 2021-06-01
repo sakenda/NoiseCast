@@ -1,43 +1,39 @@
 ﻿using Newtonsoft.Json;
 using NoiseCast.Core;
-using NoiseCast.MVVM.Model;
+using NoiseCast.MVVM.ViewModel;
+using System;
 using System.IO;
 
-namespace NoiseCast.MVVM.Core
+namespace NoiseCast.MVVM.Model
 {
     public static class SessionSerialization
     {
+        private static string _sessionSettingsPath = AppDomain.CurrentDomain.BaseDirectory + "session.json";
+
         /// <summary>
-        /// Serializes the session setting. E.g. last played item in player
+        /// Serializes the application settings.
         /// </summary>
         /// <param name="settings"></param>
-        public static void Serialize(SettingsModel settings)
+        public static void Serialize(ApplicationSettingsModel settings)
         {
             var json = JsonConvert.SerializeObject(settings, Formatting.Indented);
-            var path = ApplicationSettings.SETTINGS_PATH + "session.json";
-
-            FileController.WriteAllText(path, json);
+            FileController.WriteAllText(_sessionSettingsPath, json);
         }
 
         /// <summary>
-        /// Deserialize the session settings. E.g. last played item in player
+        /// Deserialize the applicationsettings.
         /// </summary>
         /// <returns></returns>
-        public static SettingsModel Deserialize()
+        public static ApplicationSettingsModel Deserialize()
         {
-            SettingsModel settings;
-            string path = ApplicationSettings.SETTINGS_PATH + "session.json";
+            if (File.Exists(_sessionSettingsPath))
+            {
+                string json = File.ReadAllText(_sessionSettingsPath);
+                return JsonConvert.DeserializeObject<ApplicationSettingsModel>(json);
+            }
 
-            if (File.Exists(path))
-            {
-                string json = File.ReadAllText(path);
-                settings = JsonConvert.DeserializeObject<SettingsModel>(json);
-            }
-            else
-            {
-                settings = new SettingsModel(null, 0.5, 30);
-                Serialize(settings);
-            }
+            var settings = new ApplicationSettingsModel() { Settings = new SettingsModel(null, 0.5, 30) };
+            Serialize(settings);
 
             return settings;
         }

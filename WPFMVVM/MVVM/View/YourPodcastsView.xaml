@@ -10,10 +10,9 @@
              d:DesignHeight="800"
              d:DesignWidth="1200"
              d:Background="White"
-             d:DataContext="{d:DesignInstance Type=vm:YourPodcastsViewModel, IsDesignTimeCreatable=True, CreateList=False}"
+             d:DataContext="{d:DesignInstance Type=vm:YourPodcastsViewModel, IsDesignTimeCreatable=true}"
              FontFamily="{StaticResource BarlowRegular}">
     <UserControl.Resources>
-        <vm:YourPodcastsViewModel x:Key="YourPodcastViewModel"/>
         <converter:IsSubscribedBoolToStringConverter x:Key="BoolToString"/>
     </UserControl.Resources>
 

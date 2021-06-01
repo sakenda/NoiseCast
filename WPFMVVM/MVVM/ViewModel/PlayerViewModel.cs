@@ -5,7 +5,6 @@ using System.Windows.Controls;
 using System.Windows.Input;
 using System.Windows.Threading;
 using NoiseCast.Core;
-using NoiseCast.MVVM.Core;
 using NoiseCast.MVVM.Model;
 using NoiseCast.MVVM.ViewModel.Controller;
 
@@ -23,7 +22,7 @@ namespace NoiseCast.MVVM.ViewModel
         private int _tickCounter;
 
         public DispatcherTimer Timer => _timer;
-        public double SkipAmount => ApplicationSettings.Settings.SkipValue;
+        public double SkipAmount => MainViewModel.ApplicationSettings.Settings.SkipValue;
         public MediaElement MediaElement { get => _mediaElement; set => SetProperty(ref _mediaElement, value); }
         public EpisodeModel CurrentEpisode { get => _currentEpisode; set => SetProperty(ref _currentEpisode, value); }
         public double PositionMaximum { get => _positionMaximum; set => SetProperty(ref _positionMaximum, value); }
@@ -75,7 +74,7 @@ namespace NoiseCast.MVVM.ViewModel
             _mediaElement.UnloadedBehavior = MediaState.Manual;
             _mediaElement.MediaOpened += MediaElement_MediaOpened;
 
-            ApplicationSettings.Settings.SubscribePropertyChanged(this);
+            MainViewModel.ApplicationSettings.Settings.SubscribePropertyChanged(this);
         }
 
         /// <summary>

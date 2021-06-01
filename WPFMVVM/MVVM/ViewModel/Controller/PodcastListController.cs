@@ -1,6 +1,5 @@
 ﻿using CodeHollow.FeedReader;
 using NoiseCast.Core;
-using NoiseCast.MVVM.Core;
 using NoiseCast.MVVM.Model;
 using System;
 using System.Collections.ObjectModel;

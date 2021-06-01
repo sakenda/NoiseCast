@@ -1,10 +1,10 @@
-﻿using NoiseCast.MVVM.Core;
+﻿using NoiseCast.Core;
 using NoiseCast.MVVM.ViewModel;
 using System.ComponentModel;
 
 namespace NoiseCast.MVVM.Model
 {
-    public class SettingsModel
+    public class SettingsModel : ObservableObject
     {
         private string[] _lastSelectedID;
         private double _playerVolume;
@@ -12,7 +12,7 @@ namespace NoiseCast.MVVM.Model
 
         public string[] LastSelectedID => _lastSelectedID;
         public double PlayerVolume => _playerVolume;
-        public double SkipValue => _skipValue;
+        public double SkipValue { get => _skipValue; set => SetProperty(ref _skipValue, value); }
 
         public SettingsModel(string[] lastSelectedID, double playerVolume, double skipValue)
         {
@@ -42,11 +42,10 @@ namespace NoiseCast.MVVM.Model
                 _lastSelectedID[0] = playerVM.CurrentEpisode.ParentPodcastModel.Id;
                 _lastSelectedID[1] = playerVM.CurrentEpisode.Id;
                 _playerVolume = playerVM.Volume;
-                _skipValue = 30;
-                //_skipValue = playerVM.SkipAmount;
+                _skipValue = playerVM.SkipAmount;
             }
 
-            SessionSerialization.Serialize(this);
+            SessionSerialization.Serialize(MainViewModel.SettingsVM.AppSettings);
         }
     }
 }

@@ -3,6 +3,7 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:viewModel="clr-namespace:NoiseCast.MVVM.ViewModel"
              xmlns:view="clr-namespace:NoiseCast.MVVM.View"
+             xmlns:core="clr-namespace:NoiseCast.MVVM.Model"
              StartupUri="MainWindow.xaml">
     <Application.Resources>
         <ResourceDictionary>
