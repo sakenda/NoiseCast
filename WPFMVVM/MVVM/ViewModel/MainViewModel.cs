@@ -92,7 +92,7 @@ namespace NoiseCast.MVVM.ViewModel
 
         private void SessionSetup()
         {
-            PlayerVM.InitializeSession(_applicationSettings.Settings);
+            PlayerVM.InitializeSession(_applicationSettings.PlayerSession);
         }
 
         private bool ExitCanExecute(object arg) => true;

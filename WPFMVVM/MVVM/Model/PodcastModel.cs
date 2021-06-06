@@ -2,7 +2,6 @@
 using CodeHollow.FeedReader.Feeds;
 using Newtonsoft.Json;
 using NoiseCast.Core;
-using NoiseCast.MVVM.Model;
 using NoiseCast.MVVM.ViewModel;
 using System;
 using System.Collections.ObjectModel;

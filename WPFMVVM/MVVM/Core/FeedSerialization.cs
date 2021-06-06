@@ -52,8 +52,9 @@ namespace NoiseCast.MVVM.Model
         public static ObservableCollection<PodcastModel> Deserialize()
         {
             var feedList = new ObservableCollection<PodcastModel>();
+            string podcastPath = MainViewModel.ApplicationSettings.GetPodcastPath();
 
-            string[] files = Directory.GetFiles(MainViewModel.ApplicationSettings.GetPodcastPath(), "*.json", SearchOption.TopDirectoryOnly);
+            string[] files = Directory.GetFiles(podcastPath, "*.json", SearchOption.TopDirectoryOnly);
 
             Parallel.ForEach(files, file =>
             {

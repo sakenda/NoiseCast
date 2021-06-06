@@ -1,6 +1,5 @@
 ﻿using Newtonsoft.Json;
 using NoiseCast.Core;
-using NoiseCast.MVVM.ViewModel;
 using System;
 using System.IO;
 
@@ -32,7 +31,7 @@ namespace NoiseCast.MVVM.Model
                 return JsonConvert.DeserializeObject<ApplicationSettingsModel>(json);
             }
 
-            var settings = new ApplicationSettingsModel() { Settings = new SettingsModel(null, 0.5, 30) };
+            var settings = new ApplicationSettingsModel() { PlayerSession = new PlayerSessionModel(null, 0.5, 30) };
             Serialize(settings);
 
             return settings;

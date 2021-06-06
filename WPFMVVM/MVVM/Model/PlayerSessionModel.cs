@@ -4,7 +4,7 @@ using System.ComponentModel;
 
 namespace NoiseCast.MVVM.Model
 {
-    public class SettingsModel : ObservableObject
+    public class PlayerSessionModel : ObservableObject
     {
         private string[] _lastSelectedID;
         private double _playerVolume;
@@ -14,7 +14,7 @@ namespace NoiseCast.MVVM.Model
         public double PlayerVolume => _playerVolume;
         public double SkipValue { get => _skipValue; set => SetProperty(ref _skipValue, value); }
 
-        public SettingsModel(string[] lastSelectedID, double playerVolume, double skipValue)
+        public PlayerSessionModel(string[] lastSelectedID, double playerVolume, double skipValue)
         {
             _lastSelectedID = lastSelectedID != null ? lastSelectedID : new string[2] { "", "" };
             _playerVolume = playerVolume;

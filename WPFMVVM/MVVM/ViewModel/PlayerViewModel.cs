@@ -21,7 +21,7 @@ namespace NoiseCast.MVVM.ViewModel
         private int _tickCounter;
 
         public DispatcherTimer Timer => _timer;
-        public double SkipAmount => MainViewModel.ApplicationSettings.Settings.SkipValue;
+        public double SkipAmount => MainViewModel.ApplicationSettings.PlayerSession.SkipValue;
         public MediaElement MediaElement { get => _mediaElement; set => SetProperty(ref _mediaElement, value); }
         public EpisodeModel CurrentEpisode { get => _currentEpisode; set => SetProperty(ref _currentEpisode, value); }
         public double PositionMaximum { get => _positionMaximum; set => SetProperty(ref _positionMaximum, value); }
@@ -73,14 +73,14 @@ namespace NoiseCast.MVVM.ViewModel
             _mediaElement.UnloadedBehavior = MediaState.Manual;
             _mediaElement.MediaOpened += MediaElement_MediaOpened;
 
-            MainViewModel.ApplicationSettings.Settings.SubscribePropertyChanged(this);
+            MainViewModel.ApplicationSettings.PlayerSession.SubscribePropertyChanged(this);
         }
 
         /// <summary>
         /// Setup sessionvalues on startup
         /// </summary>
         /// <param name="session">The deserialized values</param>
-        public void InitializeSession(SettingsModel session)
+        public void InitializeSession(PlayerSessionModel session)
         {
             Volume = session.PlayerVolume;
 

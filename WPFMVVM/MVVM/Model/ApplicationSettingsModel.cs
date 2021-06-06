@@ -11,16 +11,20 @@ namespace NoiseCast.MVVM.Model
         private const string _settingsPodcastPath = @"\podcasts\";
 
         private string _settingsPathMain;
-        private SettingsModel _settings;
+        private PlayerSessionModel _playerSession;
 
         public string SettingsPathMain { get => _settingsPathMain; set => SetProperty(ref _settingsPathMain, value); }
-        public SettingsModel Settings { get => _settings; set => _settings = value; }
+        public PlayerSessionModel PlayerSession { get => _playerSession; set => _playerSession = value; }
 
-        [JsonConstructor]
         public ApplicationSettingsModel()
         {
-            if (string.IsNullOrWhiteSpace(_settingsPathMain))
-                _settingsPathMain = AppDomain.CurrentDomain.BaseDirectory;
+        }
+
+        [JsonConstructor]
+        public ApplicationSettingsModel(string settingsPathMain, PlayerSessionModel playerSession)
+        {
+            _settingsPathMain = string.IsNullOrWhiteSpace(settingsPathMain) ? AppDomain.CurrentDomain.BaseDirectory : settingsPathMain;
+            _playerSession = playerSession;
 
             Directory.CreateDirectory(SettingsPathMain);
             Directory.CreateDirectory(GetPodcastPath());
