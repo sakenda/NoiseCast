@@ -31,7 +31,7 @@ namespace NoiseCast.MVVM.Model
                 return JsonConvert.DeserializeObject<ApplicationSettingsModel>(json);
             }
 
-            var settings = new ApplicationSettingsModel() { PlayerSession = new PlayerSessionModel(null, 0.5, 30) };
+            var settings = new ApplicationSettingsModel();
             Serialize(settings);
 
             return settings;

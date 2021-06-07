@@ -14,10 +14,16 @@ namespace NoiseCast.MVVM.Model
         private PlayerSessionModel _playerSession;
 
         public string SettingsPathMain { get => _settingsPathMain; set => SetProperty(ref _settingsPathMain, value); }
-        public PlayerSessionModel PlayerSession { get => _playerSession; set => _playerSession = value; }
+        public PlayerSessionModel PlayerSession { get => _playerSession; set => SetProperty(ref _playerSession, value); }
 
         public ApplicationSettingsModel()
         {
+            _settingsPathMain = AppDomain.CurrentDomain.BaseDirectory;
+            _playerSession = new PlayerSessionModel(null, 0.5, 30);
+
+            Directory.CreateDirectory(SettingsPathMain);
+            Directory.CreateDirectory(GetPodcastPath());
+            Directory.CreateDirectory(GetImagePath());
         }
 
         [JsonConstructor]

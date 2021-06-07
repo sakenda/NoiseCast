@@ -11,8 +11,24 @@ namespace NoiseCast.MVVM.Model
         private double _skipValue;
 
         public string[] LastSelectedID => _lastSelectedID;
-        public double PlayerVolume => _playerVolume;
-        public double SkipValue { get => _skipValue; set => SetProperty(ref _skipValue, value); }
+        public double PlayerVolume
+        {
+            get => _playerVolume;
+            set
+            {
+                if (SetProperty(ref _playerVolume, value))
+                    Serialize();
+            }
+        }
+        public double SkipValue
+        {
+            get => _skipValue;
+            set
+            {
+                if (SetProperty(ref _skipValue, value))
+                    Serialize();
+            }
+        }
 
         public PlayerSessionModel(string[] lastSelectedID, double playerVolume, double skipValue)
         {
@@ -22,28 +38,14 @@ namespace NoiseCast.MVVM.Model
         }
 
         /// <summary>
-        /// Subscribe (at the right time) to Player.PropertyChanged
-        /// </summary>
-        /// <param name="pVM"></param>
-        public void SubscribePropertyChanged(PlayerViewModel pVM) => pVM.PropertyChanged += PlayerVM_PropertyChanged;
-
-        /// <summary>
         /// Gather all relevant properties to save in the session.json
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
-        private void PlayerVM_PropertyChanged(object sender, PropertyChangedEventArgs e)
+        private void Serialize()
         {
-            if (sender is PlayerViewModel playerVM)
-            {
-                if (playerVM.CurrentEpisode == null)
-                    return;
-
-                _lastSelectedID[0] = playerVM.CurrentEpisode.ParentPodcastModel.Id;
-                _lastSelectedID[1] = playerVM.CurrentEpisode.Id;
-                _playerVolume = playerVM.Volume;
-                _skipValue = playerVM.SkipAmount;
-            }
+            _lastSelectedID[0] = MainViewModel.PlayerVM.CurrentEpisode.ParentPodcastModel.Id;
+            _lastSelectedID[1] = MainViewModel.PlayerVM.CurrentEpisode.Id;
 
             SessionSerialization.Serialize(MainViewModel.SettingsVM.AppSettings);
         }

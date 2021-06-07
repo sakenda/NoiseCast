@@ -8,5 +8,10 @@ namespace NoiseCast.MVVM.ViewModel
         private ApplicationSettingsModel _appSettings;
 
         public ApplicationSettingsModel AppSettings { get => _appSettings; set => SetProperty(ref _appSettings, value); }
+
+        public SettingsViewModel()
+        {
+            _appSettings = MainViewModel.ApplicationSettings;
+        }
     }
 }

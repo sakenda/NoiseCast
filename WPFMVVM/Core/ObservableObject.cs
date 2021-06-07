@@ -7,16 +7,18 @@ namespace NoiseCast.Core
     {
         public event PropertyChangedEventHandler PropertyChanged;
 
-        protected void SetProperty<T>(ref T storage, T value, [CallerMemberName] string propertyName = null)
+        protected bool SetProperty<T>(ref T storage, T value, [CallerMemberName] string propertyName = null)
         {
             if (object.Equals(storage, value))
             {
-                return;
+                return false;
             }
 
             storage = value;
 
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
+
+            return true;
         }
     }
 }

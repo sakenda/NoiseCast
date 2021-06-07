@@ -28,11 +28,11 @@
                            FontFamily="{StaticResource BarlowRegular}"
                            FontSize="14"
                            Margin="0 0 20 0"/>
-                <Slider Value="{Binding AppSettings.Settings.SkipValue, Mode=OneWayToSource}"
+                <Slider Value="{Binding AppSettings.PlayerSession.SkipValue, Mode=TwoWay}"
                         Maximum="300"
                         IsSnapToTickEnabled="True"
                         Style="{StaticResource Horizontal_Slider}"/>
-                <TextBlock Text="{Binding AppSettings.Settings.SkipValue}"
+                <TextBlock Text="{Binding AppSettings.PlayerSession.SkipValue}"
                            FontFamily="{StaticResource BarlowItalic}"
                            FontSize="14"
                            Margin="20 0"/>
@@ -43,7 +43,8 @@
                            FontFamily="{StaticResource BarlowRegular}"
                            FontSize="14"
                            Margin="0 0 20 0"/>
-                <TextBox Text="{Binding AppSettings.SettingsPathMain}"/>
+                <TextBox Text="{Binding AppSettings.SettingsPathMain}"
+                         Width="250"/>
             </StackPanel>
 
             <StackPanel Orientation="Horizontal" Margin="0 0 0 10">

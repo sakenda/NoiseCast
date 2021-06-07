@@ -11,17 +11,17 @@ namespace NoiseCast.MVVM.ViewModel
 {
     public class PlayerViewModel : ObservableObject
     {
+        private ApplicationSettingsModel _appSettings;
         private MediaElement _mediaElement;
         private DispatcherTimer _timer;
         private EpisodeModel _currentEpisode;
         private double _position;
         private double _positionMaximum;
         private double _tempVolume;
-        private double _volume;
         private int _tickCounter;
 
+        public ApplicationSettingsModel AppSettings => _appSettings;
         public DispatcherTimer Timer => _timer;
-        public double SkipAmount => MainViewModel.ApplicationSettings.PlayerSession.SkipValue;
         public MediaElement MediaElement { get => _mediaElement; set => SetProperty(ref _mediaElement, value); }
         public EpisodeModel CurrentEpisode { get => _currentEpisode; set => SetProperty(ref _currentEpisode, value); }
         public double PositionMaximum { get => _positionMaximum; set => SetProperty(ref _positionMaximum, value); }
@@ -37,15 +37,6 @@ namespace NoiseCast.MVVM.ViewModel
                 SetProperty(ref _position, value);
             }
         }
-        public double Volume
-        {
-            get => _volume;
-            set
-            {
-                SetVolume(value);
-                SetProperty(ref _volume, value);
-            }
-        }
 
         public ICommand RewindCommand { get; private set; }
         public ICommand SkipCommand { get; private set; }
@@ -56,12 +47,14 @@ namespace NoiseCast.MVVM.ViewModel
 
         public PlayerViewModel()
         {
+            _appSettings = MainViewModel.ApplicationSettings;
+
             RewindCommand = new RelayCommand(RewindExecuted, RewindCanExecute);
             SkipCommand = new RelayCommand(SkipExecuted, SkipCanExecute);
             PlayCommand = new RelayCommand(PlayExecuted, PlayCanExecute);
             NextCommand = new RelayCommand(NextExecuted, NextCanExecute);
             LastCommand = new RelayCommand(LastExecuted, LastCanExecute);
-            MuteCommand = new RelayCommand(MuteExecuted, MuteCanExecute);
+            MuteCommand = new RelayCommand(MuteExecuted);
 
             _timer = new DispatcherTimer();
             _timer.Interval = TimeSpan.FromSeconds(1);
@@ -73,7 +66,21 @@ namespace NoiseCast.MVVM.ViewModel
             _mediaElement.UnloadedBehavior = MediaState.Manual;
             _mediaElement.MediaOpened += MediaElement_MediaOpened;
 
-            MainViewModel.ApplicationSettings.PlayerSession.SubscribePropertyChanged(this);
+            _appSettings.PlayerSession.PropertyChanged += PlayerSession_PropertyChanged;
+        }
+
+        /// <summary>
+        /// Listen to changed properties, such as volume and sets it inside the player
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void PlayerSession_PropertyChanged(object sender, System.ComponentModel.PropertyChangedEventArgs e)
+        {
+            if (e.PropertyName == nameof(ApplicationSettingsModel.PlayerSession.PlayerVolume))
+            {
+                var session = (PlayerSessionModel)sender;
+                SetVolume(session.PlayerVolume);
+            }
         }
 
         /// <summary>
@@ -82,8 +89,6 @@ namespace NoiseCast.MVVM.ViewModel
         /// <param name="session">The deserialized values</param>
         public void InitializeSession(PlayerSessionModel session)
         {
-            Volume = session.PlayerVolume;
-
             if (string.IsNullOrWhiteSpace(session.LastSelectedID[0]) || string.IsNullOrWhiteSpace(session.LastSelectedID[1])) return;
 
             var podcast = MainViewModel.PodcastsList.FirstOrDefault(x => x.Id == session.LastSelectedID[0]);
@@ -198,7 +203,7 @@ namespace NoiseCast.MVVM.ViewModel
 
         private void SkipExecuted(object obj)
         {
-            TimeSpan targetTime = _mediaElement.Position + TimeSpan.FromSeconds(SkipAmount);
+            TimeSpan targetTime = _mediaElement.Position + TimeSpan.FromSeconds(_appSettings.PlayerSession.SkipValue);
 
             if (targetTime > _mediaElement.NaturalDuration.TimeSpan)
             {
@@ -214,7 +219,7 @@ namespace NoiseCast.MVVM.ViewModel
 
         private void RewindExecuted(object obj)
         {
-            TimeSpan targetTime = _mediaElement.Position - TimeSpan.FromSeconds(SkipAmount);
+            TimeSpan targetTime = _mediaElement.Position - TimeSpan.FromSeconds(_appSettings.PlayerSession.SkipValue);
 
             if (targetTime <= TimeSpan.Zero)
             {
@@ -239,6 +244,5 @@ namespace NoiseCast.MVVM.ViewModel
 
             _mediaElement.Volume = _tempVolume;
         }
-        private bool MuteCanExecute(object arg) => true;
     }
 }
