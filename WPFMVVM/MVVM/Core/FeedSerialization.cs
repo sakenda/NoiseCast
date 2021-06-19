@@ -1,9 +1,11 @@
-﻿using Newtonsoft.Json;
+﻿using CodeHollow.FeedReader;
+using Newtonsoft.Json;
 using NoiseCast.Core;
 using NoiseCast.MVVM.ViewModel;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.Diagnostics;
 using System.IO;
 using System.Threading.Tasks;
 
@@ -81,6 +83,21 @@ namespace NoiseCast.MVVM.Model
 
             if (isWebPath)
                 podcastModel.SetImagePath(await FileController.DownloadImageAndSave(webPath.AbsoluteUri, imagePath));
+        }
+
+        /// <summary>
+        /// Loops the whole Podcastlist an update the image from the online source
+        /// </summary>
+        /// <param name="list"></param>
+        public static void RefreshImages(ObservableCollection<PodcastModel> list)
+        {
+            foreach (var item in list)
+            {
+                Debug.WriteLine("-");
+                Feed feed = FeedReader.ReadFromString(item.OriginalDocument);
+                item.SetImagePath(feed.ImageUrl);
+                SaveImage(item);
+            }
         }
     }
 }

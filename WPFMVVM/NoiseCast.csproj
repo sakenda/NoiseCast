@@ -14,6 +14,7 @@
     <None Remove="Fonts\Font Awesome 5 Brands-Regular-400.otf" />
     <None Remove="Fonts\Font Awesome 5 Free-Regular-400.otf" />
     <None Remove="Fonts\Font Awesome 5 Free-Solid-900.otf" />
+    <None Remove="Images\splashscreen.png" />
   </ItemGroup>
 
   <ItemGroup>
@@ -43,10 +44,7 @@
     <Resource Include="Fonts\Font Awesome 5 Free-Solid-900.otf">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Resource>
-  </ItemGroup>
-
-  <ItemGroup>
-    <Folder Include="Images\" />
+    <SplashScreen Include="Images\splashscreen.png" />
   </ItemGroup>
 
 </Project>
