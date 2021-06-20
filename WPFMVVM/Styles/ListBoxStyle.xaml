@@ -2,7 +2,7 @@
                     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
                     xmlns:vm="clr-namespace:NoiseCast.MVVM.ViewModel"
                     xmlns:converter="clr-namespace:NoiseCast.MVVM.ViewModel.Converter">
-    <converter:DoubleToTimeSpanConverter x:Key="DoubleToTime"/>
+    <converter:DoubleToTimeSpanSecondsConverter x:Key="DoubleToTime"/>
     <converter:StringToTimeSpanConverter x:Key="StringToTime"/>
     <converter:OlderThanDateConverter x:Key="OlderThanDate"/>
     <converter:IsArchivedBoolToStringConverter x:Key="IsArchivedConverter"/>

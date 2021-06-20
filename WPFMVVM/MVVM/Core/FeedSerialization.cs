@@ -93,7 +93,6 @@ namespace NoiseCast.MVVM.Model
         {
             foreach (var item in list)
             {
-                Debug.WriteLine("-");
                 Feed feed = FeedReader.ReadFromString(item.OriginalDocument);
                 item.SetImagePath(feed.ImageUrl);
                 SaveImage(item);

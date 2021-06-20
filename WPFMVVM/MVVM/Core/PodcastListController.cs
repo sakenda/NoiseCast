@@ -30,7 +30,7 @@ namespace NoiseCast.MVVM.ViewModel.Controller
 
             if (feed == null) return false;
 
-            var podcastModel = new PodcastModel(feed);
+            var podcastModel = new PodcastModel(feed, url);
             list.Add(podcastModel);
 
             return true;
@@ -67,5 +67,15 @@ namespace NoiseCast.MVVM.ViewModel.Controller
         /// </summary>
         /// <param name="podcast"></param>
         public static void SaveFeed(this PodcastModel podcast) => FeedSerialization.Serialize(podcast);
+
+        /// <summary>
+        /// Load the given RSS-Link and check if <see cref="Feed.LastUpdatedDate"/> is newer than the current
+        /// <see cref="PodcastModel.LastUpdatedDate"/>.
+        /// </summary>
+        public static async void UpdateFeed(this PodcastModel podcast)
+        {
+            Feed feed = await FeedReader.ReadAsync(podcast.RSSLink);
+            podcast.Update(feed);
+        }
     }
 }

@@ -4,6 +4,7 @@ using Newtonsoft.Json;
 using NoiseCast.Core;
 using NoiseCast.MVVM.ViewModel;
 using System;
+using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Diagnostics;
 using System.Linq;
@@ -17,18 +18,20 @@ namespace NoiseCast.MVVM.Model
         private Guid _id;
         private bool _isSubscribed;
         private int _isArchivedCount;
+        private DateTime? _lastUpdatedDate;
 
         [JsonProperty] public string Id => _id.ToString();
-        [JsonProperty] public string OriginalDocument { get; }
+        [JsonProperty] public string OriginalDocument { get; private set; }
+        [JsonProperty] public string RSSLink { get; private set; }
         [JsonProperty] public ObservableCollection<EpisodeModel> Episodes { get; private set; }
         [JsonIgnore] public int IsArchivedCount { get => _isArchivedCount; set => SetProperty(ref _isArchivedCount, value); }
+        [JsonIgnore] public DateTime? LastUpdatedDate { get => _lastUpdatedDate; private set => SetProperty(ref _lastUpdatedDate, value); }
+        [JsonIgnore] public bool IsSubscribed { get => _isSubscribed; private set => SetProperty(ref _isSubscribed, value); }
         [JsonIgnore] public string Title { get; private set; }
         [JsonIgnore] public string Description { get; private set; }
         [JsonIgnore] public string Copyright { get; private set; }
-        [JsonIgnore] public DateTime? LastUpdatedDate { get; private set; }
         [JsonIgnore] public string Link { get; private set; }
         [JsonIgnore] public string ImagePath { get; private set; }
-        [JsonIgnore] public bool IsSubscribed { get => _isSubscribed; private set => SetProperty(ref _isSubscribed, value); }
         [JsonIgnore] public string FilePath => MainViewModel.SettingsVM.AppSettings.GetPodcastPath() + _id.ToString() + ".json";
 
         /// <summary>
@@ -38,10 +41,11 @@ namespace NoiseCast.MVVM.Model
         /// <param name="originalDocument">Feed as XML-Document</param>
         /// <param name="episodesList">List of values relevant to each episode</param>
         [JsonConstructor]
-        public PodcastModel(Guid id, string originalDocument, ObservableCollection<EpisodeModel> episodes)
+        public PodcastModel(Guid id, string originalDocument, string rSSLink, ObservableCollection<EpisodeModel> episodes)
         {
             _id = id;
             OriginalDocument = originalDocument;
+            RSSLink = rSSLink;
             Episodes = episodes;
             IsSubscribed = true;
             _isArchivedCount = 0;
@@ -65,10 +69,11 @@ namespace NoiseCast.MVVM.Model
         /// Constructor for new Podcasts with no ID
         /// </summary>
         /// <param name="podcast"></param>
-        public PodcastModel(Feed feed)
+        public PodcastModel(Feed feed, string rSSLink)
         {
             _id = Guid.Empty;
             OriginalDocument = feed.OriginalDocument;
+            RSSLink = rSSLink;
             _isSubscribed = false;
             Episodes = new ObservableCollection<EpisodeModel>();
 
@@ -97,12 +102,25 @@ namespace NoiseCast.MVVM.Model
         {
             if (feed == null) return;
 
+            if (Episodes.Count > 0 && Episodes.Count < feed.Items.Count)
+            {
+                var excludedEpisodes = new HashSet<string>(Episodes.Select(p => p.Id));
+                var newEpisodes = feed.Items.Where(p => !excludedEpisodes.Contains(p.Id));
+
+                foreach (var item in newEpisodes)
+                {
+                    EpisodeModel episode = new EpisodeModel(item, this);
+                    Episodes.Add(episode);
+                }
+
+                return;
+            }
+
             foreach (var item in feed.Items)
             {
                 if (item == null) continue;
 
                 EpisodeModel episode = new EpisodeModel(item, this);
-
                 Episodes.Add(episode);
             }
         }
@@ -164,6 +182,19 @@ namespace NoiseCast.MVVM.Model
             if (Episodes == null || Episodes.Count == 0) return Episodes = new ObservableCollection<EpisodeModel>();
 
             return Episodes;
+        }
+
+        /// <summary>
+        /// Update contents from a online copy of the RSS-Content
+        /// </summary>
+        /// <param name="feed"></param>
+        public void Update(Feed feed)
+        {
+            if (feed.LastUpdatedDate == LastUpdatedDate) return;
+
+            OriginalDocument = feed.OriginalDocument;
+            InitializePodcast(feed);
+            InitializeEpisodes(feed);
         }
     }
 }

@@ -5,7 +5,7 @@ using System.Windows.Data;
 namespace NoiseCast.MVVM.ViewModel.Converter
 {
     [ValueConversion(typeof(double), typeof(TimeSpan))]
-    public class DoubleToTimeSpanConverter : IValueConverter
+    public class DoubleToTimeSpanSecondsConverter : IValueConverter
     {
         public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture) => null;
         public object Convert(object value, Type targetType, object parameter, CultureInfo culture)

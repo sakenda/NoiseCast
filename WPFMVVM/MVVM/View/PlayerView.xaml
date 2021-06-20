@@ -12,7 +12,7 @@
              d:DataContext="{d:DesignInstance Type=vm:PlayerViewModel, IsDesignTimeCreatable=True}"
              x:Name="main">
     <UserControl.Resources>
-        <converter:DoubleToTimeSpanConverter x:Key="TimeConverter"/>
+        <converter:DoubleToTimeSpanSecondsConverter x:Key="TimeConverter"/>
         <converter:DoubleToPercentValueStringConverter x:Key="DoubleToPercent"/>
         <vm:PlayerViewModel x:Key="PlayerViewModel"/>
         <BooleanToVisibilityConverter x:Key="BoolToVisibilityConverter"/>

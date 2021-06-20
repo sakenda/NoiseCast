@@ -44,8 +44,11 @@ namespace NoiseCast.MVVM.Model
         /// <param name="e"></param>
         private void Serialize()
         {
-            _lastSelectedID[0] = MainViewModel.PlayerVM.CurrentEpisode.ParentPodcastModel.Id;
-            _lastSelectedID[1] = MainViewModel.PlayerVM.CurrentEpisode.Id;
+            if (MainViewModel.PlayerVM.CurrentEpisode != null)
+            {
+                _lastSelectedID[0] = MainViewModel.PlayerVM.CurrentEpisode.ParentPodcastModel.Id;
+                _lastSelectedID[1] = MainViewModel.PlayerVM.CurrentEpisode.Id;
+            }
 
             SessionSerialization.Serialize(MainViewModel.SettingsVM.AppSettings);
         }
