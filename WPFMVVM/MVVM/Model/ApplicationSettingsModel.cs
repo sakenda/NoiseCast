@@ -73,9 +73,7 @@ namespace NoiseCast.MVVM.Model
             // Update Podcastlist
             Debug.WriteLine("UPDATE: " + TimeSpan.FromMilliseconds(_stopWatch.ElapsedMilliseconds));
             foreach (var item in MainViewModel.PodcastsList)
-            {
                 PodcastListController.UpdateFeed(item);
-            }
 
             _stopWatch.Restart();
         }

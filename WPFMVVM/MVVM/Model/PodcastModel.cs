@@ -95,26 +95,15 @@ namespace NoiseCast.MVVM.Model
         }
 
         /// <summary>
-        /// Initializes all episodes as a EpisodeModel
+        /// Initializes episodes from a given <see cref="Feed"/>. If no Episodes are initialized in
+        /// the <see cref="Episodes"/> list, they get written into it. If only new Episodes need to be added,
+        /// <see cref="AddNewEpisodes(Feed)"/> will get called and only new episodes will be added.
         /// </summary>
         /// <param name="feed"></param>
         private void InitializeEpisodes(Feed feed)
         {
             if (feed == null) return;
-
-            if (Episodes.Count > 0 && Episodes.Count < feed.Items.Count)
-            {
-                var excludedEpisodes = new HashSet<string>(Episodes.Select(p => p.Id));
-                var newEpisodes = feed.Items.Where(p => !excludedEpisodes.Contains(p.Id));
-
-                foreach (var item in newEpisodes)
-                {
-                    EpisodeModel episode = new EpisodeModel(item, this);
-                    Episodes.Add(episode);
-                }
-
-                return;
-            }
+            if (AddNewEpisodes(feed)) return;
 
             foreach (var item in feed.Items)
             {
@@ -123,6 +112,33 @@ namespace NoiseCast.MVVM.Model
                 EpisodeModel episode = new EpisodeModel(item, this);
                 Episodes.Add(episode);
             }
+        }
+
+        /// <summary>
+        /// Add new episodes to the <see cref="Episodes"/> list
+        /// </summary>
+        /// <param name="feed"></param>
+        /// <returns></returns>
+        private bool AddNewEpisodes(Feed feed)
+        {
+            if (Episodes.Count > 0 && Episodes.Count < feed.Items.Count)
+            {
+                var excludedEpisodes = new HashSet<string>(Episodes.Select(p => p.Id));
+                var newEpisodes = feed.Items.Where(p => !excludedEpisodes.Contains(p.Id));
+
+                if (newEpisodes.Count() == 0) return false;
+
+                foreach (var item in newEpisodes)
+                {
+                    EpisodeModel episode = new EpisodeModel(item, this);
+                    Episodes.Add(episode);
+                }
+
+                this.Serialize();
+                return true;
+            }
+
+            return false;
         }
 
         /// <summary>
