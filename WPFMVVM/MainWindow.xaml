@@ -30,7 +30,7 @@
                 <RowDefinition/>
             </Grid.RowDefinitions>
 
-            <!-- Application/Window Controls -->
+            <!-- #region "Application/Window Controls" -->
             <StackPanel Grid.Column="2"
                         Orientation="Horizontal"
                         VerticalAlignment="Center"
@@ -53,8 +53,9 @@
                         Click="CloseApplication_Click"
                         ToolTip="Schließen"/>
             </StackPanel>
+            <!-- #endregion "Application/Window Controls" -->
 
-            <!-- Header/Searchbar -->
+            <!-- #region "Header/Searchbar" -->
             <TextBlock Text="NoiseCast"
                        Grid.ColumnSpan="2"
                        VerticalAlignment="Center"
@@ -71,8 +72,9 @@
                      HorizontalAlignment="Right"
                      Margin="0 0 300 0"
                      Style="{StaticResource SearchBoxStyle}"/>
+            <!-- #endregion "Header/Searchbar" -->
 
-            <!-- Menu -->
+            <!-- #region "Menu" -->
             <Grid Grid.Row="1" x:Name="sp_menu" Width="200">
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="45"/>
@@ -107,32 +109,33 @@
                              Style="{StaticResource MenuButtonStyle}"
                              Command="{Binding NewEpisodesViewCommand}"/>
 
-                <Rectangle Grid.Row="2" Grid.ColumnSpan="2" Fill="{StaticResource gradient}"
-                           Height="1" Width="180"
-                           Margin="0 5"/>
-
-                <Label Grid.Row="3" Grid.Column="0"
-                       Content="&#xf14e;"
-                       Style="{StaticResource MenuIcon}"/>
-                <RadioButton Grid.Row="3" Grid.Column="1"
-                             Content="Discover"
-                             Style="{StaticResource MenuButtonStyle}"
-                             Command="{Binding DiscoveryViewCommand}"/>
-
-                <Label Grid.Row="4" Grid.Column="0"
+                <Label Grid.Row="2" Grid.Column="0"
                        Content="&#xf144;"
                        Style="{StaticResource MenuIcon}"/>
-                <RadioButton Grid.Row="4" Grid.Column="1"
+                <RadioButton Grid.Row="2" Grid.Column="1"
                              Content="In Progress"
                              Style="{StaticResource MenuButtonStyle}"
                              Command="{Binding InProgressViewCommand}"/>
 
-                <Label Grid.Row="5" Grid.Column="0"
+                <Label Grid.Row="3" Grid.Column="0"
                        Content="&#xf0c7;"
                        Style="{StaticResource MenuIcon}"/>
-                <RadioButton Grid.Row="5" Grid.Column="1" Content="Downloads"
+                <RadioButton Grid.Row="3" Grid.Column="1"
+                             Content="Downloads"
                              Style="{StaticResource MenuButtonStyle}"
                              Command="{Binding DownloadsViewCommand}"/>
+
+                <Rectangle Grid.Row="4" Grid.ColumnSpan="2" Fill="{StaticResource gradient}"
+                           Height="1" Width="180"
+                           Margin="0 5"/>
+
+                <Label Grid.Row="5" Grid.Column="0"
+                       Content="&#xf14e;"
+                       Style="{StaticResource MenuIcon}"/>
+                <RadioButton Grid.Row="5" Grid.Column="1"
+                             Content="Discover"
+                             Style="{StaticResource MenuButtonStyle}"
+                             Command="{Binding DiscoveryViewCommand}"/>
 
                 <Rectangle Grid.Row="6" Grid.ColumnSpan="2"
                            Fill="{StaticResource gradient}"
@@ -147,19 +150,22 @@
                              Style="{StaticResource MenuButtonStyle}"
                              Command="{Binding SettingsViewCommand}"/>
             </Grid>
+            <!-- #endregion "Menu" -->
 
-            <!-- Content -->
+            <!-- #region "Content" -->
             <Border Grid.Row="1" Grid.Column="1"
                     Background="White" CornerRadius="10" Margin="0 0 0 20">
                 <ContentControl Margin="10" Content="{Binding CurrentView}"/>
             </Border>
+            <!-- #endregion "Content" -->
 
-            <!-- Player -->
+            <!-- #region Player -->
             <ContentControl Grid.Row="1" Grid.Column="2"
                             Content="{Binding PlayerView}"
                             Margin="0"
                             Width="300" VerticalAlignment="Top"
                             x:Name="sp_player"/>
+            <!-- #endregion Player -->
         </Grid>
     </Border>
 </Window>

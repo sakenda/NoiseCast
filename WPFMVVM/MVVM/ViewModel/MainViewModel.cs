@@ -34,6 +34,7 @@ namespace NoiseCast.MVVM.ViewModel
             get => _podcastsList;
             set => _podcastsList = value;
         }
+
         public RelayCommand YourPodcastsViewCommand { get; set; }
         public RelayCommand NewEpisodesViewCommand { get; set; }
         public RelayCommand DiscoveryViewCommand { get; set; }
@@ -84,12 +85,18 @@ namespace NoiseCast.MVVM.ViewModel
             Debug.WriteLine("Starttime: " + sw.Elapsed);
         }
 
+        /// <summary>
+        /// Execute Deserialization on startup
+        /// </summary>
         private void DeserializeData()
         {
             _applicationSettings = SessionSerialization.Deserialize();
             _podcastsList = FeedSerialization.Deserialize();
         }
 
+        /// <summary>
+        /// Serialize sessionsettings
+        /// </summary>
         private void SessionSetup()
         {
             PlayerVM.InitializeSession(_applicationSettings.PlayerSession);

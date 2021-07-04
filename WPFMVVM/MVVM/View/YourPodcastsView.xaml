@@ -142,7 +142,7 @@
         <ListBox Grid.Row="1" Grid.Column="2" Grid.ColumnSpan="3"
                  ItemsSource="{Binding ViewEpisodes}"
                  Style="{StaticResource ListBoxStyle}"
-                 ItemContainerStyle="{StaticResource EpisodesListBoxItem}"/>
+                 ItemContainerStyle="{StaticResource YourPodcastsListBoxItem}"/>
         <!-- #endregion -->
     </Grid>
 </UserControl>

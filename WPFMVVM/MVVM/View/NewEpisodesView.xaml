@@ -5,12 +5,24 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:local="clr-namespace:NoiseCast.MVVM.View"
              mc:Ignorable="d"
-             d:DesignHeight="500"
-             d:DesignWidth="800">
+             d:DesignHeight="800"
+             d:DesignWidth="1200"
+             d:Background="White"
+             FontFamily="{StaticResource BarlowRegular}">
     <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="80"/>
+            <RowDefinition/>
+        </Grid.RowDefinitions>
+
         <TextBlock Text="New Episodes"
                    FontSize="28"
                    HorizontalAlignment="Left"
                    Margin="0 0 0 20"/>
+
+        <ListBox Grid.Row="1" Grid.Column="2" Grid.ColumnSpan="3"
+                 ItemsSource="{Binding ViewNewEpisodes}"
+                 Style="{StaticResource ListBoxStyle}"
+                 ItemContainerStyle="{StaticResource NewEpisodesListBoxItem}"/>
     </Grid>
 </UserControl>
