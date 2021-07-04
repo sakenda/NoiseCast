@@ -267,6 +267,7 @@
                         <Grid x:Name="gr_ListBoxItem" Margin="0"
                               VerticalAlignment="Center">
                             <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="120"/>
                                 <ColumnDefinition Width="Auto"/>
                                 <ColumnDefinition Width="*"/>
                                 <ColumnDefinition Width="Auto"/>
@@ -276,7 +277,18 @@
                                 <RowDefinition/>
                             </Grid.RowDefinitions>
 
-                            <TextBlock Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="2"
+                            <Border Grid.Column="0" Grid.Row="0" Grid.RowSpan="2"
+                                    Width="100" Height="100"
+                                    Margin="10 0 0 0"
+                                    VerticalAlignment="Center">
+                                <Border.Clip>
+                                    <RectangleGeometry RadiusX="10" RadiusY="10" Rect="0,0,100,100"/>
+                                </Border.Clip>
+
+                                <Image Source="{Binding ImagePath}"/>
+                            </Border>
+
+                            <TextBlock Grid.Row="0" Grid.Column="1" Grid.ColumnSpan="2"
                                        Text="{Binding Title}"
                                        TextWrapping="WrapWithOverflow"
                                        TextTrimming="WordEllipsis"
@@ -285,7 +297,7 @@
                                        VerticalAlignment="Center"
                                        Margin="10 5"/>
 
-                            <Button Grid.Column="0" Grid.Row="1" Grid.RowSpan="2"
+                            <Button Grid.Column="1" Grid.Row="1" Grid.RowSpan="2"
                                     x:Name="b_play"
                                     Command="{x:Static vm:NewEpisodesViewModel.PlayCommand}"
                                     CommandParameter="{Binding SelectedItem, RelativeSource={RelativeSource AncestorType={x:Type ListBox}}}"
@@ -295,7 +307,7 @@
                                     Margin="20 -5 10 0"
                                     FontSize="40"/>
 
-                            <StackPanel Grid.Row="1" Grid.Column="1" Orientation="Vertical">
+                            <StackPanel Grid.Row="1" Grid.Column="2" Orientation="Vertical">
                                 <TextBlock Text="{Binding Description}"
                                            x:Name="tb_desc"
                                            TextWrapping="WrapWithOverflow"
@@ -303,14 +315,13 @@
                                            Height="55" Margin="10 5 0 0"
                                            FontSize="14"/>
 
-                                <StackPanel Grid.Column="1" Grid.ColumnSpan="2"
-                                            Orientation="Horizontal"
+                                <StackPanel Orientation="Horizontal"
                                             Margin="10 0 10 5"
                                             VerticalAlignment="Center">
 
                                     <Label Content="&#xf017;"
-                                            Margin="0 0 5 0"
-                                            FontFamily="{StaticResource FontAwesomeSolid}"/>
+                                           Margin="0 0 5 0"
+                                           FontFamily="{StaticResource FontAwesomeSolid}"/>
                                     <TextBlock Text="{Binding DurationRemaining, Converter={StaticResource StringToTime}}"
                                                FontSize="14"
                                                VerticalAlignment="Center"/>
@@ -364,6 +375,7 @@
                         <Grid x:Name="gr_ListBoxItem" Margin="0"
                               VerticalAlignment="Center">
                             <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="120"/>
                                 <ColumnDefinition Width="Auto"/>
                                 <ColumnDefinition Width="*"/>
                                 <ColumnDefinition Width="Auto"/>
@@ -373,7 +385,18 @@
                                 <RowDefinition/>
                             </Grid.RowDefinitions>
 
-                            <TextBlock Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="2"
+                            <Border Grid.Column="0" Grid.Row="0" Grid.RowSpan="2"
+                                    Width="100" Height="100"
+                                    Margin="10 0 0 0"
+                                    VerticalAlignment="Center">
+                                <Border.Clip>
+                                    <RectangleGeometry RadiusX="10" RadiusY="10" Rect="0,0,100,100"/>
+                                </Border.Clip>
+
+                                <Image Source="{Binding ImagePath}"/>
+                            </Border>
+
+                            <TextBlock Grid.Row="0" Grid.Column="1" Grid.ColumnSpan="2"
                                        Text="{Binding Title}"
                                        TextWrapping="WrapWithOverflow"
                                        TextTrimming="WordEllipsis"
@@ -382,7 +405,7 @@
                                        VerticalAlignment="Center"
                                        Margin="10 5"/>
 
-                            <Button Grid.Column="0" Grid.Row="1" Grid.RowSpan="2"
+                            <Button Grid.Column="1" Grid.Row="1" Grid.RowSpan="2"
                                     x:Name="b_play"
                                     Command="{x:Static vm:InProgressViewModel.PlayCommand}"
                                     CommandParameter="{Binding SelectedItem, RelativeSource={RelativeSource AncestorType={x:Type ListBox}}}"
@@ -392,7 +415,7 @@
                                     Margin="20 -5 10 0"
                                     FontSize="40"/>
 
-                            <StackPanel Grid.Row="1" Grid.Column="1" Orientation="Vertical">
+                            <StackPanel Grid.Row="1" Grid.Column="2" Orientation="Vertical">
                                 <TextBlock Text="{Binding Description}"
                                            x:Name="tb_desc"
                                            TextWrapping="WrapWithOverflow"
@@ -400,14 +423,13 @@
                                            Height="55" Margin="10 5 0 0"
                                            FontSize="14"/>
 
-                                <StackPanel Grid.Column="1" Grid.ColumnSpan="2"
-                                            Orientation="Horizontal"
+                                <StackPanel Orientation="Horizontal"
                                             Margin="10 0 10 5"
                                             VerticalAlignment="Center">
 
                                     <Label Content="&#xf017;"
-                                            Margin="0 0 5 0"
-                                            FontFamily="{StaticResource FontAwesomeSolid}"/>
+                                           Margin="0 0 5 0"
+                                           FontFamily="{StaticResource FontAwesomeSolid}"/>
                                     <TextBlock Text="{Binding DurationRemaining, Converter={StaticResource StringToTime}}"
                                                FontSize="14"
                                                VerticalAlignment="Center"/>

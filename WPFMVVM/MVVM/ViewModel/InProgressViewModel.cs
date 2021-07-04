@@ -22,19 +22,18 @@ namespace NoiseCast.MVVM.ViewModel
         {
             PlayCommand = new RelayCommand(PlayExecuted, PlayCanExecute);
 
-            _inProgressList = new ObservableCollection<EpisodeModel>();
-            InitializeInProgressList();
-            ViewInProgress = new ListCollectionView(_inProgressList);
-
-            Helper.SortViewCollection(_viewInProgress, nameof(EpisodeModel.DurationRemaining), ListSortDirection.Ascending);
-            ViewInProgress.MoveCurrentToFirst();
+            Initialize();
         }
 
         /// <summary>
         /// Initialize episodeslist at startup
         /// </summary>
-        private void InitializeInProgressList()
+        public void Initialize()
         {
+            if (_inProgressList == null) _inProgressList = new ObservableCollection<EpisodeModel>();
+
+            _inProgressList.Clear();
+
             foreach (PodcastModel podcast in MainViewModel.PodcastsList)
             {
                 foreach (EpisodeModel episode in podcast.Episodes)
@@ -46,6 +45,11 @@ namespace NoiseCast.MVVM.ViewModel
                     }
                 }
             }
+
+            ViewInProgress = new ListCollectionView(_inProgressList);
+
+            Helper.SortViewCollection(_viewInProgress, nameof(EpisodeModel.DurationRemaining), ListSortDirection.Ascending);
+            ViewInProgress.MoveCurrentToFirst();
         }
 
         /// <summary>

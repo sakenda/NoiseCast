@@ -2,6 +2,8 @@
 using NoiseCast.MVVM.Model;
 using System.Collections.ObjectModel;
 using System.Diagnostics;
+using System.Windows;
+using System.Windows.Threading;
 
 namespace NoiseCast.MVVM.ViewModel
 {
@@ -57,6 +59,8 @@ namespace NoiseCast.MVVM.ViewModel
             Stopwatch sw = new Stopwatch();
             sw.Start();
 
+            Application.Current.DispatcherUnhandledException += Current_DispatcherUnhandledException;
+
             DeserializeData();
 
             YourPodcastsVM = new YourPodcastsViewModel();
@@ -86,6 +90,17 @@ namespace NoiseCast.MVVM.ViewModel
         }
 
         /// <summary>
+        /// If any error ocours, the message will be shown and set to handled.
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void Current_DispatcherUnhandledException(object sender, DispatcherUnhandledExceptionEventArgs e)
+        {
+            MessageBox.Show(e.Exception.Message, "Error");
+            e.Handled = true;
+        }
+
+        /// <summary>
         /// Execute Deserialization on startup
         /// </summary>
         private void DeserializeData()
@@ -99,7 +114,7 @@ namespace NoiseCast.MVVM.ViewModel
         /// </summary>
         private void SessionSetup()
         {
-            PlayerVM.InitializeSession(_applicationSettings.PlayerSession);
+            PlayerVM.Initialize(_applicationSettings.PlayerSession);
         }
 
         private bool ExitCanExecute(object arg) => true;

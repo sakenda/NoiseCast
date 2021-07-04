@@ -87,7 +87,7 @@ namespace NoiseCast.MVVM.ViewModel
         /// Setup sessionvalues on startup
         /// </summary>
         /// <param name="session">The deserialized values</param>
-        public void InitializeSession(PlayerSessionModel session)
+        public void Initialize(PlayerSessionModel session)
         {
             if (string.IsNullOrWhiteSpace(session.LastSelectedID[0]) || string.IsNullOrWhiteSpace(session.LastSelectedID[1])) return;
 
@@ -104,12 +104,22 @@ namespace NoiseCast.MVVM.ViewModel
         public void SetEpisode(EpisodeModel episode)
         {
             if (episode == null) return;
+
+            if (_timer.IsEnabled)
+            {
+                _timer.Stop();
+                _mediaElement.Stop();
+                MediaElement.Source = null;
+            }
+
             CurrentEpisode = episode;
             MediaElement.Source = new Uri(episode.MediaPath);
 
             // To trigger MediaOpened
             _mediaElement.Play();
             _mediaElement.Stop();
+
+            Save();
         }
 
         /// <summary>
@@ -138,8 +148,9 @@ namespace NoiseCast.MVVM.ViewModel
         /// </summary>
         private void AutoSave()
         {
-            if (_tickCounter++ % 60 == 0) FeedSerialization.Serialize(MainViewModel.PodcastsList);
+            if (_tickCounter++ % 60 == 0) Save();
         }
+        private void Save() => FeedSerialization.Serialize(MainViewModel.PodcastsList);
 
         /// <summary>
         /// When Episodes duration ist full, set episode as IsArchived and stop timer and player
